@@ -28,13 +28,13 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-lightning text-lg text-gray-600" />
-              <span class="text-sm font-medium">Model</span>
+              <i class="ki-outline ki-star text-xs text-gray-600" />
+              <span class="text-xs font-medium">Model</span>
               <div class="w-2 h-2 bg-blue-500 rounded-full" />
             </div>
             <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-600">Classic Fast</span>
-              <i class="ki-outline ki-right text-sm text-gray-500" />
+              <span class="text-xs text-gray-600">Classic Fast</span>
+              <i class="ki-outline ki-right text-xs text-gray-500" />
             </div>
           </div>
         </div>
@@ -43,13 +43,13 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-star text-lg text-gray-600" />
-              <span class="text-sm font-medium">Style</span>
+              <i class="ki-outline ki-star text-xs text-gray-600" />
+              <span class="text-xs font-medium">Style</span>
             </div>
             <div class="flex items-center space-x-2">
-              <i class="ki-outline ki-shuffle text-sm text-gray-500" />
-              <i class="ki-outline ki-plus text-sm text-gray-500" />
-              <i class="ki-outline ki-right text-sm text-gray-500" />
+              <i class="ki-outline ki-shuffle text-xs text-gray-500" />
+              <i class="ki-outline ki-plus text-xs text-gray-500" />
+              <i class="ki-outline ki-right text-xs text-gray-500" />
             </div>
           </div>
         </div>
@@ -58,10 +58,10 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-element-8 text-lg text-gray-600" />
-              <span class="text-sm font-medium">Composition</span>
+              <i class="ki-outline ki-element-8 text-xs text-gray-600" />
+              <span class="text-xs font-medium">Composition</span>
             </div>
-            <i class="ki-outline ki-right text-sm text-gray-500" />
+            <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
 
@@ -69,10 +69,10 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-picture text-lg text-gray-600" />
-              <span class="text-sm font-medium">Effects</span>
+              <i class="ki-outline ki-picture text-xs text-gray-600" />
+              <span class="text-xs font-medium">Effects</span>
             </div>
-            <i class="ki-outline ki-right text-sm text-gray-500" />
+            <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
 
@@ -80,10 +80,10 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-user text-lg text-gray-600" />
-              <span class="text-sm font-medium">Character</span>
+              <i class="ki-outline ki-user text-xs text-gray-600" />
+              <span class="text-xs font-medium">Character</span>
             </div>
-            <i class="ki-outline ki-right text-sm text-gray-500" />
+            <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
 
@@ -91,10 +91,10 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-tshirt text-lg text-gray-600" />
-              <span class="text-sm font-medium">Object</span>
+              <i class="ki-outline ki-tshirt text-xs text-gray-600" />
+              <span class="text-xs font-medium">Object</span>
             </div>
-            <i class="ki-outline ki-right text-sm text-gray-500" />
+            <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
 
@@ -102,10 +102,10 @@
         <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between p-3">
             <div class="flex items-center space-x-3">
-              <i class="ki-outline ki-paintbucket text-lg text-gray-600" />
-              <span class="text-sm font-medium">Colors</span>
+              <i class="ki-outline ki-paintbucket text-xs text-gray-600" />
+              <span class="text-xs font-medium">Colors</span>
             </div>
-            <i class="ki-outline ki-right text-sm text-gray-500" />
+            <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@
       <!-- Generate按钮 -->
       <button class="kt-btn kt-btn-primary w-full flex items-center justify-center space-x-2 py-3">
         <span>Generate</span>
-        <i class="ki-outline ki-star text-sm" />
+        <i class="ki-outline ki-star text-xs" />
       </button>
     </div>
   </div>
