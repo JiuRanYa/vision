@@ -47,7 +47,7 @@ const breadcrumbs = computed(() => {
         <div class="flex items-center space-x-2 text-sm text-gray-600">
           <template v-for="(crumb, index) in breadcrumbs" :key="crumb.text">
             <span
-              class="transition-colors"
+              class="transition-colors kt-btn kt-btn-ghost"
               :class="[
                 crumb.isActive
                   ? 'text-gray-900 font-medium'

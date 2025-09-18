@@ -132,8 +132,8 @@ const communityImages = reactive([
 
         <!-- Generate按钮 -->
         <button class="kt-btn kt-btn-primary w-full flex items-center justify-center space-x-2 py-3">
+          <i class="ki-filled ki-click" />
           <span>Generate</span>
-          <i class="ki-outline ki-star text-xs" />
         </button>
       </div>
     </div>
