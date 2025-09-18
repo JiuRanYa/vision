@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@antfu/eslint-config": "^5.3.0",
+    "@tailwindcss/vite": "^4.1.13",
+    "tailwindcss": "^4.1.13",
     "vue": "^3.5.18"
   },
   "devDependencies": {
