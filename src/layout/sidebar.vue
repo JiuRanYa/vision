@@ -91,7 +91,7 @@ const toolIcons = reactive([
               v-for="tool in toolIcons"
               :key="tool.icon"
               :href="tool.link"
-              class="p-2 text-gray-500 hover:text-gray-700 transition-colors relative"
+              class="kt-btn kt-btn-icon kt-btn-ghost relative"
             >
               <i :class="`ki-outline ${tool.icon} text-lg`" />
               <span
