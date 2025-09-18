@@ -21,7 +21,7 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
             :href="item.link"
             class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 py-2 px-3 rounded-lg hover:bg-gray-200 transition-colors"
           >
-            <i :class="`ki-outline ${item.icon} text-lg`" />
+            <i :class="`ki-outline ${item.icon} text-md`" />
             <span class="hidden text-sm xl:block">{{ item.text }}</span>
           </a>
         </nav>
@@ -46,7 +46,7 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
               ]"
             >
               <div class="relative">
-                <i :class="`ki-outline ${item.icon} text-lg`" />
+                <i :class="`ki-outline ${item.icon} text-md`" />
               </div>
               <span class="hidden text-sm xl:block" :class="{ 'font-medium': item.isActive }">
                 {{ item.text }}
