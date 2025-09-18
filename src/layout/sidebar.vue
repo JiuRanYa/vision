@@ -36,7 +36,7 @@ const toolIcons = reactive([
         <!-- FREEPIK标志 -->
         <div class="flex items-center space-x-2 mb-8">
           <i class="ki-outline ki-picture text-2xl text-blue-600" />
-          <span class="text-xl font-bold text-blue-600 hidden xl:block">FREEPIK</span>
+          <span class="text-xl font-bold text-blue-600 hidden xl:block">VISION</span>
         </div>
 
         <!-- 主导航菜单 -->
@@ -48,7 +48,7 @@ const toolIcons = reactive([
             class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 py-2 px-3 rounded-lg hover:bg-gray-200 transition-colors"
           >
             <i :class="`ki-outline ${item.icon} text-lg`" />
-            <span class="hidden xl:block">{{ item.text }}</span>
+            <span class="hidden text-sm xl:block">{{ item.text }}</span>
           </a>
         </nav>
       </div>
@@ -74,7 +74,7 @@ const toolIcons = reactive([
               <div class="relative">
                 <i :class="`ki-outline ${item.icon} text-lg`" />
               </div>
-              <span class="hidden xl:block" :class="{ 'font-medium': item.isActive }">
+              <span class="hidden text-sm xl:block" :class="{ 'font-medium': item.isActive }">
                 {{ item.text }}
               </span>
             </a>
