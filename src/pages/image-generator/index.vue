@@ -5,7 +5,7 @@
 <template>
   <div class="h-full w-80 border-r border-gray-100 bg-white p-6 overflow-y-auto">
     <!-- 标题 -->
-    <h1 class="text-lg font-bold text-gray-900 mb-6">
+    <h1 class="text-sm font-bold text-gray-900 mb-6">
       Generate images
     </h1>
     <!-- 输入区域 -->

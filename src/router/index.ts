@@ -5,7 +5,8 @@ const routes = [
     path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
-      { path: '/', component: () => import('@/pages/image-generator/index.vue') },
+      { path: '/', redirect: '/image-generator' },
+      { path: '/image-generator', component: () => import('@/pages/image-generator/index.vue') },
     ],
   },
 ]

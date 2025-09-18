@@ -9,7 +9,7 @@ export const mainNavItems = [
 
 // Pinned区域数据
 export const pinnedItems = [
-  { icon: 'ki-picture', text: 'Image Generator', link: '/ai-image-generator', isActive: true, hasStar: true },
+  { icon: 'ki-picture', text: 'Image Generator', link: '/image-generator', isActive: true, hasStar: true },
   { icon: 'ki-picture', text: 'Video Generator', link: '#', isActive: false, hasStar: false },
   { icon: 'ki-picture', text: 'Assistant', link: '#', isActive: false, hasStar: true },
 ]
