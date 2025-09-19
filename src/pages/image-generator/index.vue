@@ -153,7 +153,7 @@ const communityImages = reactive([
         <div
           v-for="image in communityImages"
           :key="image.id"
-          class="break-inside-avoid mb-4 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+          class="group break-inside-avoid mb-4 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
           :class="image.height"
         >
           <div
@@ -161,6 +161,16 @@ const communityImages = reactive([
             :class="image.gradient"
           >
             {{ image.emoji }}
+          </div>
+
+          <!-- Hover遮罩层 -->
+          <div class="absolute inset-0 bg-black group-hover:bg-opacity-30 transition-all duration-200 opacity-0 group-hover:opacity-20" />
+
+          <!-- ReCreate按钮 -->
+          <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <button class="kt-btn kt-btn-mono rounded-full">
+              ReCreate
+            </button>
           </div>
         </div>
       </div>
