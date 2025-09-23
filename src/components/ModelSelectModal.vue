@@ -131,7 +131,3 @@ function selectModel(model: Model) {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* 自定义样式 */
-</style>
