@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import { } from 'vue'
+import { useRoute } from 'vue-router'
 import { mainNavItems, pinnedItems, toolIcons } from './config'
+
+// 获取当前路由
+const route = useRoute()
+
+// 判断菜单项是否激活
+function isItemActive(link: string) {
+  return route.path === link
+}
 </script>
 
 <template>
@@ -15,15 +25,22 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
 
         <!-- 主导航菜单 -->
         <nav class="space-y-2">
-          <a
+          <router-link
             v-for="item in mainNavItems"
             :key="item.text"
-            :href="item.link"
-            class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 py-2 px-3 rounded-lg hover:bg-gray-200 transition-colors"
+            :to="item.link"
+            class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
+            :class="[
+              isItemActive(item.link)
+                ? 'text-gray-700 bg-gray-100'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200',
+            ]"
           >
             <i :class="`ki-outline ${item.icon} text-md`" />
-            <span class="hidden text-sm xl:block">{{ item.text }}</span>
-          </a>
+            <span class="hidden text-sm xl:block" :class="{ 'font-medium': isItemActive(item.link) }">
+              {{ item.text }}
+            </span>
+          </router-link>
         </nav>
       </div>
 
@@ -40,7 +57,7 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
               :to="item.link"
               class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
               :class="[
-                item.isActive
+                isItemActive(item.link)
                   ? 'text-gray-900 bg-gray-200'
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200',
               ]"
@@ -48,7 +65,7 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
               <div class="relative">
                 <i :class="`ki-outline ${item.icon} text-md`" />
               </div>
-              <span class="hidden text-sm xl:block" :class="{ 'font-medium': item.isActive }">
+              <span class="hidden text-sm xl:block" :class="{ 'font-medium': isItemActive(item.link) }">
                 {{ item.text }}
               </span>
             </router-link>
