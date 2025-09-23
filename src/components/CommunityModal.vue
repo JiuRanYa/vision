@@ -63,11 +63,13 @@ function handleRecreate() {
       <div class="kt-modal-body">
         <!-- 图片/视频展示区域 -->
         <div class="mb-6">
-          <img
-            :src="item.imageUrl"
-            :alt="item.prompt"
-            class="w-full h-64 object-cover rounded-lg"
-          >
+          <div class="relative w-full max-h-96 overflow-hidden rounded-lg">
+            <img
+              :src="item.imageUrl"
+              :alt="item.prompt"
+              class="w-full h-auto max-h-96 object-contain"
+            >
+          </div>
         </div>
 
         <!-- Prompt信息 -->
