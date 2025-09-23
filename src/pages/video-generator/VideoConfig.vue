@@ -54,7 +54,7 @@ function handleGenerate() {
       <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
         <div class="p-4 text-center">
           <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <i class="ki-outline ki-video text-xl text-gray-500" />
+            <i class="ki-outline ki-picture text-xl text-gray-500" />
           </div>
           <span class="text-xs font-medium text-gray-700">Start image</span>
         </div>
@@ -64,7 +64,7 @@ function handleGenerate() {
       <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
         <div class="p-4 text-center">
           <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <i class="ki-outline ki-video text-xl text-gray-500" />
+            <i class="ki-outline ki-picture text-xl text-gray-500" />
           </div>
           <span class="text-xs font-medium text-gray-700">End image</span>
         </div>

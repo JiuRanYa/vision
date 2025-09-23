@@ -176,7 +176,7 @@ const communityImages = reactive([
         <!-- 空状态 -->
         <div v-else class="text-center py-12">
           <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="ki-outline ki-video text-2xl text-gray-400" />
+            <i class="ki-outline ki-youtube text-2xl text-gray-400" />
           </div>
           <h3 class="text-lg font-medium text-gray-900 mb-2">
             No videos generated yet
