@@ -19,19 +19,15 @@ const videoConfig = reactive({
 // 生成状态
 const isGenerating = ref(false)
 
-// 生成结果数据
-const generatedVideos = reactive([
-  // 示例生成结果
-])
+const isTyping = ref(false)
 
-// 生成视频处理函数
+const generatedVideos = reactive([])
+
 function handleGenerate() {
   console.warn('Generating video with config:', videoConfig)
 
-  // 开始生成
   isGenerating.value = true
 
-  // 模拟生成过程
   setTimeout(() => {
     // 添加新的生成结果
     const newVideo = {
@@ -43,7 +39,6 @@ function handleGenerate() {
     }
     generatedVideos.unshift(newVideo)
 
-    // 结束生成
     isGenerating.value = false
   }, 5000)
 }
@@ -63,13 +58,36 @@ const communityImages = reactive([
   { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨', prompt: 'Confident video portrait of a man, professional lighting, business cinematography', type: 'video' as const },
 ])
 
-// 处理重新创建
+// 打字机动画函数
+function typewriterEffect(text: string, callback?: () => void) {
+  if (isTyping.value) {
+    return // 防止重复触发
+  }
+
+  isTyping.value = true
+  videoConfig.prompt = ''
+
+  let index = 0
+  const typeNextChar = () => {
+    if (index < text.length) {
+      videoConfig.prompt += text[index]
+      index++
+      setTimeout(typeNextChar, 50) // 50ms间隔，可调整速度
+    }
+    else {
+      isTyping.value = false
+      if (callback) {
+        callback()
+      }
+    }
+  }
+
+  typeNextChar()
+}
+
 function handleRecreate(item: typeof communityImages[0]) {
   console.warn('Recreating from community item:', item)
-  // 将社区视频的prompt填充到配置中
-  videoConfig.prompt = item.prompt
-  // 触发生成
-  handleGenerate()
+  typewriterEffect(item.prompt)
 }
 </script>
 

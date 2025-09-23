@@ -3,9 +3,6 @@ import { reactive, ref } from 'vue'
 import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
-// Image Generator 侧边栏配置面板
-
-// 图片生成配置
 const imageConfig = reactive({
   prompt: '',
   model: 'Classic Fast',
@@ -17,22 +14,18 @@ const imageConfig = reactive({
   colors: '',
 })
 
-// 生成状态
 const isGenerating = ref(false)
 
-// 生成结果数据
-const generatedImages = reactive([
-  // 示例生成结果
-])
+// 打字机动画状态
+const isTyping = ref(false)
 
-// 生成图片处理函数
+const generatedImages = reactive([])
+
 function handleGenerate() {
   console.warn('Generating image with config:', imageConfig)
 
-  // 开始生成
   isGenerating.value = true
 
-  // 模拟生成过程
   setTimeout(() => {
     // 添加新的生成结果
     const newImage = {
@@ -44,7 +37,6 @@ function handleGenerate() {
     }
     generatedImages.unshift(newImage)
 
-    // 结束生成
     isGenerating.value = false
   }, 3000)
 }
@@ -64,13 +56,36 @@ const communityImages = reactive([
   { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨', prompt: 'Portrait of a man with confident expression, professional lighting, business photography', type: 'image' as const },
 ])
 
-// 处理重新创建
+function typewriterEffect(text: string, callback?: () => void) {
+  if (isTyping.value) {
+    return // 防止重复触发
+  }
+
+  isTyping.value = true
+  imageConfig.prompt = ''
+
+  let index = 0
+  const typeNextChar = () => {
+    if (index < text.length) {
+      imageConfig.prompt += text[index]
+      index++
+      setTimeout(typeNextChar, 5)
+    }
+    else {
+      isTyping.value = false
+      if (callback) {
+        callback()
+      }
+    }
+  }
+
+  typeNextChar()
+}
+
 function handleRecreate(item: typeof communityImages[0]) {
   console.warn('Recreating from community item:', item)
-  // 将社区图片的prompt填充到配置中
-  imageConfig.prompt = item.prompt
-  // 触发生成
-  handleGenerate()
+  // 使用打字机动画填充prompt
+  typewriterEffect(item.prompt)
 }
 </script>
 

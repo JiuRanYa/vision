@@ -37,16 +37,12 @@ function handleGenerate() {
   <div class="space-y-6">
     <!-- 文本输入框 -->
     <div class="relative">
-      <input
+      <textarea
         :value="config.prompt"
-        type="text"
         placeholder="Describe your image or"
-        class="kt-input w-full pr-20 focus:border-blue-500"
-        @input="updateConfig('prompt', ($event.target as HTMLInputElement).value)"
-      >
-      <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700 text-sm">
-        upload
-      </button>
+        class="kt-textarea w-full h-24 resize-none pt-1.5 focus:border-blue-500"
+        @input="updateConfig('prompt', ($event.target as HTMLTextAreaElement).value)"
+      />
     </div>
 
     <!-- 设置选项 -->
