@@ -17,7 +17,6 @@ function isItemActive(link: string) {
     <div class="bg-gray-50 h-full flex flex-col">
       <!-- 顶部区域：标志和主导航 -->
       <div class="p-6">
-        <!-- FREEPIK标志 -->
         <div class="flex items-center space-x-2 mb-8">
           <span class="text-xl font-bold text-blue-600 hidden xl:block">Bole VISION</span>
         </div>
@@ -72,7 +71,7 @@ function isItemActive(link: string) {
         </div>
       </div>
 
-      <!-- 底部区域：Get a plan 和工具图标 -->
+      <!-- 底部区域：工具图标 -->
       <div class="p-6 space-y-4">
         <!-- 工具图标行 -->
         <div class="flex items-center justify-between">
