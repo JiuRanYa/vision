@@ -163,7 +163,3 @@ function handleModelSelect(model: { id: number, name: string }) {
     />
   </div>
 </template>
-
-<style scoped>
-/* 自定义样式 */
-</style>

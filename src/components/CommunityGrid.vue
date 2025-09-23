@@ -72,7 +72,3 @@ function handleRecreate(item: typeof _props.items[0]) {
     />
   </div>
 </template>
-
-<style scoped>
-/* 自定义样式 */
-</style>

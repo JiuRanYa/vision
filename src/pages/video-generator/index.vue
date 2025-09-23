@@ -222,7 +222,3 @@ function handleRecreate(item: typeof communityImages[0]) {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* 自定义样式 */
-</style>
