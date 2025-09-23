@@ -73,7 +73,7 @@ function typewriterEffect(text: string, callback?: () => void) {
     if (index < text.length) {
       videoConfig.prompt += text[index]
       index++
-      setTimeout(typeNextChar, 50) // 50ms间隔，可调整速度
+      setTimeout(typeNextChar, 5) // 50ms间隔，可调整速度
     }
     else {
       isTyping.value = false
