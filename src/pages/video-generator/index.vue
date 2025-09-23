@@ -118,11 +118,9 @@ function handleRecreate(item: typeof communityImages[0]) {
           </h2>
           <div class="flex items-center space-x-2">
             <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 hover:text-gray-900">
-              <i class="ki-outline ki-refresh text-sm" />
               <span class="ml-1">Regenerate</span>
             </button>
             <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 hover:text-gray-900">
-              <i class="ki-outline ki-download text-sm" />
               <span class="ml-1">Download All</span>
             </button>
           </div>
