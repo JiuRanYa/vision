@@ -17,19 +17,16 @@ const props = defineProps<{
   }
 }>()
 
-// 定义emits
 const emit = defineEmits<{
   'update:config': [config: typeof props.config]
   'generate': []
 }>()
 
-// 更新配置
 function updateConfig(key: keyof typeof props.config, value: string) {
   const newConfig = { ...props.config, [key]: value }
   emit('update:config', newConfig)
 }
 
-// 生成视频
 function handleGenerate() {
   emit('generate')
 }
