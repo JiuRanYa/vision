@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
+import ModelSelectModal from '@/components/ModelSelectModal.vue'
+import { imageModels } from '@/config/models'
 
 // 定义props
 const props = defineProps<{
   config: {
     prompt: string
     model: string
+    modelId: number
     style: string
     composition: string
     effects: string
@@ -31,6 +34,12 @@ function updateConfig(key: keyof typeof props.config, value: string) {
 function handleGenerate() {
   emit('generate')
 }
+
+// 处理模型选择
+function handleModelSelect(model: { id: number, name: string }) {
+  updateConfig('model', model.name)
+  updateConfig('modelId', model.id.toString())
+}
 </script>
 
 <template>
@@ -48,7 +57,10 @@ function handleGenerate() {
     <!-- 设置选项 -->
     <div class="space-y-3">
       <!-- Model -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 transition-colors"
+        data-kt-modal-toggle="#image-model-select-modal"
+      >
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-star text-xs text-gray-600" />
@@ -141,6 +153,14 @@ function handleGenerate() {
       <i class="ki-filled ki-click" />
       <span>Generate</span>
     </button>
+
+    <!-- Model选择Modal -->
+    <ModelSelectModal
+      :models="imageModels"
+      :selected-model-id="config.modelId"
+      modal-id="image-model-select-modal"
+      @select-model="handleModelSelect"
+    />
   </div>
 </template>
 

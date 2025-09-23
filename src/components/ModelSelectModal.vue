@@ -1,98 +1,28 @@
 <script setup lang="ts">
+import type { Model } from '@/config/models'
 import { defineEmits, defineProps } from 'vue'
-
-interface Model {
-  id: number
-  name: string
-  description: string
-  image?: string
-  icon?: string
-  badge?: 'NEW' | 'PRO'
-  resolution?: string
-  actionLabel?: string
-  isPremium?: boolean
-}
 
 // 定义props
 const _props = defineProps<{
+  models: Model[]
   selectedModelId: number | null
+  modalId?: string
 }>()
 
 // 定义emits
 const emit = defineEmits<{
-  'select-model': [model: Model]
+  selectModel: [model: Model]
 }>()
-
-// 模型数据
-const models: Model[] = [
-  {
-    id: 1,
-    name: 'Auto',
-    description: 'Balance speed and quality for everyday use.',
-    icon: 'ki-outline ki-camera',
-    actionLabel: 'Start / End',
-  },
-  {
-    id: 2,
-    name: 'Wan 2.2',
-    description: 'Cinematic control with unseen prompt adherence.',
-    image: 'https://picsum.photos/id/237/200/150',
-    isPremium: true,
-    actionLabel: 'Start',
-    resolution: '480p - 720p',
-  },
-  {
-    id: 3,
-    name: 'Seedance 1.0 Pro',
-    description: 'Precision storytelling with native multi-shot, style, and motion control.',
-    isPremium: true,
-    actionLabel: 'Start',
-    resolution: '480p - 1080p',
-  },
-  {
-    id: 4,
-    name: 'Kling 2.1 Master',
-    description: 'Superb dynamics & prompt adherence.',
-    image: 'https://picsum.photos/id/1005/200/150',
-    isPremium: true,
-    actionLabel: 'Start',
-    resolution: '1080p',
-  },
-  {
-    id: 5,
-    name: 'MiniMax Hailuo 02',
-    description: 'Fluid and natural camera work for complex motion.',
-    isPremium: true,
-    actionLabel: 'Start / End',
-    resolution: '512p - 1080p',
-  },
-  {
-    id: 6,
-    name: 'Google Veo 3',
-    description: 'Sound, voices, improved physics, and even higher quality.',
-    isPremium: true,
-    actionLabel: 'Start',
-    resolution: '720p - 1080p',
-  },
-  {
-    id: 7,
-    name: 'PixVerse 5',
-    description: 'Choose a style, add a custom seed, create with consistency.',
-    badge: 'NEW',
-    actionLabel: 'Start / End',
-    resolution: '360p - 1080p',
-  },
-]
 
 // 处理模型选择
 function selectModel(model: Model) {
-  emit('select-model', model)
+  emit('selectModel', model)
 }
 </script>
 
 <template>
   <div
-    id="model-select-modal"
+    :id="_props.modalId || 'model-select-modal'"
     class="kt-modal"
     data-kt-modal="true"
   >
@@ -107,30 +37,13 @@ function selectModel(model: Model) {
             Our top models, ready to go
           </p>
         </div>
-        <div class="flex items-center space-x-2">
-          <button class="kt-btn kt-btn-icon kt-btn-ghost">
-            <i class="ki-outline ki-element-11 text-lg" />
-            <span class="ml-1 text-sm">Grid</span>
-          </button>
-          <button class="kt-btn kt-btn-icon kt-btn-ghost">
-            <i class="ki-outline ki-burger-menu text-lg" />
-            <span class="ml-1 text-sm">List</span>
-          </button>
-          <button
-            type="button"
-            class="kt-modal-close"
-            data-kt-modal-dismiss="true"
-          >
-            <i class="ki-outline ki-cross text-lg" />
-          </button>
-        </div>
       </div>
 
       <!-- Modal Body -->
       <div class="kt-modal-body p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
-            v-for="model in models"
+            v-for="model in _props.models"
             :key="model.id"
             class="kt-card p-4 cursor-pointer relative transition-all duration-200"
             :class="{
@@ -143,7 +56,7 @@ function selectModel(model: Model) {
             <!-- Selection Checkmark for selected model -->
             <div
               v-if="model.id === _props.selectedModelId"
-              class="absolute top-2 left-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
+              class="z-[10] absolute top-2 left-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
             >
               <i class="ki-solid ki-check text-white text-xs" />
             </div>
@@ -167,13 +80,6 @@ function selectModel(model: Model) {
                 {{ model.name }}
               </span>
 
-              <!-- Premium Badge (Crown) -->
-              <div
-                v-if="model.isPremium"
-                class="absolute top-2 right-2 bg-yellow-400 rounded-full p-1"
-              >
-                <i class="ki-solid ki-crown text-yellow-800 text-xs" />
-              </div>
               <!-- NEW Badge -->
               <div
                 v-if="model.badge === 'NEW'"

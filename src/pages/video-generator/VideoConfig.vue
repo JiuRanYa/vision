@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
 import ModelSelectModal from '@/components/ModelSelectModal.vue'
+import { videoModels } from '@/config/models'
 
 // 定义props
 const props = defineProps<{
@@ -45,7 +46,7 @@ function handleModelSelect(model: { id: number, name: string }) {
     <!-- Model选择 -->
     <div
       class="kt-card cursor-pointer hover:bg-gray-50 transition-colors"
-      data-kt-modal-toggle="#model-select-modal"
+      data-kt-modal-toggle="#video-model-select-modal"
     >
       <div class="flex items-center justify-between p-3">
         <div class="flex items-center space-x-3">
@@ -158,7 +159,9 @@ function handleModelSelect(model: { id: number, name: string }) {
 
     <!-- Model选择Modal -->
     <ModelSelectModal
+      :models="videoModels"
       :selected-model-id="config.modelId"
+      modal-id="video-model-select-modal"
       @select-model="handleModelSelect"
     />
   </div>

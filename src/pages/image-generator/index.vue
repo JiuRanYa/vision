@@ -5,7 +5,8 @@ import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
 const imageConfig = reactive({
   prompt: '',
-  model: 'Classic Fast',
+  model: 'Auto',
+  modelId: 1,
   style: '',
   composition: '',
   effects: '',
