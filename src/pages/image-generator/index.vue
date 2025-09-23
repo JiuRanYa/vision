@@ -31,9 +31,7 @@ function handleGenerate() {
     // 添加新的生成结果
     const newImage = {
       id: Date.now(),
-      height: 'h-80',
-      gradient: 'from-orange-200 to-red-300',
-      emoji: '🎨',
+      imageUrl: `https://picsum.photos/400/600?random=${Date.now()}`,
       status: 'completed',
     }
     generatedImages.unshift(newImage)
@@ -145,18 +143,14 @@ function handleRecreate(item: typeof communityImages[0]) {
               <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Previous</span>
             </div>
             <div class="relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer h-80">
-              <div
-                class="w-full h-full bg-gradient-to-br flex items-center justify-center text-4xl"
-                :class="generatedImages[1].gradient"
+              <img
+                :src="generatedImages[1].imageUrl"
+                alt="Generated image"
+                class="w-full h-full object-cover"
               >
-                {{ generatedImages[1].emoji }}
-              </div>
               <!-- 悬停操作按钮 -->
-              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                 <div class="flex space-x-2">
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-download text-gray-600 text-sm" />
-                  </button>
                   <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                     <i class="ki-outline ki-share text-gray-600 text-sm" />
                   </button>
@@ -174,18 +168,14 @@ function handleRecreate(item: typeof communityImages[0]) {
               <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Latest</span>
             </div>
             <div class="relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer h-80">
-              <div
-                class="w-full h-full bg-gradient-to-br flex items-center justify-center text-4xl"
-                :class="generatedImages[0].gradient"
+              <img
+                :src="generatedImages[0].imageUrl"
+                alt="Generated image"
+                class="w-full h-full object-cover"
               >
-                {{ generatedImages[0].emoji }}
-              </div>
               <!-- 悬停操作按钮 -->
-              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                 <div class="flex space-x-2">
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-download text-gray-600 text-sm" />
-                  </button>
                   <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                     <i class="ki-outline ki-share text-gray-600 text-sm" />
                   </button>
