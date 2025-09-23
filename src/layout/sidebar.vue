@@ -19,8 +19,7 @@ function isItemActive(link: string) {
       <div class="p-6">
         <!-- FREEPIK标志 -->
         <div class="flex items-center space-x-2 mb-8">
-          <i class="ki-outline ki-picture text-2xl text-blue-600" />
-          <span class="text-xl font-bold text-blue-600 hidden xl:block">VISION</span>
+          <span class="text-xl font-bold text-blue-600 hidden xl:block">Bole VISION</span>
         </div>
 
         <!-- 主导航菜单 -->
