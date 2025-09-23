@@ -34,10 +34,10 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
             Pinned
           </h3>
           <div class="space-y-2">
-            <a
+            <router-link
               v-for="item in pinnedItems"
               :key="item.text"
-              :href="item.link"
+              :to="item.link"
               class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
               :class="[
                 item.isActive
@@ -51,7 +51,7 @@ import { mainNavItems, pinnedItems, toolIcons } from './config'
               <span class="hidden text-sm xl:block" :class="{ 'font-medium': item.isActive }">
                 {{ item.text }}
               </span>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>

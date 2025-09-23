@@ -8,6 +8,7 @@ const routes = [
     children: [
       { path: '/', redirect: '/image-generator' },
       { path: '/image-generator', component: () => import('@/pages/image-generator/index.vue') },
+      { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
     ],
   },
 ] as RouteRecordRaw[]
