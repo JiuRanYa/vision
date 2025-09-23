@@ -108,7 +108,7 @@ function handleModelSelect(model: { id: number, name: string }) {
         <textarea
           :value="config.prompt"
           placeholder="Describe your video"
-          class="kt-input w-full h-24 resize-none pr-10 focus:border-blue-500"
+          class="kt-textarea pt-1.5 w-full h-24 resize-none focus:border-blue-500"
           @input="updateConfig('prompt', ($event.target as HTMLTextAreaElement).value)"
         />
         <button class="absolute right-3 bottom-3 text-gray-500 hover:text-gray-700">
