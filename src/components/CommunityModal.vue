@@ -5,9 +5,7 @@ import { defineEmits, defineProps } from 'vue'
 const props = defineProps<{
   item: {
     id: number
-    height: string
-    gradient: string
-    emoji: string
+    imageUrl: string
     prompt: string
     type: 'image' | 'video'
   }
@@ -65,12 +63,11 @@ function handleRecreate() {
       <div class="kt-modal-body">
         <!-- 图片/视频展示区域 -->
         <div class="mb-6">
-          <div
-            class="w-full h-64 bg-gradient-to-br rounded-lg flex items-center justify-center text-8xl"
-            :class="item.gradient"
+          <img
+            :src="item.imageUrl"
+            :alt="item.prompt"
+            class="w-full h-64 object-cover rounded-lg"
           >
-            {{ item.emoji }}
-          </div>
         </div>
 
         <!-- Prompt信息 -->

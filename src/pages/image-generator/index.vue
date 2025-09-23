@@ -44,17 +44,17 @@ function handleGenerate() {
 
 // 瀑布流图片数据
 const communityImages = reactive([
-  { id: 1, height: 'h-80', gradient: 'from-pink-200 to-red-300', emoji: '👩', prompt: 'A beautiful portrait of a woman with flowing hair, soft lighting, professional photography style', type: 'image' as const },
-  { id: 2, height: 'h-64', gradient: 'from-blue-200 to-purple-300', emoji: '🪼', prompt: 'Underwater scene with jellyfish floating gracefully, blue ocean theme, ethereal lighting', type: 'image' as const },
-  { id: 3, height: 'h-72', gradient: 'from-orange-200 to-yellow-300', emoji: '👩', prompt: 'Sunset portrait of a woman with golden hour lighting, warm tones, cinematic style', type: 'image' as const },
-  { id: 4, height: 'h-96', gradient: 'from-gray-200 to-blue-300', emoji: '⚔️', prompt: 'Medieval fantasy warrior with sword, dramatic lighting, epic fantasy art style', type: 'image' as const },
-  { id: 5, height: 'h-56', gradient: 'from-white to-gray-200', emoji: '🚗', prompt: 'Modern luxury car in urban setting, sleek design, professional automotive photography', type: 'image' as const },
-  { id: 6, height: 'h-80', gradient: 'from-pink-200 to-purple-300', emoji: '🦥', prompt: 'Cute sloth hanging from tree branch, soft pastel colors, adorable animal illustration', type: 'image' as const },
-  { id: 7, height: 'h-88', gradient: 'from-blue-200 to-gray-300', emoji: '👩', prompt: 'Professional headshot of businesswoman, clean background, corporate photography style', type: 'image' as const },
-  { id: 8, height: 'h-64', gradient: 'from-yellow-200 to-orange-300', emoji: '👩', prompt: 'Artistic portrait with warm lighting, creative composition, artistic photography', type: 'image' as const },
-  { id: 9, height: 'h-72', gradient: 'from-blue-200 to-white', emoji: '👩', prompt: 'Minimalist portrait with clean lines, soft lighting, modern photography style', type: 'image' as const },
-  { id: 10, height: 'h-56', gradient: 'from-gray-200 to-gray-300', emoji: '⬜', prompt: 'Abstract geometric composition, minimalist design, modern art style', type: 'image' as const },
-  { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨', prompt: 'Portrait of a man with confident expression, professional lighting, business photography', type: 'image' as const },
+  { id: 1, imageUrl: 'https://picsum.photos/400/600?random=1', prompt: 'A beautiful portrait of a woman with flowing hair, soft lighting, professional photography style', type: 'image' as const },
+  { id: 2, imageUrl: 'https://picsum.photos/400/500?random=2', prompt: 'Underwater scene with jellyfish floating gracefully, blue ocean theme, ethereal lighting', type: 'image' as const },
+  { id: 3, imageUrl: 'https://picsum.photos/400/550?random=3', prompt: 'Sunset portrait of a woman with golden hour lighting, warm tones, cinematic style', type: 'image' as const },
+  { id: 4, imageUrl: 'https://picsum.photos/400/700?random=4', prompt: 'Medieval fantasy warrior with sword, dramatic lighting, epic fantasy art style', type: 'image' as const },
+  { id: 5, imageUrl: 'https://picsum.photos/400/450?random=5', prompt: 'Modern luxury car in urban setting, sleek design, professional automotive photography', type: 'image' as const },
+  { id: 6, imageUrl: 'https://picsum.photos/400/600?random=6', prompt: 'Cute sloth hanging from tree branch, soft pastel colors, adorable animal illustration', type: 'image' as const },
+  { id: 7, imageUrl: 'https://picsum.photos/400/650?random=7', prompt: 'Professional headshot of businesswoman, clean background, corporate photography style', type: 'image' as const },
+  { id: 8, imageUrl: 'https://picsum.photos/400/500?random=8', prompt: 'Artistic portrait with warm lighting, creative composition, artistic photography', type: 'image' as const },
+  { id: 9, imageUrl: 'https://picsum.photos/400/550?random=9', prompt: 'Minimalist portrait with clean lines, soft lighting, modern photography style', type: 'image' as const },
+  { id: 10, imageUrl: 'https://picsum.photos/400/450?random=10', prompt: 'Abstract geometric composition, minimalist design, modern art style', type: 'image' as const },
+  { id: 11, imageUrl: 'https://picsum.photos/400/600?random=11', prompt: 'Portrait of a man with confident expression, professional lighting, business photography', type: 'image' as const },
 ])
 
 function typewriterEffect(text: string, callback?: () => void) {

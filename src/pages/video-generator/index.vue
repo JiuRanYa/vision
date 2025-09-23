@@ -46,17 +46,17 @@ function handleGenerate() {
 
 // 瀑布流视频数据
 const communityImages = reactive([
-  { id: 1, height: 'h-80', gradient: 'from-pink-200 to-red-300', emoji: '🎬', prompt: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion', type: 'video' as const },
-  { id: 2, height: 'h-64', gradient: 'from-blue-200 to-purple-300', emoji: '🌊', prompt: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement', type: 'video' as const },
-  { id: 3, height: 'h-72', gradient: 'from-orange-200 to-yellow-300', emoji: '🌅', prompt: 'Time-lapse video of sunset over mountains, warm tones, cinematic style', type: 'video' as const },
-  { id: 4, height: 'h-96', gradient: 'from-gray-200 to-blue-300', emoji: '⚔️', prompt: 'Epic fantasy video of warrior in battle, dramatic lighting, action sequence', type: 'video' as const },
-  { id: 5, height: 'h-56', gradient: 'from-white to-gray-200', emoji: '🚗', prompt: 'Smooth video of luxury car driving through city streets, professional cinematography', type: 'video' as const },
-  { id: 6, height: 'h-80', gradient: 'from-pink-200 to-purple-300', emoji: '🦥', prompt: 'Cute video of sloth moving slowly on tree branch, adorable animal behavior', type: 'video' as const },
-  { id: 7, height: 'h-88', gradient: 'from-blue-200 to-gray-300', emoji: '👩', prompt: 'Professional video portrait of businesswoman, clean background, corporate style', type: 'video' as const },
-  { id: 8, height: 'h-64', gradient: 'from-yellow-200 to-orange-300', emoji: '🎨', prompt: 'Artistic video with creative transitions, warm lighting, artistic cinematography', type: 'video' as const },
-  { id: 9, height: 'h-72', gradient: 'from-blue-200 to-white', emoji: '✨', prompt: 'Minimalist video with clean lines, soft lighting, modern cinematography', type: 'video' as const },
-  { id: 10, height: 'h-56', gradient: 'from-gray-200 to-gray-300', emoji: '⬜', prompt: 'Abstract video with geometric patterns, minimalist design, modern art style', type: 'video' as const },
-  { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨', prompt: 'Confident video portrait of a man, professional lighting, business cinematography', type: 'video' as const },
+  { id: 1, imageUrl: 'https://picsum.photos/400/600?random=21', prompt: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion', type: 'video' as const },
+  { id: 2, imageUrl: 'https://picsum.photos/400/500?random=22', prompt: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement', type: 'video' as const },
+  { id: 3, imageUrl: 'https://picsum.photos/400/550?random=23', prompt: 'Time-lapse video of sunset over mountains, warm tones, cinematic style', type: 'video' as const },
+  { id: 4, imageUrl: 'https://picsum.photos/400/700?random=24', prompt: 'Epic fantasy video of warrior in battle, dramatic lighting, action sequence', type: 'video' as const },
+  { id: 5, imageUrl: 'https://picsum.photos/400/450?random=25', prompt: 'Smooth video of luxury car driving through city streets, professional cinematography', type: 'video' as const },
+  { id: 6, imageUrl: 'https://picsum.photos/400/600?random=26', prompt: 'Cute video of sloth moving slowly on tree branch, adorable animal behavior', type: 'video' as const },
+  { id: 7, imageUrl: 'https://picsum.photos/400/650?random=27', prompt: 'Professional video portrait of businesswoman, clean background, corporate style', type: 'video' as const },
+  { id: 8, imageUrl: 'https://picsum.photos/400/500?random=28', prompt: 'Artistic video with creative transitions, warm lighting, artistic cinematography', type: 'video' as const },
+  { id: 9, imageUrl: 'https://picsum.photos/400/550?random=29', prompt: 'Minimalist video with clean lines, soft lighting, modern cinematography', type: 'video' as const },
+  { id: 10, imageUrl: 'https://picsum.photos/400/450?random=30', prompt: 'Abstract video with geometric patterns, minimalist design, modern art style', type: 'video' as const },
+  { id: 11, imageUrl: 'https://picsum.photos/400/600?random=31', prompt: 'Confident video portrait of a man, professional lighting, business cinematography', type: 'video' as const },
 ])
 
 // 打字机动画函数

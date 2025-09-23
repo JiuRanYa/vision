@@ -6,9 +6,7 @@ import CommunityModal from './CommunityModal.vue'
 const _props = defineProps<{
   items: Array<{
     id: number
-    height: string
-    gradient: string
-    emoji: string
+    imageUrl: string
     prompt: string
     type: 'image' | 'video'
   }>
@@ -41,15 +39,14 @@ function handleRecreate(item: typeof _props.items[0]) {
         v-for="item in items"
         :key="item.id"
         class="group break-inside-avoid mb-4 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
-        :class="item.height"
         :data-kt-modal-toggle="`#community-modal-${item.id}`"
       >
-        <div
-          class="w-full h-full bg-gradient-to-br flex items-center justify-center text-6xl"
-          :class="item.gradient"
+        <img
+          :src="item.imageUrl"
+          :alt="item.prompt"
+          class="w-full h-auto object-cover"
+          loading="lazy"
         >
-          {{ item.emoji }}
-        </div>
 
         <!-- Hover遮罩层 -->
         <div class="absolute inset-0 bg-black group-hover:bg-opacity-30 transition-all duration-200 opacity-0 group-hover:opacity-20" />
