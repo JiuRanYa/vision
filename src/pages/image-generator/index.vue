@@ -1,7 +1,26 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
+import ImageConfig from '@/components/ImageConfig.vue'
 
 // Image Generator 侧边栏配置面板
+
+// 图片生成配置
+const imageConfig = reactive({
+  prompt: '',
+  model: 'Classic Fast',
+  style: '',
+  composition: '',
+  effects: '',
+  character: '',
+  object: '',
+  colors: '',
+})
+
+// 生成图片处理函数
+function handleGenerate() {
+  console.warn('Generating image with config:', imageConfig)
+  // 这里可以添加实际的生成逻辑
+}
 
 // 瀑布流图片数据
 const communityImages = reactive([
@@ -28,114 +47,11 @@ const communityImages = reactive([
         Generate images
       </h1>
 
-      <!-- 输入区域 -->
-      <div class="space-y-6">
-        <!-- 文本输入框 -->
-        <div class="relative">
-          <input
-            type="text"
-            placeholder="Describe your image or"
-            class="kt-input w-full pr-20 focus:border-blue-500"
-          >
-          <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700 text-sm">
-            upload
-          </button>
-        </div>
-
-        <!-- 设置选项 -->
-        <div class="space-y-3">
-          <!-- Model -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-star text-xs text-gray-600" />
-                <span class="text-xs font-medium">Model</span>
-                <div class="w-2 h-2 bg-blue-500 rounded-full" />
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-xs text-gray-600">Classic Fast</span>
-                <i class="ki-outline ki-right text-xs text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Style -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-star text-xs text-gray-600" />
-                <span class="text-xs font-medium">Style</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i class="ki-outline ki-shuffle text-xs text-gray-500" />
-                <i class="ki-outline ki-plus text-xs text-gray-500" />
-                <i class="ki-outline ki-right text-xs text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Composition -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-element-8 text-xs text-gray-600" />
-                <span class="text-xs font-medium">Composition</span>
-              </div>
-              <i class="ki-outline ki-right text-xs text-gray-500" />
-            </div>
-          </div>
-
-          <!-- Effects -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-picture text-xs text-gray-600" />
-                <span class="text-xs font-medium">Effects</span>
-              </div>
-              <i class="ki-outline ki-right text-xs text-gray-500" />
-            </div>
-          </div>
-
-          <!-- Character -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-user text-xs text-gray-600" />
-                <span class="text-xs font-medium">Character</span>
-              </div>
-              <i class="ki-outline ki-right text-xs text-gray-500" />
-            </div>
-          </div>
-
-          <!-- Object -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-paintbucket text-xs text-gray-600" />
-                <span class="text-xs font-medium">Object</span>
-              </div>
-              <i class="ki-outline ki-right text-xs text-gray-500" />
-            </div>
-          </div>
-
-          <!-- Colors -->
-          <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-between p-3">
-              <div class="flex items-center space-x-3">
-                <i class="ki-outline ki-paintbucket text-xs text-gray-600" />
-                <span class="text-xs font-medium">Colors</span>
-              </div>
-              <i class="ki-outline ki-right text-xs text-gray-500" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Generate按钮 -->
-        <button class="kt-btn kt-btn-primary w-full flex items-center justify-center space-x-2 py-3">
-          <i class="ki-filled ki-click" />
-          <span>Generate</span>
-        </button>
-      </div>
+      <!-- 配置组件 -->
+      <ImageConfig
+        v-model:config="imageConfig"
+        @generate="handleGenerate"
+      />
     </div>
 
     <!-- 右侧瀑布流区域 -->
