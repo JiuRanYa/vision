@@ -37,6 +37,13 @@ function selectModel(model: Model) {
             Our top models, ready to go
           </p>
         </div>
+        <button
+          type="button"
+          class="kt-modal-close"
+          data-kt-modal-dismiss="true"
+        >
+          <i class="ki-outline ki-cross text-lg" />
+        </button>
       </div>
 
       <!-- Modal Body -->
