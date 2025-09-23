@@ -1,4 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
+import KTUI from '@keenthemes/ktui/src/index.ts'
+import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 const routes = [
@@ -16,4 +18,10 @@ const routes = [
 export const router = createRouter({
   history: createMemoryHistory(),
   routes,
+})
+
+router.afterEach(() => {
+  nextTick(() => {
+    KTUI.init()
+  })
 })

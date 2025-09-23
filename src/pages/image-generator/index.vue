@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
 // Image Generator 侧边栏配置面板
@@ -50,21 +51,74 @@ function handleGenerate() {
 
 // 瀑布流图片数据
 const communityImages = reactive([
-  { id: 1, height: 'h-80', gradient: 'from-pink-200 to-red-300', emoji: '👩' },
-  { id: 2, height: 'h-64', gradient: 'from-blue-200 to-purple-300', emoji: '🪼' },
-  { id: 3, height: 'h-72', gradient: 'from-orange-200 to-yellow-300', emoji: '👩' },
-  { id: 4, height: 'h-96', gradient: 'from-gray-200 to-blue-300', emoji: '⚔️' },
-  { id: 5, height: 'h-56', gradient: 'from-white to-gray-200', emoji: '🚗' },
-  { id: 6, height: 'h-80', gradient: 'from-pink-200 to-purple-300', emoji: '🦥' },
-  { id: 7, height: 'h-88', gradient: 'from-blue-200 to-gray-300', emoji: '👩' },
-  { id: 8, height: 'h-64', gradient: 'from-yellow-200 to-orange-300', emoji: '👩' },
-  { id: 9, height: 'h-72', gradient: 'from-blue-200 to-white', emoji: '👩' },
-  { id: 10, height: 'h-56', gradient: 'from-gray-200 to-gray-300', emoji: '⬜' },
-  { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨' },
+  { id: 1, height: 'h-80', gradient: 'from-pink-200 to-red-300', emoji: '👩', prompt: 'A beautiful portrait of a woman with flowing hair, soft lighting, professional photography style', type: 'image' as const },
+  { id: 2, height: 'h-64', gradient: 'from-blue-200 to-purple-300', emoji: '🪼', prompt: 'Underwater scene with jellyfish floating gracefully, blue ocean theme, ethereal lighting', type: 'image' as const },
+  { id: 3, height: 'h-72', gradient: 'from-orange-200 to-yellow-300', emoji: '👩', prompt: 'Sunset portrait of a woman with golden hour lighting, warm tones, cinematic style', type: 'image' as const },
+  { id: 4, height: 'h-96', gradient: 'from-gray-200 to-blue-300', emoji: '⚔️', prompt: 'Medieval fantasy warrior with sword, dramatic lighting, epic fantasy art style', type: 'image' as const },
+  { id: 5, height: 'h-56', gradient: 'from-white to-gray-200', emoji: '🚗', prompt: 'Modern luxury car in urban setting, sleek design, professional automotive photography', type: 'image' as const },
+  { id: 6, height: 'h-80', gradient: 'from-pink-200 to-purple-300', emoji: '🦥', prompt: 'Cute sloth hanging from tree branch, soft pastel colors, adorable animal illustration', type: 'image' as const },
+  { id: 7, height: 'h-88', gradient: 'from-blue-200 to-gray-300', emoji: '👩', prompt: 'Professional headshot of businesswoman, clean background, corporate photography style', type: 'image' as const },
+  { id: 8, height: 'h-64', gradient: 'from-yellow-200 to-orange-300', emoji: '👩', prompt: 'Artistic portrait with warm lighting, creative composition, artistic photography', type: 'image' as const },
+  { id: 9, height: 'h-72', gradient: 'from-blue-200 to-white', emoji: '👩', prompt: 'Minimalist portrait with clean lines, soft lighting, modern photography style', type: 'image' as const },
+  { id: 10, height: 'h-56', gradient: 'from-gray-200 to-gray-300', emoji: '⬜', prompt: 'Abstract geometric composition, minimalist design, modern art style', type: 'image' as const },
+  { id: 11, height: 'h-80', gradient: 'from-white to-yellow-200', emoji: '👨', prompt: 'Portrait of a man with confident expression, professional lighting, business photography', type: 'image' as const },
 ])
+
+// 处理重新创建
+function handleRecreate(item: typeof communityImages[0]) {
+  console.warn('Recreating from community item:', item)
+  // 将社区图片的prompt填充到配置中
+  imageConfig.prompt = item.prompt
+  // 触发生成
+  handleGenerate()
+}
 </script>
 
 <template>
+  <div>
+    <button class="kt-btn" data-kt-modal-toggle="#modal">
+      Show Modal
+    </button>
+    <div
+      id="modal"
+      class="kt-modal"
+      data-kt-modal="true"
+    >
+      <div class="kt-modal-content max-w-[400px] top-[10%]">
+        <div class="kt-modal-header">
+          <h3 class="kt-modal-title">
+            Modal Title
+          </h3>
+          <button
+            type="button"
+            class="kt-modal-close"
+            aria-label="Close modal"
+            data-kt-modal-dismiss="#modal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-x"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="kt-modal-body">
+          <div class="rounded-lg bg-muted w-full grow h-[200px]" />
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="flex h-full min-h-0">
     <!-- 左侧配置面板 -->
     <div class="w-80 border-r border-gray-100 bg-white p-6 overflow-y-auto">
@@ -188,40 +242,11 @@ const communityImages = reactive([
         </div>
       </div>
 
-      <!-- 社区瀑布流标题区域 -->
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-md font-bold text-gray-900">
-          Get inspired by the community
-        </h2>
-        <a href="#" class="text-blue-600 hover:text-blue-700 text-xs font-medium">My profile</a>
-      </div>
-
-      <!-- 瀑布流网格 -->
-      <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
-        <div
-          v-for="image in communityImages"
-          :key="image.id"
-          class="group break-inside-avoid mb-4 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
-          :class="image.height"
-        >
-          <div
-            class="w-full h-full bg-gradient-to-br flex items-center justify-center text-6xl"
-            :class="image.gradient"
-          >
-            {{ image.emoji }}
-          </div>
-
-          <!-- Hover遮罩层 -->
-          <div class="absolute inset-0 bg-black group-hover:bg-opacity-30 transition-all duration-200 opacity-0 group-hover:opacity-20" />
-
-          <!-- ReCreate按钮 -->
-          <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <button class="kt-btn kt-btn-mono rounded-full">
-              ReCreate
-            </button>
-          </div>
-        </div>
-      </div>
+      <!-- 社区组件 -->
+      <CommunityGrid
+        :items="communityImages"
+        @recreate="handleRecreate"
+      />
     </div>
   </div>
 </template>

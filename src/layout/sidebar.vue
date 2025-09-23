@@ -13,7 +13,7 @@ function isItemActive(link: string) {
 </script>
 
 <template>
-  <div class="z-[100] h-dvh overflow-hidden lg:static relative transition-all duration-100 w-16 xl:w-60">
+  <div class="z-[50] h-dvh overflow-hidden lg:static relative transition-all duration-100 w-16 xl:w-60">
     <div class="bg-gray-50 h-full flex flex-col">
       <!-- 顶部区域：标志和主导航 -->
       <div class="p-6">
