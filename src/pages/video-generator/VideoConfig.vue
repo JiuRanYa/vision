@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
+import ModelSelectModal from '@/components/ModelSelectModal.vue'
 
 // 定义props
 const props = defineProps<{
   config: {
     model: string
+    modelId: number
     startImage: string
     endImage: string
     promptType: 'text' | 'visual'
@@ -30,12 +32,21 @@ function updateConfig(key: keyof typeof props.config, value: string) {
 function handleGenerate() {
   emit('generate')
 }
+
+// 处理模型选择
+function handleModelSelect(model: { id: number, name: string }) {
+  updateConfig('model', model.name)
+  updateConfig('modelId', model.id.toString())
+}
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Model选择 -->
-    <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+    <div
+      class="kt-card cursor-pointer hover:bg-gray-50 transition-colors"
+      data-kt-modal-toggle="#model-select-modal"
+    >
       <div class="flex items-center justify-between p-3">
         <div class="flex items-center space-x-3">
           <i class="ki-outline ki-chip text-xs text-gray-600" />
@@ -144,6 +155,12 @@ function handleGenerate() {
       <span>Generate</span>
       <i class="ki-outline ki-star text-sm" />
     </button>
+
+    <!-- Model选择Modal -->
+    <ModelSelectModal
+      :selected-model-id="config.modelId"
+      @select-model="handleModelSelect"
+    />
   </div>
 </template>
 

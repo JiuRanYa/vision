@@ -8,6 +8,7 @@ import VideoConfig from './VideoConfig.vue'
 // 视频生成配置
 const videoConfig = reactive({
   model: 'Auto',
+  modelId: 1,
   startImage: '',
   endImage: '',
   promptType: 'text' as 'text' | 'visual',
