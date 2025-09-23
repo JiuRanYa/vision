@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import ImageConfig from '@/components/ImageConfig.vue'
+import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
 // Image Generator 侧边栏配置面板
 
