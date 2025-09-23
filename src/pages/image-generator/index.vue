@@ -90,50 +90,6 @@ function handleRecreate(item: typeof communityImages[0]) {
 </script>
 
 <template>
-  <div>
-    <button class="kt-btn" data-kt-modal-toggle="#modal">
-      Show Modal
-    </button>
-    <div
-      id="modal"
-      class="kt-modal"
-      data-kt-modal="true"
-    >
-      <div class="kt-modal-content max-w-[400px] top-[10%]">
-        <div class="kt-modal-header">
-          <h3 class="kt-modal-title">
-            Modal Title
-          </h3>
-          <button
-            type="button"
-            class="kt-modal-close"
-            aria-label="Close modal"
-            data-kt-modal-dismiss="#modal"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-x"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="kt-modal-body">
-          <div class="rounded-lg bg-muted w-full grow h-[200px]" />
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="flex h-full min-h-0">
     <!-- 左侧配置面板 -->
     <div class="w-80 border-r border-gray-100 bg-white p-6 overflow-y-auto">

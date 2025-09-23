@@ -110,6 +110,7 @@ function handleRecreate() {
           </button>
           <button
             class="kt-btn kt-btn-primary"
+            :data-kt-modal-dismiss="`#community-modal-${item.id}`"
             @click="handleRecreate"
           >
             <i class="ki-outline ki-refresh text-sm mr-2" />
