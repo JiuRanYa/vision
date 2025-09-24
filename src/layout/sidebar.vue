@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import { } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { mainNavItems, pinnedItems, toolIcons } from './config'
+import { mainNavItems, pinnedItems } from './config'
 
 // 获取当前路由
 const route = useRoute()
+
+// 主题状态管理
+const isDarkMode = ref(false)
 
 // 判断菜单项是否激活
 function isItemActive(link: string) {
   return route.path === link
 }
+
+// 切换主题
+function toggleTheme() {
+  isDarkMode.value = !isDarkMode.value
+  // 更新HTML根元素的class
+  if (isDarkMode.value) {
+    document.documentElement.classList.add('dark')
+  }
+  else {
+    document.documentElement.classList.remove('dark')
+  }
+}
 </script>
 
 <template>
   <div class="z-[50] h-dvh overflow-hidden lg:static relative transition-all duration-100 w-16 xl:w-60">
-    <div class="bg-gray-50 h-full flex flex-col">
+    <div class="bg-gray-50 dark:bg-gray-900 h-full flex flex-col">
       <!-- 顶部区域：标志和主导航 -->
       <div class="p-6">
         <div class="flex items-center space-x-2 mb-8">
-          <span class="text-xl font-bold text-blue-600 hidden xl:block">Bole VISION</span>
+          <span class="text-xl font-bold text-blue-600 dark:text-blue-400 hidden xl:block">Bole VISION</span>
         </div>
 
         <!-- 主导航菜单 -->
@@ -30,8 +45,8 @@ function isItemActive(link: string) {
             class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
             :class="[
               isItemActive(item.link)
-                ? 'text-gray-700 bg-gray-100'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200',
+                ? 'text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800',
             ]"
           >
             <i :class="`ki-outline ${item.icon} text-md`" />
@@ -44,8 +59,8 @@ function isItemActive(link: string) {
 
       <!-- 中间区域：Pinned -->
       <div class="px-6 flex-1">
-        <div class="border-t border-gray-200 pt-6">
-          <h3 class="text-sm font-medium text-gray-500 mb-4 hidden xl:block">
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4 hidden xl:block">
             Pinned
           </h3>
           <div class="space-y-2">
@@ -56,8 +71,8 @@ function isItemActive(link: string) {
               class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
               :class="[
                 isItemActive(item.link)
-                  ? 'text-gray-900 bg-gray-200'
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200',
+                  ? 'text-gray-900 dark:text-gray-100 bg-gray-200 dark:bg-gray-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800',
               ]"
             >
               <div class="relative">
@@ -77,18 +92,32 @@ function isItemActive(link: string) {
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <button
-              v-for="tool in toolIcons"
-              :key="tool.icon"
-              :href="tool.link"
-              class="kt-btn kt-btn-icon kt-btn-ghost relative"
+              href="#"
+              class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
             >
-              <i :class="`ki-outline ${tool.icon} text-lg`" />
-              <span
-                v-if="tool.badge"
-                class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
-              >
-                {{ tool.badge }}
+              <i class="ki-outline ki-question text-lg" />
+            </button>
+            <button
+              href="#"
+              class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+              @click="toggleTheme"
+            >
+              <i :class="isDarkMode ? 'ki-outline ki-moon text-lg' : 'ki-outline ki-sun text-lg'" />
+            </button>
+            <button
+              href="#"
+              class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              <i class="ki-outline ki-notification text-lg" />
+              <span class="absolute -top-1 -right-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                2
               </span>
+            </button>
+            <button
+              href="#"
+              class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              <i class="ki-outline ki-more text-lg" />
             </button>
           </div>
         </div>

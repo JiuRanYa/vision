@@ -40,23 +40,23 @@ const breadcrumbs = computed(() => {
   <div class="flex">
     <Sidebar />
 
-    <div class="bg-surface-0 flex flex-1 flex-col overflow-hidden md:h-screen">
+    <div class="bg-white dark:bg-gray-900 flex flex-1 flex-col overflow-hidden md:h-screen">
       <!-- 顶部导航栏 -->
-      <header class="h-16 border-b border-gray-100 bg-white px-6 flex items-center justify-between flex-shrink-0">
+      <header class="h-16 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 flex items-center justify-between flex-shrink-0">
         <!-- 中间：面包屑导航 -->
-        <div class="flex items-center space-x-2 text-sm text-gray-600">
+        <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
           <template v-for="(crumb, index) in breadcrumbs" :key="crumb.text">
             <span
               class="transition-colors kt-btn kt-btn-ghost"
               :class="[
                 crumb.isActive
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900',
+                  ? 'text-gray-900 dark:text-gray-100 font-medium'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
               ]"
             >
               {{ crumb.text }}
             </span>
-            <span v-if="index < breadcrumbs.length - 1" class="text-gray-400">/</span>
+            <span v-if="index < breadcrumbs.length - 1" class="text-gray-400 dark:text-gray-500">/</span>
           </template>
         </div>
       </header>
