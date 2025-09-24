@@ -1,8 +1,19 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import WaterfallGrid from '@/components/WaterfallGrid.vue'
 
-// 社区瀑布流数据
+// 当前选中的标签
+const activeTab = ref('image')
+
+// 标签页配置
+const tabs = [
+  { id: 'image', label: 'Image' },
+  { id: 'video', label: 'Video' },
+  { id: 'styles', label: 'Styles' },
+  { id: 'top-creators', label: 'Top Creators' },
+]
+
+// 社区图片数据
 const communityImages = reactive([
   { id: 1, imageUrl: 'https://picsum.photos/400/600?random=1', prompt: 'A beautiful portrait of a woman with flowing hair, soft lighting, professional photography style', type: 'image' as const },
   { id: 2, imageUrl: 'https://picsum.photos/400/500?random=2', prompt: 'Underwater scene with jellyfish floating gracefully, blue ocean theme, ethereal lighting', type: 'image' as const },
@@ -26,6 +37,41 @@ const communityImages = reactive([
   { id: 20, imageUrl: 'https://picsum.photos/400/450?random=20', prompt: 'Macro photography of flower with intricate details and colors', type: 'image' as const },
 ])
 
+// 社区视频数据
+const communityVideos = reactive([
+  { id: 21, imageUrl: 'https://picsum.photos/400/600?random=21', prompt: 'Cinematic video of ocean waves crashing against rocks, dramatic lighting', type: 'video' as const },
+  { id: 22, imageUrl: 'https://picsum.photos/400/500?random=22', prompt: 'Time-lapse video of city traffic at night, neon lights and movement', type: 'video' as const },
+  { id: 23, imageUrl: 'https://picsum.photos/400/550?random=23', prompt: 'Nature documentary style video of birds flying in formation', type: 'video' as const },
+  { id: 24, imageUrl: 'https://picsum.photos/400/700?random=24', prompt: 'Artistic video of dancer performing contemporary choreography', type: 'video' as const },
+  { id: 25, imageUrl: 'https://picsum.photos/400/450?random=25', prompt: 'Food preparation video with close-up shots and smooth transitions', type: 'video' as const },
+  { id: 26, imageUrl: 'https://picsum.photos/400/600?random=26', prompt: 'Travel video showcasing beautiful landscapes and cultural moments', type: 'video' as const },
+  { id: 27, imageUrl: 'https://picsum.photos/400/650?random=27', prompt: 'Fashion video with model walking through urban environment', type: 'video' as const },
+  { id: 28, imageUrl: 'https://picsum.photos/400/500?random=28', prompt: 'Architectural video tour of modern building with dynamic camera movements', type: 'video' as const },
+  { id: 29, imageUrl: 'https://picsum.photos/400/550?random=29', prompt: 'Sports video capturing athlete in action with slow motion effects', type: 'video' as const },
+  { id: 30, imageUrl: 'https://picsum.photos/400/450?random=30', prompt: 'Music video with creative visual effects and storytelling', type: 'video' as const },
+])
+
+// 根据当前标签过滤内容
+const filteredContent = computed(() => {
+  switch (activeTab.value) {
+    case 'image':
+      return communityImages
+    case 'video':
+      return communityVideos
+    case 'styles':
+      return [...communityImages, ...communityVideos].slice(0, 10) // 混合内容
+    case 'top-creators':
+      return [...communityImages, ...communityVideos].slice(0, 8) // 精选内容
+    default:
+      return communityImages
+  }
+})
+
+// 切换标签
+function switchTab(tabId: string) {
+  activeTab.value = tabId
+}
+
 // 处理重新创建
 function handleRecreate(item: typeof communityImages[0]) {
   console.warn('Recreating from community item:', item)
@@ -34,20 +80,43 @@ function handleRecreate(item: typeof communityImages[0]) {
 </script>
 
 <template>
-  <div class="p-6 overflow-y-auto">
+  <div class="p-6 overflow-y-auto bg-white dark:bg-gray-900">
     <!-- 页面标题 -->
-    <div class="mb-8">
-      <h1 class="text-2xl dark:text-gray-100 font-bold text-gray-900 mb-2">
-        Community
+    <div class="text-center py-16">
+      <h1 class="text-3xl text-gray-900 dark:text-gray-100">
+        Get inspired by hundreds of amazing<br>
+        community artists
       </h1>
-      <p class="text-gray-600 dark:text-gray-400">
-        Discover amazing creations from our community
-      </p>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="flex items-center justify-between mb-8">
+      <!-- 标签页 -->
+      <div class="flex space-x-2">
+        <button
+          v-for="tab in tabs"
+          :key="tab.id"
+          class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+          :class="[
+            activeTab === tab.id
+              ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
+              : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+          ]"
+          @click="switchTab(tab.id)"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <!-- My profile链接 -->
+      <a href="#" class="text-gray-900 dark:text-gray-100 text-sm font-medium hover:text-gray-600 dark:hover:text-gray-400">
+        My profile
+      </a>
     </div>
 
     <!-- 瀑布流组件 -->
     <WaterfallGrid
-      :items="communityImages"
+      :items="filteredContent"
       @recreate="handleRecreate"
     />
   </div>
