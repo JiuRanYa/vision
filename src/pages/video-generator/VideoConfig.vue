@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits, defineProps, watch } from 'vue'
 import ModelSelectModal from '@/components/ModelSelectModal.vue'
 import { videoModels } from '@/config/models'
 
@@ -22,9 +22,9 @@ const emit = defineEmits<{
   'generate': []
 }>()
 
-function updateConfig(key: keyof typeof props.config, value: string | number) {
-  const newConfig = Object.assign({}, props.config, { [key]: value })
-  emit('update:config', newConfig)
+function updateConfig(newConfig: Partial<typeof props.config>) {
+  const updatedConfig = { ...props.config, ...newConfig }
+  emit('update:config', updatedConfig)
 }
 
 function handleGenerate() {
@@ -39,13 +39,15 @@ const durationOptions = [
 
 // 处理模型选择
 function handleModelSelect(model: { id: number, name: string }) {
-  updateConfig('model', model.name)
-  updateConfig('modelId', model.id)
+  updateConfig({
+    model: model.name,
+    modelId: model.id,
+  })
 }
 
 // 处理Duration选择
 function handleDurationSelect(duration: string) {
-  updateConfig('duration', duration)
+  updateConfig({ duration })
 }
 </script>
 
@@ -98,14 +100,14 @@ function handleDurationSelect(duration: string) {
         <button
           class="flex-1 py-2 px-3 text-xs font-medium rounded-md transition-colors"
           :class="config.promptType === 'text' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'"
-          @click="updateConfig('promptType', 'text')"
+          @click="updateConfig({ promptType: 'text' })"
         >
           Text
         </button>
         <button
           class="flex-1 py-2 px-3 text-xs font-medium rounded-md transition-colors"
           :class="config.promptType === 'visual' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'"
-          @click="updateConfig('promptType', 'visual')"
+          @click="updateConfig({ promptType: 'visual' })"
         >
           Visual
         </button>
@@ -117,7 +119,7 @@ function handleDurationSelect(duration: string) {
           :value="config.prompt"
           placeholder="Describe your video"
           class="kt-textarea pt-1.5 w-full h-24 resize-none focus:border-blue-500 dark:focus:border-blue-400"
-          @input="updateConfig('prompt', ($event.target as HTMLTextAreaElement).value)"
+          @input="updateConfig({ prompt: ($event.target as HTMLTextAreaElement).value })"
         />
         <button class="absolute right-3 bottom-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
           <i class="ki-outline ki-magic-wand text-sm" />

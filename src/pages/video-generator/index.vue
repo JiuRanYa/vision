@@ -93,7 +93,6 @@ function handleRecreate(item: typeof communityImages[0]) {
 </script>
 
 <template>
-  {{ videoConfig }}
   <div class="flex h-full min-h-0">
     <!-- 左侧配置面板 -->
     <div class="w-80 border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 overflow-y-auto">
