@@ -22,8 +22,8 @@ const emit = defineEmits<{
   'generate': []
 }>()
 
-function updateConfig(key: keyof typeof props.config, value: string) {
-  const newConfig = { ...props.config, [key]: value }
+function updateConfig(key: keyof typeof props.config, value: string | number) {
+  const newConfig = Object.assign({}, props.config, { [key]: value })
   emit('update:config', newConfig)
 }
 
@@ -31,10 +31,21 @@ function handleGenerate() {
   emit('generate')
 }
 
+// Duration选项
+const durationOptions = [
+  { value: '5-6s', label: '5-6s' },
+  { value: '6-10s', label: '6-10s' },
+]
+
 // 处理模型选择
 function handleModelSelect(model: { id: number, name: string }) {
   updateConfig('model', model.name)
-  updateConfig('modelId', model.id.toString())
+  updateConfig('modelId', model.id)
+}
+
+// 处理Duration选择
+function handleDurationSelect(duration: string) {
+  updateConfig('duration', duration)
 }
 </script>
 
@@ -117,8 +128,12 @@ function handleModelSelect(model: { id: number, name: string }) {
     <!-- 设置选项 -->
     <div class="space-y-3">
       <!-- Duration -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        <div class="flex items-center justify-between p-3">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-dropdown="true"
+        data-kt-dropdown-trigger="click"
+      >
+        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-time text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium text-gray-900 dark:text-gray-100">Duration</span>
@@ -126,6 +141,24 @@ function handleModelSelect(model: { id: number, name: string }) {
           <div class="flex items-center space-x-2">
             <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.duration }}</span>
             <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          </div>
+        </div>
+
+        <!-- Dropdown菜单 -->
+        <div
+          class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg"
+          data-kt-dropdown-menu="true"
+        >
+          <div class="space-y-1">
+            <button
+              v-for="option in durationOptions"
+              :key="option.value"
+              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              :class="{ 'bg-gray-100 dark:bg-gray-700': config.duration === option.value }"
+              @click="handleDurationSelect(option.value)"
+            >
+              {{ option.label }}
+            </button>
           </div>
         </div>
       </div>

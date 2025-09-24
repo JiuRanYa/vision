@@ -6,14 +6,14 @@ import VideoConfig from './VideoConfig.vue'
 // Video Generator 侧边栏配置面板
 
 // 视频生成配置
-const videoConfig = reactive({
+const videoConfig = ref({
   model: 'Auto',
   modelId: 1,
   startImage: '',
   endImage: '',
   promptType: 'text' as 'text' | 'visual',
   prompt: '',
-  duration: 'Short (5-6s)',
+  duration: '5-6s',
   aspectRatio: '16:9',
 })
 
@@ -66,12 +66,12 @@ function typewriterEffect(text: string, callback?: () => void) {
   }
 
   isTyping.value = true
-  videoConfig.prompt = ''
+  videoConfig.value.prompt = ''
 
   let index = 0
   const typeNextChar = () => {
     if (index < text.length) {
-      videoConfig.prompt += text[index]
+      videoConfig.value.prompt += text[index]
       index++
       setTimeout(typeNextChar, 5) // 50ms间隔，可调整速度
     }
@@ -93,6 +93,7 @@ function handleRecreate(item: typeof communityImages[0]) {
 </script>
 
 <template>
+  {{ videoConfig }}
   <div class="flex h-full min-h-0">
     <!-- 左侧配置面板 -->
     <div class="w-80 border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 overflow-y-auto">
