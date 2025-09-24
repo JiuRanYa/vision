@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue'
 import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
-const imageConfig = reactive({
+const imageConfig = ref({
   prompt: '',
   model: 'Auto',
   modelId: 1,
@@ -61,12 +61,12 @@ function typewriterEffect(text: string, callback?: () => void) {
   }
 
   isTyping.value = true
-  imageConfig.prompt = ''
+  imageConfig.value.prompt = ''
 
   let index = 0
   const typeNextChar = () => {
     if (index < text.length) {
-      imageConfig.prompt += text[index]
+      imageConfig.value.prompt += text[index]
       index++
       setTimeout(typeNextChar, 5)
     }

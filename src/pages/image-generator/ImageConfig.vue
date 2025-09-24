@@ -25,9 +25,9 @@ const emit = defineEmits<{
 }>()
 
 // 更新配置
-function updateConfig(key: keyof typeof props.config, value: string) {
-  const newConfig = { ...props.config, [key]: value }
-  emit('update:config', newConfig)
+function updateConfig(newConfig: Partial<typeof props.config>) {
+  const updatedConfig = { ...props.config, ...newConfig }
+  emit('update:config', updatedConfig)
 }
 
 // 生成图片
@@ -37,8 +37,10 @@ function handleGenerate() {
 
 // 处理模型选择
 function handleModelSelect(model: { id: number, name: string }) {
-  updateConfig('model', model.name)
-  updateConfig('modelId', model.id.toString())
+  updateConfig({
+    model: model.name,
+    modelId: model.id,
+  })
 }
 </script>
 
@@ -50,7 +52,7 @@ function handleModelSelect(model: { id: number, name: string }) {
         :value="config.prompt"
         placeholder="Describe your image or"
         class="kt-textarea w-full h-24 resize-none pt-1.5 focus:border-blue-500"
-        @input="updateConfig('prompt', ($event.target as HTMLTextAreaElement).value)"
+        @input="updateConfig({ prompt: ($event.target as HTMLTextAreaElement).value })"
       />
     </div>
 
