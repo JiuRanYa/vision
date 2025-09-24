@@ -1,7 +1,6 @@
 // 主导航菜单数据
 export const mainNavItems = [
   { icon: 'ki-home', text: 'Home', link: '/' },
-  { icon: 'ki-home', text: 'Community', link: '#' },
   { icon: 'ki-star', text: 'AI Suite', link: '#' },
   { icon: 'ki-home', text: 'Stock', link: '#' },
   { icon: 'ki-folder', text: 'My creations', link: '#' },
