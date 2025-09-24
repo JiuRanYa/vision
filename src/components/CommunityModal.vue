@@ -75,11 +75,11 @@ function handleRecreate() {
         <!-- Prompt信息 -->
         <div class="space-y-4">
           <div>
-            <h4 class="text-sm font-medium text-gray-900 mb-2">
+            <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
               {{ item.type === 'image' ? 'Image Prompt' : 'Video Prompt' }}
             </h4>
-            <div class="bg-gray-50 rounded-lg p-4">
-              <p class="text-sm text-gray-700 leading-relaxed">
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+              <p class="text-sm text-gray-700 dark:text-gray-400 leading-relaxed">
                 {{ item.prompt }}
               </p>
             </div>

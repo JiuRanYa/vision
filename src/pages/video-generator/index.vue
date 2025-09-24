@@ -95,9 +95,9 @@ function handleRecreate(item: typeof communityImages[0]) {
 <template>
   <div class="flex h-full min-h-0">
     <!-- 左侧配置面板 -->
-    <div class="w-80 border-r border-gray-100 bg-white p-6 overflow-y-auto">
+    <div class="w-80 border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 overflow-y-auto">
       <!-- 标题 -->
-      <h1 class="text-sm font-bold text-gray-900 mb-6">
+      <h1 class="text-sm font-bold text-gray-900 dark:text-gray-100 mb-6">
         Generate video
       </h1>
 
@@ -109,18 +109,18 @@ function handleRecreate(item: typeof communityImages[0]) {
     </div>
 
     <!-- 右侧瀑布流区域 -->
-    <div class="flex-1 p-6 overflow-y-auto">
+    <div class="flex-1 p-6 overflow-y-auto bg-white dark:bg-gray-900">
       <!-- 生成结果区域 -->
       <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-md font-bold text-gray-900">
+          <h2 class="text-md font-bold text-gray-900 dark:text-gray-100">
             Generated Videos
           </h2>
           <div class="flex items-center space-x-2">
-            <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 hover:text-gray-900">
+            <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
               <span class="ml-1">Regenerate</span>
             </button>
-            <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 hover:text-gray-900">
+            <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
               <span class="ml-1">Download All</span>
             </button>
           </div>
@@ -128,13 +128,13 @@ function handleRecreate(item: typeof communityImages[0]) {
 
         <!-- Loading状态 -->
         <div v-if="isGenerating" class="text-center py-12">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
-            <i class="ki-outline ki-loading text-2xl text-blue-600" />
+          <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
+            <i class="ki-outline ki-loading text-2xl text-blue-600 dark:text-blue-400" />
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
             Generating your video...
           </h3>
-          <p class="text-gray-500 text-sm">
+          <p class="text-gray-500 dark:text-gray-400 text-sm">
             This may take a few moments
           </p>
         </div>
@@ -144,9 +144,9 @@ function handleRecreate(item: typeof communityImages[0]) {
           <!-- 左侧：上次生成结果（只有多张图片时才显示） -->
           <div v-if="generatedVideos.length > 1" class="flex-1">
             <div class="mb-2">
-              <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Previous</span>
+              <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Previous</span>
             </div>
-            <div class="relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer h-80">
+            <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer h-80">
               <div
                 class="w-full h-full bg-gradient-to-br flex items-center justify-center text-4xl"
                 :class="generatedVideos[1].gradient"
@@ -156,14 +156,14 @@ function handleRecreate(item: typeof communityImages[0]) {
               <!-- 悬停操作按钮 -->
               <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <div class="flex space-x-2">
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-download text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-download text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-share text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-heart text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
                 </div>
               </div>
@@ -173,9 +173,9 @@ function handleRecreate(item: typeof communityImages[0]) {
           <!-- 右侧：最新生成结果（单张图片时占据全宽，多张图片时占据一半） -->
           <div :class="generatedVideos.length === 1 ? 'w-full' : 'flex-1'">
             <div class="mb-2">
-              <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Latest</span>
+              <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Latest</span>
             </div>
-            <div class="relative group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer h-80">
+            <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer h-80">
               <div
                 class="w-full h-full bg-gradient-to-br flex items-center justify-center text-4xl"
                 :class="generatedVideos[0].gradient"
@@ -185,14 +185,14 @@ function handleRecreate(item: typeof communityImages[0]) {
               <!-- 悬停操作按钮 -->
               <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <div class="flex space-x-2">
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-download text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-download text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-share text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
-                  <button class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <i class="ki-outline ki-heart text-gray-600 text-sm" />
+                  <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
                 </div>
               </div>
@@ -202,13 +202,13 @@ function handleRecreate(item: typeof communityImages[0]) {
 
         <!-- 空状态 -->
         <div v-else class="text-center py-12">
-          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="ki-outline ki-youtube text-2xl text-gray-400" />
+          <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="ki-outline ki-youtube text-2xl text-gray-400 dark:text-gray-500" />
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
             No videos generated yet
           </h3>
-          <p class="text-gray-500 text-sm">
+          <p class="text-gray-500 dark:text-gray-400 text-sm">
             Click "Generate" to create your first AI video
           </p>
         </div>

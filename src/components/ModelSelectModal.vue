@@ -120,10 +120,10 @@ function selectModel(model: Model) {
 
         <!-- Other models section -->
         <div class="mt-8 pt-6 border-t border-gray-100">
-          <h4 class="text-md font-semibold text-gray-900 mb-2">
+          <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Other models
           </h4>
-          <p class="text-sm text-gray-600">
+          <p class="text-sm text-gray-600 dark:text-gray-400">
             New and classic with unique features
           </p>
         </div>
