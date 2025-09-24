@@ -42,14 +42,16 @@ function toggleTheme() {
             v-for="item in mainNavItems"
             :key="item.text"
             :to="item.link"
-            class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
+            class="flex items-center rounded-lg transition-colors"
             :class="[
               isItemActive(item.link)
                 ? 'text-gray-900 dark:text-gray-200 bg-gray-200 dark:bg-gray-800'
                 : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800',
             ]"
           >
-            <i :class="`ki-outline ${item.icon} text-md`" />
+            <button class="kt-btn kt-btn-icon kt-btn-ghost">
+              <i :class="`ki-outline ${item.icon} text-md`" />
+            </button>
             <span class="hidden text-sm xl:block" :class="{ 'font-medium': isItemActive(item.link) }">
               {{ item.text }}
             </span>
@@ -68,7 +70,7 @@ function toggleTheme() {
               v-for="item in pinnedItems"
               :key="item.text"
               :to="item.link"
-              class="flex items-center space-x-3 py-2 px-3 rounded-lg transition-colors"
+              class="flex items-center ps-1 rounded-lg transition-colors"
               :class="[
                 isItemActive(item.link)
                   ? 'text-gray-900 dark:text-gray-100 bg-gray-200 dark:bg-gray-800'
@@ -76,7 +78,9 @@ function toggleTheme() {
               ]"
             >
               <div class="relative">
-                <i :class="`ki-outline ${item.icon} text-md`" />
+                <button class="kt-btn kt-btn-icon kt-btn-ghost">
+                  <i :class="`ki-outline ${item.icon} text-md`" />
+                </button>
               </div>
               <span class="hidden text-sm xl:block" :class="{ 'font-medium': isItemActive(item.link) }">
                 {{ item.text }}
