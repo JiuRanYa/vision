@@ -58,89 +58,89 @@ function handleModelSelect(model: { id: number, name: string }) {
     <div class="space-y-3">
       <!-- Model -->
       <div
-        class="kt-card cursor-pointer hover:bg-gray-50 transition-colors"
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         data-kt-modal-toggle="#image-model-select-modal"
       >
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-star text-xs text-gray-600" />
+            <i class="ki-outline ki-star text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Model</span>
             <div class="w-2 h-2 bg-blue-500 rounded-full" />
           </div>
           <div class="flex items-center space-x-2">
-            <span class="text-xs text-gray-600">{{ config.model }}</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.model }}</span>
             <i class="ki-outline ki-right text-xs text-gray-500" />
           </div>
         </div>
       </div>
 
       <!-- Style -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-star text-xs text-gray-600" />
+            <i class="ki-outline ki-star text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Style</span>
           </div>
           <div class="flex items-center space-x-2">
-            <i class="ki-outline ki-shuffle text-xs text-gray-500" />
-            <i class="ki-outline ki-plus text-xs text-gray-500" />
-            <i class="ki-outline ki-right text-xs text-gray-500" />
+            <i class="ki-outline ki-shuffle text-xs text-gray-500 dark:text-gray-400" />
+            <i class="ki-outline ki-plus text-xs text-gray-500 dark:text-gray-400" />
+            <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
           </div>
         </div>
       </div>
 
       <!-- Composition -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-element-8 text-xs text-gray-600" />
+            <i class="ki-outline ki-element-8 text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Composition</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500" />
+          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
         </div>
       </div>
 
       <!-- Effects -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-picture text-xs text-gray-600" />
+            <i class="ki-outline ki-picture text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Effects</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500" />
+          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
         </div>
       </div>
 
       <!-- Character -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-user text-xs text-gray-600" />
+            <i class="ki-outline ki-user text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Character</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500" />
+          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
         </div>
       </div>
 
       <!-- Object -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-paintbucket text-xs text-gray-600" />
+            <i class="ki-outline ki-paintbucket text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Object</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500" />
+          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
         </div>
       </div>
 
       <!-- Colors -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
-            <i class="ki-outline ki-paintbucket text-xs text-gray-600" />
+            <i class="ki-outline ki-paintbucket text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Colors</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500" />
+          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
         </div>
       </div>
     </div>
