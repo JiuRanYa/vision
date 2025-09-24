@@ -37,10 +37,10 @@ function handleRecreate(item: typeof communityImages[0]) {
   <div class="p-6 overflow-y-auto">
     <!-- 页面标题 -->
     <div class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900 mb-2">
+      <h1 class="text-2xl dark:text-gray-100 font-bold text-gray-900 mb-2">
         Community
       </h1>
-      <p class="text-gray-600">
+      <p class="text-gray-600 dark:text-gray-400">
         Discover amazing creations from our community
       </p>
     </div>

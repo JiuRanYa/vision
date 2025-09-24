@@ -2,16 +2,16 @@
 export const mainNavItems = [
   { icon: 'ki-home', text: 'Home', link: '/' },
   { icon: 'ki-star', text: 'Community', link: '/community' },
-  { icon: 'ki-star', text: 'AI Suite', link: '#' },
-  { icon: 'ki-home', text: 'Stock', link: '#' },
-  { icon: 'ki-folder', text: 'My creations', link: '#' },
+  { icon: 'ki-star', text: 'AI Suite', link: '/image-generator' },
+  { icon: 'ki-home', text: 'Stock', link: '/community' },
+  { icon: 'ki-folder', text: 'My creations', link: '/community' },
 ]
 
 // Pinned区域数据
 export const pinnedItems = [
   { icon: 'ki-picture', text: 'Image Generator', link: '/image-generator', hasStar: true },
   { icon: 'ki-youtube', text: 'Video Generator', link: '/video-generator', hasStar: false },
-  { icon: 'ki-illustrator', text: 'Assistant', link: '#', hasStar: true },
+  { icon: 'ki-illustrator', text: 'Assistant', link: '/community', hasStar: true },
 ]
 
 // 工具图标数据
