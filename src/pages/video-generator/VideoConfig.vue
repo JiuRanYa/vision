@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, watch } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 import ModelSelectModal from '@/components/ModelSelectModal.vue'
 import { videoModels } from '@/config/models'
 
@@ -37,6 +37,15 @@ const durationOptions = [
   { value: '6-10s', label: '6-10s' },
 ]
 
+// Aspect Ratio选项
+const aspectRatioOptions = [
+  { value: '16:9', label: '16:9' },
+  { value: '4:3', label: '4:3' },
+  { value: '1:1', label: '1:1' },
+  { value: '9:16', label: '9:16' },
+  { value: '21:9', label: '21:9' },
+]
+
 // 处理模型选择
 function handleModelSelect(model: { id: number, name: string }) {
   updateConfig({
@@ -48,6 +57,11 @@ function handleModelSelect(model: { id: number, name: string }) {
 // 处理Duration选择
 function handleDurationSelect(duration: string) {
   updateConfig({ duration })
+}
+
+// 处理Aspect Ratio选择
+function handleAspectRatioSelect(aspectRatio: string) {
+  updateConfig({ aspectRatio })
 }
 </script>
 
@@ -157,6 +171,7 @@ function handleDurationSelect(duration: string) {
               :key="option.value"
               class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
               :class="{ 'bg-gray-100 dark:bg-gray-700': config.duration === option.value }"
+              data-kt-dropdown-dismiss="true"
               @click="handleDurationSelect(option.value)"
             >
               {{ option.label }}
@@ -166,8 +181,12 @@ function handleDurationSelect(duration: string) {
       </div>
 
       <!-- Aspect Ratio -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        <div class="flex items-center justify-between p-3">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-dropdown="true"
+        data-kt-dropdown-trigger="click"
+      >
+        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-element-8 text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium text-gray-900 dark:text-gray-100">Aspect Ratio</span>
@@ -175,6 +194,25 @@ function handleDurationSelect(duration: string) {
           <div class="flex items-center space-x-2">
             <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.aspectRatio }}</span>
             <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          </div>
+        </div>
+
+        <!-- Dropdown菜单 -->
+        <div
+          class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg"
+          data-kt-dropdown-menu="true"
+        >
+          <div class="space-y-1">
+            <button
+              v-for="option in aspectRatioOptions"
+              :key="option.value"
+              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              :class="{ 'bg-gray-100 dark:bg-gray-700': config.aspectRatio === option.value }"
+              data-kt-dropdown-dismiss="true"
+              @click="handleAspectRatioSelect(option.value)"
+            >
+              {{ option.label }}
+            </button>
           </div>
         </div>
       </div>
