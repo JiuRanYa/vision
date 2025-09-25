@@ -96,20 +96,17 @@ function toggleTheme() {
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <button
-              href="#"
               class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
             >
               <i class="ki-outline ki-question text-lg" />
             </button>
             <button
-              href="#"
               class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
               @click="toggleTheme"
             >
               <i :class="isDarkMode ? 'ki-outline ki-moon text-lg' : 'ki-outline ki-sun text-lg'" />
             </button>
             <button
-              href="#"
               class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
             >
               <i class="ki-outline ki-notification text-lg" />
@@ -118,7 +115,6 @@ function toggleTheme() {
               </span>
             </button>
             <button
-              href="#"
               class="kt-btn kt-btn-icon kt-btn-ghost relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
             >
               <i class="ki-outline ki-more text-lg" />
