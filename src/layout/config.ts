@@ -3,7 +3,7 @@ export const mainNavItems = [
   { icon: 'ki-home', text: 'Home', link: '/' },
   { icon: 'ki-star', text: 'Community', link: '/community' },
   { icon: 'ki-folder', text: 'My creations', link: '/my-creations' },
-  { icon: 'ki-setting', text: 'Admin', link: '/admin' },
+  { icon: 'ki-setting', text: 'Admin board', link: '/admin-board' },
 ]
 
 // Pinned区域数据

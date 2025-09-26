@@ -70,24 +70,6 @@ if (!isAdmin.value) {
 
 <template>
   <div v-if="isAdmin" class="h-full bg-white dark:bg-gray-900 flex flex-col">
-    <!-- 页面标题 -->
-    <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <i class="ki-outline ki-setting text-xl text-blue-600 dark:text-blue-400" />
-          <h1 class="text-lg font-bold text-gray-900 dark:text-gray-100">
-            Admin Dashboard
-          </h1>
-        </div>
-        <div class="flex items-center space-x-4">
-          <button class="kt-btn kt-btn-outline">
-            <i class="ki-outline ki-refresh" />
-            Refresh
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- 可滚动的内容区域 -->
     <div class="flex-1 overflow-y-auto">
       <!-- 统计卡片 -->
