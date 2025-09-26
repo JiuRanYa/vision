@@ -84,10 +84,6 @@ if (!isAdmin.value) {
             <i class="ki-outline ki-refresh" />
             Refresh
           </button>
-          <button class="kt-btn kt-btn-primary">
-            <i class="ki-outline ki-plus" />
-            Add Task
-          </button>
         </div>
       </div>
     </div>
