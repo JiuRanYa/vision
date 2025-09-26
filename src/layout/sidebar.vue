@@ -6,10 +6,8 @@ import { mainNavItems, pinnedItems } from './config'
 // 获取当前路由
 const route = useRoute()
 
-// 主题状态管理
 const isDarkMode = ref(false)
 
-// 判断菜单项是否激活
 function isItemActive(link: string) {
   return route.path === link
 }
@@ -17,7 +15,7 @@ function isItemActive(link: string) {
 // 切换主题
 function toggleTheme() {
   isDarkMode.value = !isDarkMode.value
-  // 更新HTML根元素的class
+
   if (isDarkMode.value) {
     document.documentElement.classList.add('dark')
   }
@@ -125,7 +123,3 @@ function toggleTheme() {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* 自定义样式 */
-</style>
