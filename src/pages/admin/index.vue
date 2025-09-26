@@ -97,7 +97,7 @@ if (!isAdmin.value) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
               <i class="ki-outline ki-youtube text-xl text-blue-600 dark:text-blue-400" />
             </div>
             <div class="ml-4">
@@ -113,7 +113,7 @@ if (!isAdmin.value) {
 
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
+            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
               <i class="ki-outline ki-youtube text-xl text-green-600 dark:text-green-400" />
             </div>
             <div class="ml-4">
@@ -129,7 +129,7 @@ if (!isAdmin.value) {
 
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div class="flex items-center">
-            <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900">
+            <div class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
               <i class="ki-outline ki-time text-xl text-yellow-600 dark:text-yellow-400" />
             </div>
             <div class="ml-4">
@@ -145,7 +145,7 @@ if (!isAdmin.value) {
 
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div class="flex items-center">
-            <div class="p-3 rounded-full bg-gray-100 dark:bg-gray-700">
+            <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
               <i class="ki-outline ki-check text-xl text-gray-600 dark:text-gray-400" />
             </div>
             <div class="ml-4">
@@ -231,11 +231,6 @@ if (!isAdmin.value) {
                   </div>
                   <div class="text-sm text-gray-500 dark:text-gray-500">
                     Created: {{ task.createdAt }}
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    ETA: {{ task.estimatedTime }}
                   </div>
                 </div>
               </div>
