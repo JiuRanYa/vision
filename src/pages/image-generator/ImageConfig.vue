@@ -42,6 +42,84 @@ function handleModelSelect(model: { id: number, name: string }) {
     modelId: model.id,
   })
 }
+
+// 配置选项数据
+const styleOptions = [
+  'Realistic',
+  'Anime',
+  'Cartoon',
+  'Oil Painting',
+  'Watercolor',
+  'Sketch',
+  'Digital Art',
+  'Photography',
+]
+
+const compositionOptions = [
+  'Portrait',
+  'Landscape',
+  'Close-up',
+  'Wide Shot',
+  'Bird\'s Eye View',
+  'Low Angle',
+  'Macro',
+  'Panoramic',
+]
+
+const effectsOptions = [
+  'None',
+  'Blur',
+  'Motion Blur',
+  'Depth of Field',
+  'Bokeh',
+  'Grain',
+  'Vignette',
+  'HDR',
+]
+
+const characterOptions = [
+  'None',
+  'Human',
+  'Animal',
+  'Fantasy Creature',
+  'Robot',
+  'Alien',
+  'Superhero',
+  'Villain',
+  'Child',
+  'Elderly',
+]
+
+const objectOptions = [
+  'None',
+  'Vehicle',
+  'Building',
+  'Nature',
+  'Food',
+  'Technology',
+  'Weapon',
+  'Tool',
+  'Furniture',
+  'Clothing',
+]
+
+const colorOptions = [
+  'None',
+  'Monochrome',
+  'Vibrant',
+  'Pastel',
+  'Dark',
+  'Bright',
+  'Warm',
+  'Cool',
+  'Neutral',
+  'Rainbow',
+]
+
+// 处理选项选择
+function handleOptionSelect(key: string, value: string) {
+  updateConfig({ [key]: value })
+}
 </script>
 
 <template>
@@ -77,72 +155,149 @@ function handleModelSelect(model: { id: number, name: string }) {
       </div>
 
       <!-- Style -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        <div class="flex items-center justify-between p-3">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-dropdown="true"
+        data-kt-dropdown-trigger="click"
+      >
+        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-star text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Style</span>
           </div>
           <div class="flex items-center space-x-2">
-            <i class="ki-outline ki-shuffle text-xs text-gray-500 dark:text-gray-400" />
-            <i class="ki-outline ki-plus text-xs text-gray-500 dark:text-gray-400" />
-            <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.style }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
+        </div>
+        <div class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
+          <div class="space-y-1">
+            <button
+              v-for="option in styleOptions"
+              :key="option"
+              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              :class="{ 'bg-gray-100 dark:bg-gray-700': config.style === option }"
+              data-kt-dropdown-dismiss="true"
+              @click="handleOptionSelect('style', option)"
+            >
+              {{ option }}
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Composition -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        <div class="flex items-center justify-between p-3">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-dropdown="true"
+        data-kt-dropdown-trigger="click"
+      >
+        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-element-8 text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Composition</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.composition }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
+        </div>
+        <div class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
+          <div class="space-y-1">
+            <button
+              v-for="option in compositionOptions"
+              :key="option"
+              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              :class="{ 'bg-gray-100 dark:bg-gray-700': config.composition === option }"
+              data-kt-dropdown-dismiss="true"
+              @click="handleOptionSelect('composition', option)"
+            >
+              {{ option }}
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Effects -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        <div class="flex items-center justify-between p-3">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-dropdown="true"
+        data-kt-dropdown-trigger="click"
+      >
+        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-picture text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Effects</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.effects }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
+        </div>
+        <div class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
+          <div class="space-y-1">
+            <button
+              v-for="option in effectsOptions"
+              :key="option"
+              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              :class="{ 'bg-gray-100 dark:bg-gray-700': config.effects === option }"
+              data-kt-dropdown-dismiss="true"
+              @click="handleOptionSelect('effects', option)"
+            >
+              {{ option }}
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Character -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-modal-toggle="#character-select-modal"
+      >
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-user text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Character</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.character }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
         </div>
       </div>
 
       <!-- Object -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-modal-toggle="#object-select-modal"
+      >
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-paintbucket text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Object</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.object }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
         </div>
       </div>
 
       <!-- Colors -->
-      <div class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+      <div
+        class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        data-kt-modal-toggle="#colors-select-modal"
+      >
         <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-paintbucket text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Colors</span>
           </div>
-          <i class="ki-outline ki-right text-xs text-gray-500 dark:text-gray-400" />
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.colors }}</span>
+            <i class="ki-outline ki-right text-xs text-gray-500" />
+          </div>
         </div>
       </div>
     </div>
@@ -163,5 +318,122 @@ function handleModelSelect(model: { id: number, name: string }) {
       modal-id="image-model-select-modal"
       @select-model="handleModelSelect"
     />
+
+    <!-- Character选择Modal -->
+    <div
+      id="character-select-modal"
+      class="kt-modal"
+      data-kt-modal="true"
+      data-kt-modal-width="400px"
+    >
+      <div class="kt-modal-dialog">
+        <div class="kt-modal-content">
+          <div class="kt-modal-header">
+            <h3 class="kt-modal-title">
+              Select Character
+            </h3>
+            <button class="kt-modal-close" data-kt-modal-dismiss="true">
+              <i class="ki-outline ki-cross" />
+            </button>
+          </div>
+          <div class="kt-modal-body">
+            <div class="grid grid-cols-2 gap-3">
+              <div
+                v-for="option in characterOptions"
+                :key="option"
+                class="p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                :class="{ 'border-blue-500 bg-blue-50 dark:bg-blue-900/20': config.character === option }"
+                @click="handleOptionSelect('character', option)"
+              >
+                <div class="text-center">
+                  <i class="ki-outline ki-user text-lg mb-2" />
+                  <div class="text-sm font-medium">
+                    {{ option }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Object选择Modal -->
+    <div
+      id="object-select-modal"
+      class="kt-modal"
+      data-kt-modal="true"
+      data-kt-modal-width="400px"
+    >
+      <div class="kt-modal-dialog">
+        <div class="kt-modal-content">
+          <div class="kt-modal-header">
+            <h3 class="kt-modal-title">
+              Select Object
+            </h3>
+            <button class="kt-modal-close" data-kt-modal-dismiss="true">
+              <i class="ki-outline ki-cross" />
+            </button>
+          </div>
+          <div class="kt-modal-body">
+            <div class="grid grid-cols-2 gap-3">
+              <div
+                v-for="option in objectOptions"
+                :key="option"
+                class="p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                :class="{ 'border-blue-500 bg-blue-50 dark:bg-blue-900/20': config.object === option }"
+                @click="handleOptionSelect('object', option)"
+              >
+                <div class="text-center">
+                  <i class="ki-outline ki-paintbucket text-lg mb-2" />
+                  <div class="text-sm font-medium">
+                    {{ option }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colors选择Modal -->
+    <div
+      id="colors-select-modal"
+      class="kt-modal"
+      data-kt-modal="true"
+      data-kt-modal-width="400px"
+    >
+      <div class="kt-modal-dialog">
+        <div class="kt-modal-content">
+          <div class="kt-modal-header">
+            <h3 class="kt-modal-title">
+              Select Colors
+            </h3>
+            <button class="kt-modal-close" data-kt-modal-dismiss="true">
+              <i class="ki-outline ki-cross" />
+            </button>
+          </div>
+          <div class="kt-modal-body">
+            <div class="grid grid-cols-2 gap-3">
+              <div
+                v-for="option in colorOptions"
+                :key="option"
+                class="p-3 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                :class="{ 'border-blue-500 bg-blue-50 dark:bg-blue-900/20': config.colors === option }"
+                @click="handleOptionSelect('colors', option)"
+              >
+                <div class="text-center">
+                  <i class="ki-outline ki-paintbucket text-lg mb-2" />
+                  <div class="text-sm font-medium">
+                    {{ option }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
