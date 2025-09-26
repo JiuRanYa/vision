@@ -9,6 +9,7 @@ const videoQueue = ref([
   {
     id: 'V001',
     user: 'user123',
+    userAvatar: 'https://ui-avatars.com/api/?name=user123&background=3b82f6&color=ffffff&size=40',
     prompt: 'A beautiful sunset over mountains',
     status: 'generating',
     progress: 65,
@@ -18,6 +19,7 @@ const videoQueue = ref([
   {
     id: 'V002',
     user: 'artist456',
+    userAvatar: 'https://ui-avatars.com/api/?name=artist456&background=10b981&color=ffffff&size=40',
     prompt: 'Flying dragon in the sky',
     status: 'queued',
     progress: 0,
@@ -27,6 +29,7 @@ const videoQueue = ref([
   {
     id: 'V003',
     user: 'creator789',
+    userAvatar: 'https://ui-avatars.com/api/?name=creator789&background=f59e0b&color=ffffff&size=40',
     prompt: 'Ocean waves crashing on rocks',
     status: 'generating',
     progress: 23,
@@ -36,6 +39,7 @@ const videoQueue = ref([
   {
     id: 'V004',
     user: 'designer101',
+    userAvatar: 'https://ui-avatars.com/api/?name=designer101&background=8b5cf6&color=ffffff&size=40',
     prompt: 'City skyline at night',
     status: 'queued',
     progress: 0,
@@ -45,6 +49,7 @@ const videoQueue = ref([
   {
     id: 'V005',
     user: 'maker202',
+    userAvatar: 'https://ui-avatars.com/api/?name=maker202&background=ef4444&color=ffffff&size=40',
     prompt: 'Forest with magical creatures',
     status: 'completed',
     progress: 100,
@@ -153,33 +158,53 @@ if (!isAdmin.value) {
               <div
                 v-for="task in videoQueue"
                 :key="task.id"
-                class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
+                class="p-4 rounded-lg border transition-all duration-200"
+                :class="[
+                  task.status === 'queued'
+                    ? 'border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20'
+                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900',
+                ]"
               >
                 <!-- 任务头部 -->
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center space-x-3">
-                    <i class="ki-outline ki-youtube text-lg text-blue-600 dark:text-blue-400" />
-                    <div>
-                      <h3 class="font-medium text-gray-900 dark:text-gray-100">
-                        {{ task.id }}
-                      </h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">
-                        User: {{ task.user }}
-                      </p>
+                    <div class="flex items-center space-x-3">
+                      <img
+                        :src="task.userAvatar"
+                        :alt="task.user"
+                        class="w-10 h-10 rounded-full border-2 border-gray-200 dark:border-gray-700"
+                      >
+                      <div>
+                        <h3 class="font-medium text-gray-900 dark:text-gray-100">
+                          {{ task.id }}
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                          {{ task.user }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div class="flex items-center space-x-3">
                     <span
-                      class="px-3 py-1 rounded-full text-sm font-medium"
+                      class="px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1"
                       :class="[
                         task.status === 'generating'
                           ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
                           : task.status === 'queued'
-                            ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300'
+                            ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
                       ]"
                     >
-                      {{ task.status }}
+                      <i
+                        :class="[
+                          task.status === 'generating'
+                            ? 'ki-outline ki-play text-xs'
+                            : task.status === 'queued'
+                              ? 'ki-outline ki-time text-xs'
+                              : 'ki-outline ki-check text-xs',
+                        ]"
+                      />
+                      <span>{{ task.status }}</span>
                     </span>
                     <button class="kt-btn kt-btn-sm kt-btn-ghost">
                       <i class="ki-outline ki-dots-horizontal" />
