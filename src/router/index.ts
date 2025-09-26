@@ -13,6 +13,7 @@ const routes = [
       { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
       { path: '/community', component: () => import('@/pages/community/index.vue') },
       { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },
+      { path: '/admin', component: () => import('@/pages/admin/index.vue') },
     ],
   },
 ] as RouteRecordRaw[]

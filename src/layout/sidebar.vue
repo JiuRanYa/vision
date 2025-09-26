@@ -86,6 +86,26 @@ function toggleTheme() {
                 {{ item.text }}
               </span>
             </router-link>
+
+            <!-- Admin页面链接 -->
+            <router-link
+              to="/admin"
+              class="flex items-center ps-1 rounded-lg transition-colors"
+              :class="[
+                isItemActive('/admin')
+                  ? 'text-gray-900 dark:text-gray-100 bg-gray-200 dark:bg-gray-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800',
+              ]"
+            >
+              <div class="relative">
+                <button class="kt-btn kt-btn-icon kt-btn-ghost">
+                  <i class="ki-outline ki-setting text-md" />
+                </button>
+              </div>
+              <span class="hidden text-sm xl:block" :class="{ 'font-medium': isItemActive('/admin') }">
+                Admin
+              </span>
+            </router-link>
           </div>
         </div>
       </div>
