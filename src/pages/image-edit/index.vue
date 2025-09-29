@@ -236,7 +236,7 @@ onMounted(() => {
     </div>
 
     <!-- 右侧历史图片区域 -->
-    <div class="border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+    <div class="w-24 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
       <!-- 历史图片列表 -->
       <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 32px);">
         <div
