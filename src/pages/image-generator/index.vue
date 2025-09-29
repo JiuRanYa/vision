@@ -185,7 +185,7 @@ function handleEditImage(image: any) {
     <!-- 右侧标签页区域 -->
     <div class="flex-1 bg-white dark:bg-gray-900">
       <!-- 标签页导航 -->
-      <div class="px-6 pt-6">
+      <div class="p-6">
         <div class="flex space-x-2">
           <button
             v-for="tab in tabs"
@@ -204,7 +204,7 @@ function handleEditImage(image: any) {
       </div>
 
       <!-- 标签页内容 -->
-      <div class="p-6 overflow-y-auto h-full">
+      <div class="p-6 pt-0 overflow-y-auto h-full">
         <!-- History标签页 -->
         <div v-if="activeTab === 'history'">
           <!-- 生成结果区域 -->
