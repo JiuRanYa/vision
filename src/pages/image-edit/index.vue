@@ -105,7 +105,7 @@ onMounted(() => {
         <div class="flex items-center space-x-6">
           <!-- 自动增强 -->
           <div
-            class="inline-flex"
+            class="inline-flex me-0"
             data-kt-dropdown="true"
             data-kt-dropdown-trigger="click"
             data-kt-dropdown-placement="top-start"
