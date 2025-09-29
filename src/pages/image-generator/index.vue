@@ -129,8 +129,8 @@ function switchTab(tabId: string) {
             class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
             :class="[
               activeTab === tab.id
-                ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
-                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700',
             ]"
             @click="switchTab(tab.id)"
           >
@@ -145,7 +145,7 @@ function switchTab(tabId: string) {
         <div v-if="activeTab === 'history'">
           <!-- 生成结果区域 -->
           <div class="mb-8">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-6">
               <h2 class="text-md font-bold text-gray-900 dark:text-gray-100">
                 Generated Images
               </h2>
