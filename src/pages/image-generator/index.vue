@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { generateImage, getUrlFromS3 } from '@/api/image'
 import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
@@ -34,16 +35,18 @@ const tabs = [
 
 const generatedImages = reactive([])
 
-function handleGenerate() {
+async function handleGenerate() {
   console.warn('Generating image with config:', imageConfig)
 
   isGenerating.value = true
+
+  const { data } = await generateImage(imageConfig.value.prompt)
 
   setTimeout(() => {
     // 添加新的生成结果
     const newImage = {
       id: Date.now(),
-      imageUrl: `https://picsum.photos/400/600?random=${Date.now()}`,
+      imageUrl: `/api/s3/proxy?key=${data.value.response.file_key}`,
       status: 'completed',
     }
     generatedImages.unshift(newImage)

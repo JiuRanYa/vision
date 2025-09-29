@@ -70,7 +70,7 @@ class ApiService {
     return ApiService.$fetch<T>(_url, { refetch: true }).get().json<T>()
   }
 
-  static post<T>(resource: string, body?: MaybeRefOrGetter<T>) {
+  static post<T = any>(resource: string, body?: MaybeRefOrGetter<T>) {
     return ApiService.$fetch(resource).post(body).json<T>()
   }
 

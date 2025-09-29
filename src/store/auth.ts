@@ -24,13 +24,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     try {
-      const { data: profile } = await ApiService.get<UserProfile>('/my/sso')
+      const { data: profile } = await ApiService.get<UserProfile>('/sso')
       currentUserProfile.value = profile.value
       return profile.value
     }
-    catch (e) {
-      console.log(e)
-      // logout()
+    catch {
+      logout()
     }
   }
 
