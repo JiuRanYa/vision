@@ -10,6 +10,7 @@ const routes = [
     children: [
       { path: '/', redirect: '/image-generator' },
       { path: '/image-generator', component: () => import('@/pages/image-generator/index.vue') },
+      { path: '/image-edit', component: () => import('@/pages/image-edit/index.vue') },
       { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
       { path: '/community', component: () => import('@/pages/community/index.vue') },
       { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },

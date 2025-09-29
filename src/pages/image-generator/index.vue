@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
+
+const router = useRouter()
 
 const imageConfig = ref({
   prompt: '',
@@ -104,7 +107,15 @@ function switchTab(tabId: string) {
 // 处理编辑图片
 function handleEditImage(image: any) {
   console.warn('Editing image:', image)
-  // 这里可以添加编辑逻辑，比如跳转到编辑页面或打开编辑模态框
+  // 跳转到图片编辑页面，传递图片数据
+  router.push({
+    path: '/image-edit',
+    query: {
+      imageId: image.id,
+      imageUrl: image.imageUrl,
+      prompt: image.prompt || '',
+    },
+  })
 }
 </script>
 
