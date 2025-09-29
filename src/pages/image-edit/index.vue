@@ -68,43 +68,6 @@ function selectHistoryImage(item: any) {
   imageData.value.prompt = item.prompt
 }
 
-// 应用滤镜
-function applyFilter(filterId: string) {
-  console.warn('Applying filter:', filterId)
-  // 这里可以添加滤镜应用逻辑
-}
-
-// 保存编辑
-function saveEdit() {
-  console.warn('Saving edit:', imageData.value)
-  // 这里可以添加保存逻辑
-}
-
-// 撤销操作
-function undoEdit() {
-  if (editHistory.length > 0) {
-    editHistory.pop()
-    console.warn('Undo edit')
-  }
-}
-
-// 重做操作
-function redoEdit() {
-  console.warn('Redo edit')
-  // 这里可以添加重做逻辑
-}
-
-// 导出图片
-function exportImage() {
-  console.warn('Exporting image')
-  // 这里可以添加导出逻辑
-}
-
-// 返回上一页
-function goBack() {
-  router.back()
-}
-
 onMounted(() => {
   nextTick(() => {
     KTDropdown.init()
@@ -238,7 +201,7 @@ onMounted(() => {
     <!-- 右侧历史图片区域 -->
     <div class="w-24 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
       <!-- 历史图片列表 -->
-      <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 32px);">
+      <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 64px);">
         <div
           v-for="(item, index) in historyImages"
           :key="index"
