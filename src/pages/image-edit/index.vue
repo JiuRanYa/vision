@@ -20,16 +20,6 @@ const editHistory = reactive([])
 // 编辑工具状态
 const activeTool = ref('auto-enhance')
 
-// AI编辑工具选项（参考图片中的工具栏）
-const tools = [
-  { id: 'auto-enhance', name: '自动增强', icon: 'ki-outline ki-star' },
-  { id: 'patch', name: '修补', icon: 'ki-outline ki-paintbucket' },
-  { id: 'effects', name: '特效', icon: 'ki-outline ki-star' },
-  { id: 'compare', name: '对比', icon: 'ki-outline ki-element-8' },
-  { id: 'expand', name: '展开', icon: 'ki-outline ki-maximize' },
-  { id: 'adjust', name: '调整', icon: 'ki-outline ki-setting-2' },
-]
-
 // 初始化数据
 onMounted(() => {
   // 从路由参数获取图片数据
@@ -107,19 +97,88 @@ function goBack() {
     <!-- 悬浮工具栏 -->
     <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-100 dark:bg-gray-600 rounded-lg">
       <div class="flex items-center space-x-6">
+        <!-- 自动增强 -->
         <button
-          v-for="tool in tools"
-          :key="tool.id"
           class="w-10 h-10 flex items-center justify-center transition-colors me-0"
           :class="[
-            activeTool === tool.id
+            activeTool === 'auto-enhance'
               ? 'text-gray-900 dark:text-gray-100'
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
           ]"
-          :title="tool.name"
-          @click="selectTool(tool.id)"
+          title="自动增强"
+          @click="selectTool('auto-enhance')"
         >
-          <i :class="tool.icon" />
+          <i class="ki-outline ki-star" />
+        </button>
+
+        <!-- 修补 -->
+        <button
+          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+          :class="[
+            activeTool === 'patch'
+              ? 'text-gray-900 dark:text-gray-100'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+          title="修补"
+          @click="selectTool('patch')"
+        >
+          <i class="ki-outline ki-paintbucket" />
+        </button>
+
+        <!-- 特效 -->
+        <button
+          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+          :class="[
+            activeTool === 'effects'
+              ? 'text-gray-900 dark:text-gray-100'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+          title="特效"
+          @click="selectTool('effects')"
+        >
+          <i class="ki-outline ki-star" />
+        </button>
+
+        <!-- 对比 -->
+        <button
+          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+          :class="[
+            activeTool === 'compare'
+              ? 'text-gray-900 dark:text-gray-100'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+          title="对比"
+          @click="selectTool('compare')"
+        >
+          <i class="ki-outline ki-element-8" />
+        </button>
+
+        <!-- 展开 -->
+        <button
+          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+          :class="[
+            activeTool === 'expand'
+              ? 'text-gray-900 dark:text-gray-100'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+          title="展开"
+          @click="selectTool('expand')"
+        >
+          <i class="ki-outline ki-maximize" />
+        </button>
+
+        <!-- 调整 -->
+        <button
+          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+          :class="[
+            activeTool === 'adjust'
+              ? 'text-gray-900 dark:text-gray-100'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+          title="调整"
+          @click="selectTool('adjust')"
+        >
+          <i class="ki-outline ki-setting-2" />
         </button>
       </div>
     </div>
