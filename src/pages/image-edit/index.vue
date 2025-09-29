@@ -108,7 +108,7 @@ onMounted(() => {
             class="inline-flex me-0"
             data-kt-dropdown="true"
             data-kt-dropdown-trigger="click"
-            data-kt-dropdown-placement="top-start"
+            data-kt-dropdown-placement="top"
           >
             <button
               class="w-10 h-10 flex items-center justify-center transition-colors me-0"
@@ -125,8 +125,9 @@ onMounted(() => {
             </button>
 
             <!-- Chat聊天框 -->
-            <div class="kt-dropdown" data-kt-dropdown-menu="true">
-              123
+            <div class="kt-dropdown w-[500px] h-[100px] p-4 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
+              <!-- 标题 -->
+              <input class="w-full bg-transparent border-none hover:shadow-none outline-0" placeholder="What you want to change">
             </div>
           </div>
 
