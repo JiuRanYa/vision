@@ -53,17 +53,8 @@ async function loadHistoryImages() {
   try {
     const { data } = await getHistoryImages(pagination.page, pagination.limit)
 
-    // 映射数据，构建图片 URL
-    const mappedImages = data.value.data.map(item => ({
-      id: item.id,
-      imageUrl: `/api/s3/proxy?key=${item.response.file_key}`,
-      prompt: item.prompt,
-      status: 'completed',
-      created_at: item.created_at,
-      creator: item.creator,
-      file_name: item.response.file_name,
-      file_size: item.response.file_size,
-    }))
+    // 直接使用接口返回的数据
+    const mappedImages = data.value.data
 
     historyGeneratedImages.splice(0, historyGeneratedImages.length, ...mappedImages)
 
@@ -89,8 +80,11 @@ async function handleGenerate() {
   try {
     const { data } = await generateImage(imageConfig.value.prompt)
 
-    // 生成成功后重新加载历史数据
-    await loadHistoryImages()
+    // 直接使用接口返回的数据
+    const newImage = data.value
+
+    historyGeneratedImages.unshift(newImage)
+    pagination.total += 1
   }
   catch (error) {
     console.error('Error generating image:', error)
@@ -251,7 +245,7 @@ function handleEditImage(image: any) {
               >
                 <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer flex items-center justify-center bg-gray-50 dark:bg-gray-800">
                   <img
-                    :src="image.imageUrl"
+                    :src="`/api/s3/proxy?key=${image.response.file_key}`"
                     alt="Generated image"
                     class="w-full h-full object-fit"
                   >
