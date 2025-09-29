@@ -2,6 +2,8 @@ import type { RouteRecordRaw } from 'vue-router'
 import KTUI from '@keenthemes/ktui/src/index.ts'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { REDIRECT_PATH, useAuthStore } from '@/store/auth'
+import { useUserStore } from '@/store/user'
 
 const routes = [
   {
@@ -17,11 +19,43 @@ const routes = [
       { path: '/admin-board', component: () => import('@/pages/admin/index.vue') },
     ],
   },
+  {
+    path: '/',
+    component: () => import('../pages/error/layout.vue'),
+    meta: {
+      middleware: 'public',
+    },
+    children: [
+      {
+        path: '/sso',
+        name: 'sso',
+        component: () => import('../pages/auth/SSO.vue'),
+      },
+    ],
+  },
 ] as RouteRecordRaw[]
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, _from, next) => {
+  if (to.meta.middleware === 'public') {
+    return next()
+  }
+
+  const authStore = useAuthStore()
+  await authStore.verifyAuth()
+  if (!authStore.isAuthenticated) {
+    localStorage.setItem(REDIRECT_PATH, to.fullPath)
+    return next({ name: 'sso' })
+  }
+
+  const userStore = useUserStore()
+  userStore.initUserRole()
+
+  next()
 })
 
 router.afterEach(() => {

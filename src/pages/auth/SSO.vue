@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { useRouteQuery } from '@vueuse/router'
-import { sample } from 'lodash'
-
-const REDIRECT_PATH = 'VISION_REDIRECT_PATH'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { setAuthToken } from '@/service/cookie'
+import { REDIRECT_PATH, useAuthStore } from '@/store/auth'
 
 const router = useRouter()
 
@@ -19,8 +20,6 @@ onMounted(async () => {
     router.replace(localStorage.getItem(REDIRECT_PATH) || '/')
   }
 })
-
-const illustration = computed(() => sample(illustrations))
 </script>
 
 <template>
@@ -46,11 +45,6 @@ const illustration = computed(() => sample(illustrations))
           </div>
           <div class="flex justify-center mb-5">
             <button class="kt-btn kt-btn-ghost kt-btn-sm justify-center px-10" @click="SSO_Redirect">
-              <img
-                alt="sso"
-                class="size-4 shrink-0 reverse-color"
-                src="/media/app/sso.png"
-              >
               <span class="font-semibold">Use SSO</span>
             </button>
           </div>
@@ -70,10 +64,7 @@ const illustration = computed(() => sample(illustrations))
     >
       <div class="h-full flex flex-col justify-between p-10 lg:px-16 lg:py-20 gap-4">
         <div class="flex items-center gap-3">
-          <a href="/">
-            <img class="h-[54px] max-w-none dark:hidden" src="/media/app/logo.svg">
-            <img class="h-[54px] max-w-none hidden dark:block" src="/media/app/logo-dark.svg">
-          </a>
+          <a href="/" />
           <h3 class="text-2xl font-semibold text-mono">
             Data Insights
           </h3>
@@ -82,7 +73,6 @@ const illustration = computed(() => sample(illustrations))
         <img
           alt="open"
           class="h-[300px] lg:h-[500px] reverse-color"
-          :src="illustration"
         >
 
         <div class="flex flex-col items-stretch gap-3">

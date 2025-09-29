@@ -3,7 +3,10 @@ import { intersection } from 'lodash'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { getAuthToken, removeAuthToken } from '@/service/cookie'
+import { ApiService } from '@/service/fetch'
 import { useUserStore } from './user'
+
+export const REDIRECT_PATH = 'VISION_REDIRECT_PATH'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = computed(getAuthToken)
@@ -23,14 +26,11 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const { data: profile } = await ApiService.get<UserProfile>('/my/sso')
       currentUserProfile.value = profile.value
-
-      mountBlindWatermark()
-      checkAndCelebrateHoliday()
-
       return profile.value
     }
-    catch {
-      logout()
+    catch (e) {
+      console.log(e)
+      // logout()
     }
   }
 
