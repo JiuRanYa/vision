@@ -14,8 +14,6 @@ const imageData = ref({
   originalPrompt: '',
 })
 
-// 编辑状态
-const isEditing = ref(false)
 const editHistory = reactive([])
 
 // 编辑工具状态
