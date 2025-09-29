@@ -256,7 +256,7 @@ function handleEditImage(image: any) {
                 :key="image.id"
                 class="space-y-2"
               >
-                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
                   <img
                     :src="`/api/s3/proxy?key=${image.response.file_key}`"
                     alt="Generated image"
@@ -268,13 +268,13 @@ function handleEditImage(image: any) {
                   <!-- 悬停操作按钮 -->
                   <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <div class="flex space-x-2">
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
                         <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
                     </div>
