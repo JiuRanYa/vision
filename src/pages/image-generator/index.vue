@@ -223,7 +223,7 @@ function handleEditImage(image: any) {
               </div>
             </div>
 
-            <!-- Loading状态 -->
+            <!-- 生成图片Loading状态 -->
             <div v-if="isGenerating" class="text-center py-12">
               <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
                 <i class="ki-outline ki-loading text-2xl text-blue-600 dark:text-blue-400" />
@@ -233,6 +233,19 @@ function handleEditImage(image: any) {
               </h3>
               <p class="text-gray-500 dark:text-gray-400 text-sm">
                 This may take a few moments
+              </p>
+            </div>
+
+            <!-- 历史数据Loading状态 -->
+            <div v-else-if="isLoadingHistory" class="text-center py-12">
+              <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
+                <i class="ki-outline ki-loading text-2xl text-gray-600 dark:text-gray-400" />
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                Loading history...
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">
+                Please wait while we load your images
               </p>
             </div>
 
