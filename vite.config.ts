@@ -14,5 +14,11 @@ export default defineConfig({
   server: {
     port: 8401,
     host: true,
+    proxy: {
+      '/api': {
+        target: 'http://54.218.245.20:8401',
+        changeOrigin: true,
+      },
+    },
   },
 })
