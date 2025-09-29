@@ -21,6 +21,29 @@ const editHistory = reactive([])
 // 编辑工具状态
 const activeTool = ref('auto-enhance')
 
+// 历史图片数据
+const historyImages = reactive([
+  { id: 1, imageUrl: 'https://picsum.photos/400/400?random=1', prompt: 'A beautiful portrait of a woman with flowing hair' },
+  { id: 2, imageUrl: 'https://picsum.photos/400/400?random=2', prompt: 'Underwater scene with jellyfish floating gracefully' },
+  { id: 3, imageUrl: 'https://picsum.photos/400/400?random=3', prompt: 'Sunset portrait with golden hour lighting' },
+  { id: 4, imageUrl: 'https://picsum.photos/400/400?random=4', prompt: 'Medieval fantasy warrior with sword' },
+  { id: 5, imageUrl: 'https://picsum.photos/400/400?random=5', prompt: 'Modern luxury car in urban setting' },
+  { id: 6, imageUrl: 'https://picsum.photos/400/400?random=6', prompt: 'Cute sloth hanging from tree branch' },
+  { id: 7, imageUrl: 'https://picsum.photos/400/400?random=7', prompt: 'Professional headshot of businesswoman' },
+  { id: 8, imageUrl: 'https://picsum.photos/400/400?random=8', prompt: 'Artistic portrait with warm lighting' },
+  { id: 9, imageUrl: 'https://picsum.photos/400/400?random=9', prompt: 'Minimalist portrait with clean lines' },
+  { id: 10, imageUrl: 'https://picsum.photos/400/400?random=10', prompt: 'Abstract geometric composition' },
+  { id: 11, imageUrl: 'https://picsum.photos/400/400?random=11', prompt: 'Portrait of a man with confident expression' },
+  { id: 12, imageUrl: 'https://picsum.photos/400/400?random=12', prompt: 'Landscape with mountains and lake' },
+  { id: 13, imageUrl: 'https://picsum.photos/400/400?random=13', prompt: 'Urban street scene at night' },
+  { id: 14, imageUrl: 'https://picsum.photos/400/400?random=14', prompt: 'Close-up of flower in garden' },
+  { id: 15, imageUrl: 'https://picsum.photos/400/400?random=15', prompt: 'Architectural detail of modern building' },
+  { id: 16, imageUrl: 'https://picsum.photos/400/400?random=16', prompt: 'Vintage car in classic setting' },
+])
+
+// 选中的历史图片索引
+const selectedHistoryIndex = ref(-1)
+
 // 初始化数据
 onMounted(() => {
   // 从路由参数获取图片数据
@@ -35,6 +58,13 @@ onMounted(() => {
 // 选择工具
 function selectTool(toolId: string) {
   activeTool.value = toolId
+}
+
+// 选择历史图片
+function selectHistoryImage(item: any) {
+  selectedHistoryIndex.value = historyImages.findIndex(img => img.id === item.id)
+  imageData.value.imageUrl = item.imageUrl
+  imageData.value.prompt = item.prompt
 }
 
 // 应用滤镜
@@ -82,10 +112,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative h-full min-h-0 bg-white dark:bg-gray-900">
+  <div class="relative h-full min-h-0 bg-white dark:bg-gray-900 flex">
     <!-- 主编辑区域 -->
-    <div class="h-full flex items-center justify-center p-8">
-      <div class="relative max-w-full max-h-full">
+    <div class="relative flex-1 flex items-center justify-center p-8">
+      <div class="max-w-full max-h-full">
         <img
           v-if="imageData.imageUrl"
           :src="imageData.imageUrl"
@@ -101,7 +131,7 @@ onMounted(() => {
       </div>
 
       <!-- 悬浮工具栏 -->
-      <div class="absolute bottom-6 bg-gray-100 dark:bg-gray-600 rounded-lg">
+      <div class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg">
         <div class="flex items-center space-x-6">
           <!-- 自动增强 -->
           <div
@@ -203,9 +233,43 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 右侧历史图片区域 -->
+    <div class="border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+      <!-- 历史图片列表 -->
+      <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 32px);">
+        <div
+          v-for="(item, index) in historyImages"
+          :key="index"
+          class="relative group cursor-pointer"
+          @click="selectHistoryImage(item)"
+        >
+          <div class="aspect-squar size-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+            <img
+              :src="item.imageUrl"
+              :alt="item.prompt"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            >
+          </div>
+          <!-- 选中状态指示器 -->
+          <div
+            v-if="selectedHistoryIndex === index"
+            class="absolute inset-0 border-2 border-blue-500 rounded-lg"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 /* 自定义样式 */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
 </style>
