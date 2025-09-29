@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { KTDropdown } from '@keenthemes/ktui/src'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -72,6 +73,12 @@ function exportImage() {
 function goBack() {
   router.back()
 }
+
+onMounted(() => {
+  nextTick(() => {
+    KTDropdown.init()
+  })
+})
 </script>
 
 <template>
@@ -92,94 +99,107 @@ function goBack() {
           <p>没有图片可编辑</p>
         </div>
       </div>
-    </div>
 
-    <!-- 悬浮工具栏 -->
-    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-100 dark:bg-gray-600 rounded-lg">
-      <div class="flex items-center space-x-6">
-        <!-- 自动增强 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'auto-enhance'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="自动增强"
-          @click="selectTool('auto-enhance')"
-        >
-          <i class="ki-outline ki-star" />
-        </button>
+      <!-- 悬浮工具栏 -->
+      <div class="absolute bottom-6 bg-gray-100 dark:bg-gray-600 rounded-lg">
+        <div class="flex items-center space-x-6">
+          <!-- 自动增强 -->
+          <div
+            class="inline-flex"
+            data-kt-dropdown="true"
+            data-kt-dropdown-trigger="click"
+            data-kt-dropdown-placement="top-start"
+          >
+            <button
+              class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+              :class="[
+                activeTool === 'auto-enhance'
+                  ? 'text-gray-900 dark:text-gray-100'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+              ]"
+              title="自动增强"
+              data-kt-dropdown-toggle="true"
+              @click="selectTool('auto-enhance')"
+            >
+              <i class="ki-outline ki-star" />
+            </button>
 
-        <!-- 修补 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'patch'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="修补"
-          @click="selectTool('patch')"
-        >
-          <i class="ki-outline ki-paintbucket" />
-        </button>
+            <!-- Chat聊天框 -->
+            <div class="kt-dropdown" data-kt-dropdown-menu="true">
+              123
+            </div>
+          </div>
 
-        <!-- 特效 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'effects'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="特效"
-          @click="selectTool('effects')"
-        >
-          <i class="ki-outline ki-star" />
-        </button>
+          <!-- 修补 -->
+          <button
+            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            :class="[
+              activeTool === 'patch'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+            ]"
+            title="修补"
+            @click="selectTool('patch')"
+          >
+            <i class="ki-outline ki-paintbucket" />
+          </button>
 
-        <!-- 对比 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'compare'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="对比"
-          @click="selectTool('compare')"
-        >
-          <i class="ki-outline ki-element-8" />
-        </button>
+          <!-- 特效 -->
+          <button
+            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            :class="[
+              activeTool === 'effects'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+            ]"
+            title="特效"
+            @click="selectTool('effects')"
+          >
+            <i class="ki-outline ki-star" />
+          </button>
 
-        <!-- 展开 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'expand'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="展开"
-          @click="selectTool('expand')"
-        >
-          <i class="ki-outline ki-maximize" />
-        </button>
+          <!-- 对比 -->
+          <button
+            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            :class="[
+              activeTool === 'compare'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+            ]"
+            title="对比"
+            @click="selectTool('compare')"
+          >
+            <i class="ki-outline ki-element-8" />
+          </button>
 
-        <!-- 调整 -->
-        <button
-          class="w-10 h-10 flex items-center justify-center transition-colors me-0"
-          :class="[
-            activeTool === 'adjust'
-              ? 'text-gray-900 dark:text-gray-100'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
-          ]"
-          title="调整"
-          @click="selectTool('adjust')"
-        >
-          <i class="ki-outline ki-setting-2" />
-        </button>
+          <!-- 展开 -->
+          <button
+            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            :class="[
+              activeTool === 'expand'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+            ]"
+            title="展开"
+            @click="selectTool('expand')"
+          >
+            <i class="ki-outline ki-maximize" />
+          </button>
+
+          <!-- 调整 -->
+          <button
+            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            :class="[
+              activeTool === 'adjust'
+                ? 'text-gray-900 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+            ]"
+            title="调整"
+            @click="selectTool('adjust')"
+          >
+            <i class="ki-outline ki-setting-2" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
