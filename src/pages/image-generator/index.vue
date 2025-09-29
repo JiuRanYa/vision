@@ -100,6 +100,12 @@ function handleRecreate(item: typeof communityImages[0]) {
 function switchTab(tabId: string) {
   activeTab.value = tabId
 }
+
+// 处理编辑图片
+function handleEditImage(image: any) {
+  console.warn('Editing image:', image)
+  // 这里可以添加编辑逻辑，比如跳转到编辑页面或打开编辑模态框
+}
 </script>
 
 <template>
@@ -188,6 +194,9 @@ function switchTab(tabId: string) {
                   <!-- 悬停操作按钮 -->
                   <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                     <div class="flex space-x-2">
+                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(generatedImages[1])">
+                        <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
+                      </button>
                       <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
@@ -213,6 +222,9 @@ function switchTab(tabId: string) {
                   <!-- 悬停操作按钮 -->
                   <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                     <div class="flex space-x-2">
+                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(generatedImages[0])">
+                        <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
+                      </button>
                       <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
