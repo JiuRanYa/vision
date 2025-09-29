@@ -121,7 +121,7 @@ onMounted(() => {
           v-if="imageData.imageUrl"
           :src="imageData.imageUrl"
           :alt="imageData.prompt"
-          class="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+          class="max-h-[80vh] object-contain rounded-lg shadow-lg"
         >
         <div v-else class="text-gray-400 dark:text-gray-500 text-center">
           <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
