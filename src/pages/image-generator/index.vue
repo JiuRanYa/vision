@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { generateImage, getUrlFromS3 } from '@/api/image'
+import { generateImage, getHistoryImages } from '@/api/image'
 import CommunityGrid from '@/components/CommunityGrid.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
@@ -33,27 +33,77 @@ const tabs = [
   { id: 'inspiration', label: 'Inspiration' },
 ]
 
-const generatedImages = reactive([])
+// 历史生成图片
+const historyGeneratedImages = reactive([])
+const isLoadingHistory = ref(false)
+
+// 分页参数
+const pagination = reactive({
+  page: 1,
+  limit: 10,
+  total: 0,
+  totalPages: 0,
+  hasNext: false,
+  hasPrev: false,
+})
+
+// 加载历史生成图片
+async function loadHistoryImages() {
+  isLoadingHistory.value = true
+  try {
+    const { data } = await getHistoryImages(pagination.page, pagination.limit)
+
+    // 映射数据，构建图片 URL
+    const mappedImages = data.value.data.map(item => ({
+      id: item.id,
+      imageUrl: `/api/s3/proxy?key=${item.response.file_key}`,
+      prompt: item.prompt,
+      status: 'completed',
+      created_at: item.created_at,
+      creator: item.creator,
+      file_name: item.response.file_name,
+      file_size: item.response.file_size,
+    }))
+
+    historyGeneratedImages.splice(0, historyGeneratedImages.length, ...mappedImages)
+
+    // 更新分页信息
+    pagination.total = data.value.pagination.total
+    pagination.totalPages = data.value.pagination.totalPages
+    pagination.hasNext = data.value.pagination.hasNext
+    pagination.hasPrev = data.value.pagination.hasPrev
+  }
+  catch (error) {
+    console.error('Error loading history images:', error)
+  }
+  finally {
+    isLoadingHistory.value = false
+  }
+}
 
 async function handleGenerate() {
   console.warn('Generating image with config:', imageConfig)
 
   isGenerating.value = true
 
-  const { data } = await generateImage(imageConfig.value.prompt)
+  try {
+    const { data } = await generateImage(imageConfig.value.prompt)
 
-  setTimeout(() => {
-    // 添加新的生成结果
-    const newImage = {
-      id: Date.now(),
-      imageUrl: `/api/s3/proxy?key=${data.value.response.file_key}`,
-      status: 'completed',
-    }
-    generatedImages.unshift(newImage)
-
+    // 生成成功后重新加载历史数据
+    await loadHistoryImages()
+  }
+  catch (error) {
+    console.error('Error generating image:', error)
+  }
+  finally {
     isGenerating.value = false
-  }, 3000)
+  }
 }
+
+// 组件挂载时加载历史数据
+onMounted(() => {
+  loadHistoryImages()
+})
 
 // 瀑布流图片数据
 const communityImages = reactive([
@@ -193,50 +243,22 @@ function handleEditImage(image: any) {
             </div>
 
             <!-- 生成结果布局 -->
-            <div v-else-if="generatedImages.length > 0" class="flex gap-4">
-              <!-- 左侧：上次生成结果（只有多张图片时才显示） -->
-              <div v-if="generatedImages.length > 1" class="flex-1">
-                <div class="mb-2">
-                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Previous</span>
-                </div>
-                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer h-80">
+            <div v-else-if="historyGeneratedImages.length > 0" class="grid grid-cols-2 gap-4">
+              <div
+                v-for="(image, index) in historyGeneratedImages"
+                :key="image.id"
+                class="space-y-2"
+              >
+                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer flex items-center justify-center bg-gray-50 dark:bg-gray-800">
                   <img
-                    :src="generatedImages[1].imageUrl"
+                    :src="image.imageUrl"
                     alt="Generated image"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-fit"
                   >
                   <!-- 悬停操作按钮 -->
                   <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                     <div class="flex space-x-2">
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(generatedImages[1])">
-                        <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 右侧：最新生成结果（单张图片时占据全宽，多张图片时占据一半） -->
-              <div :class="generatedImages.length === 1 ? 'w-full' : 'flex-1'">
-                <div class="mb-2">
-                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Latest</span>
-                </div>
-                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow cursor-pointer h-80">
-                  <img
-                    :src="generatedImages[0].imageUrl"
-                    alt="Generated image"
-                    class="w-full h-full object-cover"
-                  >
-                  <!-- 悬停操作按钮 -->
-                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
-                    <div class="flex space-x-2">
-                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(generatedImages[0])">
+                      <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
                         <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
                       <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
