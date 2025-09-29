@@ -252,7 +252,7 @@ function handleEditImage(image: any) {
             <!-- 生成结果布局 -->
             <div v-else-if="historyGeneratedImages.length > 0" class="grid grid-cols-2 gap-4">
               <div
-                v-for="(image, index) in historyGeneratedImages"
+                v-for="image in historyGeneratedImages"
                 :key="image.id"
                 class="space-y-2"
               >
@@ -262,8 +262,11 @@ function handleEditImage(image: any) {
                     alt="Generated image"
                     class="w-full h-full object-fit"
                   >
+                  <!-- 遮罩层 -->
+                  <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+
                   <!-- 悬停操作按钮 -->
-                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
+                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <div class="flex space-x-2">
                       <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
                         <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
