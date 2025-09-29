@@ -159,7 +159,7 @@ function handleEditImage(image: any) {
     path: '/image-edit',
     query: {
       imageId: image.id,
-      imageUrl: image.imageUrl,
+      file_key: image.response.file_key,
       prompt: image.prompt || '',
     },
   })

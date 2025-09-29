@@ -2,6 +2,7 @@
 import { KTDropdown } from '@keenthemes/ktui/src'
 import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getHistoryImages } from '@/api/image'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,37 +21,39 @@ const editHistory = reactive([])
 const activeTool = ref('auto-enhance')
 
 // 历史图片数据
-const historyImages = reactive([
-  { id: 1, imageUrl: 'https://picsum.photos/400/400?random=1', prompt: 'A beautiful portrait of a woman with flowing hair' },
-  { id: 2, imageUrl: 'https://picsum.photos/400/400?random=2', prompt: 'Underwater scene with jellyfish floating gracefully' },
-  { id: 3, imageUrl: 'https://picsum.photos/400/400?random=3', prompt: 'Sunset portrait with golden hour lighting' },
-  { id: 4, imageUrl: 'https://picsum.photos/400/400?random=4', prompt: 'Medieval fantasy warrior with sword' },
-  { id: 5, imageUrl: 'https://picsum.photos/400/400?random=5', prompt: 'Modern luxury car in urban setting' },
-  { id: 6, imageUrl: 'https://picsum.photos/400/400?random=6', prompt: 'Cute sloth hanging from tree branch' },
-  { id: 7, imageUrl: 'https://picsum.photos/400/400?random=7', prompt: 'Professional headshot of businesswoman' },
-  { id: 8, imageUrl: 'https://picsum.photos/400/400?random=8', prompt: 'Artistic portrait with warm lighting' },
-  { id: 9, imageUrl: 'https://picsum.photos/400/400?random=9', prompt: 'Minimalist portrait with clean lines' },
-  { id: 10, imageUrl: 'https://picsum.photos/400/400?random=10', prompt: 'Abstract geometric composition' },
-  { id: 11, imageUrl: 'https://picsum.photos/400/400?random=11', prompt: 'Portrait of a man with confident expression' },
-  { id: 12, imageUrl: 'https://picsum.photos/400/400?random=12', prompt: 'Landscape with mountains and lake' },
-  { id: 13, imageUrl: 'https://picsum.photos/400/400?random=13', prompt: 'Urban street scene at night' },
-  { id: 14, imageUrl: 'https://picsum.photos/400/400?random=14', prompt: 'Close-up of flower in garden' },
-  { id: 15, imageUrl: 'https://picsum.photos/400/400?random=15', prompt: 'Architectural detail of modern building' },
-  { id: 16, imageUrl: 'https://picsum.photos/400/400?random=16', prompt: 'Vintage car in classic setting' },
-])
+const historyImages = reactive([])
+const isLoadingHistory = ref(false)
 
 // 选中的历史图片索引
 const selectedHistoryIndex = ref(-1)
+
+// 加载历史生成图片
+async function loadHistoryImages() {
+  isLoadingHistory.value = true
+  try {
+    const { data } = await getHistoryImages(1, 16)
+    historyImages.splice(0, historyImages.length, ...data.value.data)
+  }
+  catch (error) {
+    console.error('Error loading history images:', error)
+  }
+  finally {
+    isLoadingHistory.value = false
+  }
+}
 
 // 初始化数据
 onMounted(() => {
   // 从路由参数获取图片数据
   if (route.query.imageId) {
     imageData.value.id = route.query.imageId
-    imageData.value.imageUrl = route.query.imageUrl as string || ''
+    imageData.value.imageUrl = route.query.file_key ? `/api/s3/proxy?key=${route.query.file_key}` : ''
     imageData.value.prompt = route.query.prompt as string || ''
     imageData.value.originalPrompt = imageData.value.prompt
   }
+
+  // 加载历史图片数据
+  loadHistoryImages()
 })
 
 // 选择工具
@@ -61,7 +64,7 @@ function selectTool(toolId: string) {
 // 选择历史图片
 function selectHistoryImage(item: any) {
   selectedHistoryIndex.value = historyImages.findIndex(img => img.id === item.id)
-  imageData.value.imageUrl = item.imageUrl
+  imageData.value.imageUrl = `/api/s3/proxy?key=${item.response.file_key}`
   imageData.value.prompt = item.prompt
 }
 
@@ -244,7 +247,7 @@ onMounted(() => {
         >
           <div class="aspect-squar size-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
             <img
-              :src="item.imageUrl"
+              :src="`/api/s3/proxy?key=${item.response.file_key}`"
               :alt="item.prompt"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             >
