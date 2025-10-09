@@ -1,18 +1,15 @@
 <script setup lang="ts">
+import type { Creation } from '@/types/creation'
 import { KTDropdown } from '@keenthemes/ktui/src'
 import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
+import { ApiService } from '@/service/fetch'
 
 const route = useRoute()
 
 // 图片数据
-const imageData = ref({
-  id: null,
-  imageUrl: '',
-  prompt: '',
-  originalPrompt: '',
-})
+const imageData = ref<Creation>()
 
 // 编辑工具状态
 const activeTool = ref('auto-enhance')
@@ -21,7 +18,7 @@ const activeTool = ref('auto-enhance')
 const editPrompt = ref('')
 
 // 历史图片数据
-const historyImages = ref([])
+const historyImages = ref<Creation[]>([])
 const isLoadingHistory = ref(false)
 const confirmSaving = ref(true)
 
@@ -98,7 +95,6 @@ async function loadHistoryImages() {
     const { data } = await getHistoryImages(1, 16)
     historyImages.value.splice(0, historyImages.value.length, ...data.value.data)
     selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === imageData.value.id * 1)
-    console.log(selectedHistoryIndex.value)
   }
   catch (error) {
     console.error('Error loading history images:', error)
@@ -109,17 +105,15 @@ async function loadHistoryImages() {
 }
 
 // 初始化数据
-onMounted(() => {
+onMounted(async () => {
   // 从路由参数获取图片数据
-  if (route.query.imageId) {
-    imageData.value.id = route.query.imageId
-    imageData.value.imageUrl = route.query.file_key ? `/api/s3/proxy?key=${route.query.file_key}` : ''
-    imageData.value.prompt = route.query.prompt as string || ''
-    imageData.value.originalPrompt = imageData.value.prompt
+  if (route.query.creationId) {
+    const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
+    imageData.value = data.value
   }
 
   // 加载历史图片数据
-  loadHistoryImages()
+  await loadHistoryImages()
 })
 
 // 选择工具
@@ -130,8 +124,8 @@ function selectTool(toolId: string) {
 // 选择历史图片
 function selectHistoryImage(item: any) {
   selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
-  imageData.value.imageUrl = `/api/s3/proxy?key=${item.response.file_key}`
-  imageData.value.prompt = item.prompt
+  imageData.value = { ...item }
+  console.log(item)
 }
 
 // 处理发送编辑提示词
@@ -161,8 +155,8 @@ onMounted(() => {
     <div class="relative flex-1 flex items-center justify-center p-8 z-[120]">
       <div class="max-w-full max-h-full">
         <img
-          v-if="imageData.imageUrl"
-          :src="imageData.imageUrl"
+          v-if="imageData?.response?.file_key"
+          :src="`/api/s3/proxy?key=${imageData.response.file_key}`"
           :alt="imageData.prompt"
           class="max-h-[80vh] object-contain rounded-lg shadow-lg"
         >
@@ -291,11 +285,14 @@ onMounted(() => {
       <!-- 确认保存 -->
       <div v-else class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg flex gap-2 p-2">
         <div v-for="(item, index) in imageEditHistoryImages" :key="index">
-          <img
-            :src="`/api/s3/proxy?key=${item.response.file_key}`"
-            :alt="item.prompt"
-            class="w-10 h-10 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
-          >
+          <div class="size-10 relative">
+            <img
+              :src="`/api/s3/proxy?key=${item.response.file_key}`"
+              :alt="item.prompt"
+              class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+            >
+            <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
+          </div>
         </div>
         <button class="w-10 h-10 flex items-center justify-center transition-colors me-0" @click="confirmSaving = false">
           <i class="ki-outline ki-check" />
@@ -309,11 +306,11 @@ onMounted(() => {
       <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 64px);">
         <div
           v-for="(item, index) in historyImages"
-          :key="index"
+          :key="item.id"
           class="relative group cursor-pointer"
           @click="selectHistoryImage(item)"
         >
-          <div class="aspect-squar size-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+          <div class="aspect-square size-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
             <img
               :src="`/api/s3/proxy?key=${item.response.file_key}`"
               :alt="item.prompt"
@@ -322,7 +319,7 @@ onMounted(() => {
           </div>
           <!-- 选中状态指示器 -->
           <div
-            v-if="selectedHistoryIndex === index"
+            v-if="imageData?.id === item.id"
             class="absolute inset-0 border-2 border-blue-500 rounded-lg"
           />
         </div>

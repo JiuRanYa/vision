@@ -178,9 +178,7 @@ function handleEditImage(image: any) {
   router.push({
     path: '/image-edit',
     query: {
-      imageId: image.id,
-      file_key: image.response.file_key,
-      prompt: image.prompt || '',
+      creationId: image.id,
     },
   })
 }

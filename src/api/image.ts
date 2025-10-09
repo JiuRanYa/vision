@@ -1,3 +1,4 @@
+import type { Creation } from '@/types/creation'
 import { ApiService } from '@/service/fetch'
 
 // API 响应类型定义
@@ -46,7 +47,7 @@ interface HistoryImagesResponse {
 }
 
 export function generateImage(prompt: string, metadata?: any) {
-  return ApiService.post<GenerateImageResponse>('/creation', { prompt, metadata })
+  return ApiService.post<Creation[]>('/creation', { prompt, metadata })
 }
 
 export function getHistoryImages(page: number = 1, limit: number = 10) {
