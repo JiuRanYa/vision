@@ -38,6 +38,9 @@ const tabs = [
 const historyGeneratedImages = reactive([])
 const isLoadingHistory = ref(false)
 
+// 当前生成的图片
+const currentGeneratedImage = ref(null)
+
 // 分页参数
 const pagination = reactive({
   page: 1,
@@ -77,6 +80,7 @@ async function handleGenerate() {
   console.warn('Generating image with config:', imageConfig)
 
   isGenerating.value = true
+  currentGeneratedImage.value = null
 
   try {
     const { data } = await generateImage(imageConfig.value.prompt)
@@ -84,6 +88,21 @@ async function handleGenerate() {
     // 直接使用接口返回的数据
     const newImage = data.value
 
+    // 设置当前生成的图片
+    currentGeneratedImage.value = {
+      ...newImage,
+      user: {
+        name: 'Current User',
+        avatar: '',
+        timeAgo: 'Just now',
+      },
+      likes: Math.floor(Math.random() * 100) + 50,
+      tags: ['1:1', 'auto', 'auto:imagen3', 'Text to Image'],
+    }
+
+    console.log(currentGeneratedImage.value)
+
+    // 添加到历史记录
     historyGeneratedImages.unshift(newImage)
     pagination.total += 1
   }
@@ -208,8 +227,8 @@ function handleFollow(user: any) {
 function handleLike(item: any) {
   console.warn('Liking item:', item)
   // 这里应该实现点赞功能
-  if (selectedImageForShare.value) {
-    selectedImageForShare.value.likes = (selectedImageForShare.value.likes || 0) + 1
+  if (currentGeneratedImage.value && currentGeneratedImage.value.id === item.id) {
+    currentGeneratedImage.value.likes = (currentGeneratedImage.value.likes || 0) + 1
   }
 }
 </script>
@@ -255,20 +274,12 @@ function handleLike(item: any) {
       <div class="p-6 pt-0 overflow-y-auto h-full">
         <!-- History标签页 -->
         <div v-if="activeTab === 'history'">
-          <!-- 生成结果区域 -->
-          <div class="mb-8">
+          <!-- 当前生成结果区域 -->
+          <div v-if="currentGeneratedImage || isGenerating" class="mb-8">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-md font-bold text-gray-900 dark:text-gray-100">
-                Generated Images
+                Latest Generated Image
               </h2>
-              <div class="flex items-center space-x-2">
-                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-                  <span class="ml-1">Regenerate</span>
-                </button>
-                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-                  <span class="ml-1">Download All</span>
-                </button>
-              </div>
             </div>
 
             <!-- 生成图片Loading状态 -->
@@ -284,8 +295,82 @@ function handleLike(item: any) {
               </p>
             </div>
 
+            <!-- 当前生成的图片展示 -->
+            <div v-else-if="currentGeneratedImage" class="grid grid-cols-2 gap-4 mb-8">
+              <div class="space-y-2">
+                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                  <img
+                    :src="`/api/s3/proxy?key=${currentGeneratedImage.response.file_key}`"
+                    alt="Generated image"
+                    class="w-full h-full object-fit"
+                  >
+                  <!-- 遮罩层 -->
+                  <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+
+                  <!-- 悬停操作按钮 -->
+                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div class="flex space-x-2">
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(currentGeneratedImage)">
+                        <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
+                      </button>
+                      <button
+                        class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        data-kt-modal-toggle="#share-modal-current"
+                      >
+                        <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                      </button>
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 当前生成图片的ShareModal -->
+              <ShareModal
+                :item="currentGeneratedImage"
+                modal-id="share-modal-current"
+                @recreate="handleRecreateFromShare"
+                @copy-link="handleCopyLink"
+                @create-video="handleCreateVideo"
+                @follow="handleFollow"
+                @like="handleLike"
+              />
+            </div>
+
+            <!-- 空状态 -->
+            <div v-else class="text-center py-12">
+              <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ki-outline ki-picture text-2xl text-gray-400 dark:text-gray-500" />
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                No image generated yet
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">
+                Click "Generate" to create your first AI image
+              </p>
+            </div>
+          </div>
+
+          <!-- 历史生成结果区域 -->
+          <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-md font-bold text-gray-900 dark:text-gray-100">
+                Generated Images
+              </h2>
+              <div class="flex items-center space-x-2">
+                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                  <span class="ml-1">Regenerate</span>
+                </button>
+                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                  <span class="ml-1">Download All</span>
+                </button>
+              </div>
+            </div>
+
             <!-- 历史数据Loading状态 -->
-            <div v-else-if="isLoadingHistory" class="text-center py-12">
+            <div v-if="isLoadingHistory" class="text-center py-12">
               <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
                 <i class="ki-outline ki-loading text-2xl text-gray-600 dark:text-gray-400" />
               </div>
