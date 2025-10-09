@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
@@ -27,11 +27,6 @@ const emit = defineEmits<{
   like: [item: ShareModalProps['item']]
 }>()
 
-const promptMaxLength = 150
-
-// Prompt展开状态
-const isPromptExpanded = ref(false)
-
 // 处理重新创建
 function handleRecreate() {
   emit('recreate', props.item)
@@ -58,32 +53,6 @@ function handleFollow() {
 function handleLike() {
   emit('like', props.item)
 }
-
-// 处理prompt文本截断
-function getDisplayPrompt() {
-  if (props.item.prompt.length <= promptMaxLength) {
-    return { text: props.item.prompt, showMore: false }
-  }
-  return {
-    text: props.item.prompt.substring(0, promptMaxLength),
-    showMore: true,
-  }
-}
-
-// 切换prompt展开状态
-function togglePromptExpansion() {
-  isPromptExpanded.value = !isPromptExpanded.value
-}
-
-// 获取当前显示的prompt文本
-function getCurrentPromptText() {
-  if (props.item.prompt.length <= promptMaxLength || isPromptExpanded.value) {
-    return props.item.prompt
-  }
-  return props.item.prompt.substring(0, promptMaxLength)
-}
-
-const displayPrompt = getDisplayPrompt()
 </script>
 
 <template>
@@ -148,23 +117,32 @@ const displayPrompt = getDisplayPrompt()
                 </div>
 
                 <!-- Prompt信息 -->
-                <div>
+                <div class="group">
                   <h5 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                     Prompt
                   </h5>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                    {{ getCurrentPromptText() }}
-                    <span v-if="props.item.prompt.length > promptMaxLength && !isPromptExpanded">...</span>
-                  </p>
+                  <div class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <!-- 截断的文本 -->
+                    <span class="group-has-[input:checked]:hidden">
+                      {{ props.item.prompt.length > 150 ? `${props.item.prompt.substring(0, 150)}...` : props.item.prompt }}
+                    </span>
+                    <!-- 完整的文本 -->
+                    <span class="hidden group-has-[input:checked]:block">
+                      {{ props.item.prompt }}
+                    </span>
+                  </div>
 
-                  <div>
-                    <button
-                      v-if="displayPrompt.showMore"
-                      class="text-blue-600 dark:text-blue-400 ml-1 text-xs font-semibold hover:underline"
-                      @click="togglePromptExpansion"
-                    >
-                      {{ isPromptExpanded ? 'See less' : 'See more' }}
-                    </button>
+                  <!-- 展开/收起按钮 -->
+                  <div v-if="props.item.prompt.length > 150" class="mt-2">
+                    <label class="cursor-pointer">
+                      <input type="checkbox" class="sr-only peer">
+                      <span class="text-blue-600 dark:text-blue-400 text-xs font-semibold hover:underline peer-checked:hidden">
+                        See more
+                      </span>
+                      <span class="text-blue-600 dark:text-blue-400 text-xs font-semibold hover:underline hidden peer-checked:inline">
+                        See less
+                      </span>
+                    </label>
                   </div>
                 </div>
 
