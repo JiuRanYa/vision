@@ -1,6 +1,6 @@
 export interface Creation {
   id: number
-  original_id: null
+  original_id?: number
   prompt: string
   metadata: Metadata
   response: S3File

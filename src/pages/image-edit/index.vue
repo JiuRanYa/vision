@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Creation } from '@/types/creation'
 import { KTDropdown } from '@keenthemes/ktui/src'
+import { useAsyncState } from '@vueuse/core'
 import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
@@ -16,13 +17,9 @@ const activeTool = ref('auto-enhance')
 
 // 编辑提示词
 const editPrompt = ref('')
+const confirmSaving = ref(false)
 
-// 历史图片数据
-const historyImages = ref<Creation[]>([])
-const isLoadingHistory = ref(false)
-const confirmSaving = ref(true)
-
-const imageEditHistoryImages = ref([
+const imageEditHistoryImages = ref<Creation[]>([
   {
     id: 30,
     prompt: 'remove the black cat',
@@ -54,27 +51,28 @@ const imageEditHistoryImages = ref([
     is_archived: false,
   },
   {
-    id: 30,
-    prompt: 'remove the black cat',
+    id: 25,
+    original_id: null,
+    prompt: 'change the hair color to blue',
     metadata: {
       attachment: {
-        text: '',
-        file_key: 'vision/同思远/png/226ea18f-c139-4602-9068-6720d207176d-1759998763711.png',
+        text: 'Here\'s that beautiful, pink-haired girl for you! ',
+        file_key: 'vision/同思远/png/b8c54382-d484-4484-96eb-dfeb307b236f-1759995796422.png',
         mimeType: 'image/png',
-        file_name: '226ea18f-c139-4602-9068-6720d207176d',
-        file_size: 2446288,
+        file_name: 'b8c54382-d484-4484-96eb-dfeb307b236f',
+        file_size: 1200573,
         file_extension: 'png',
       },
     },
     response: {
       text: '',
-      file_key: 'vision/同思远/png/fce8ca86-74e2-42c4-9704-cb69d04071b2-1759998821414.png',
+      file_key: 'vision/同思远/png/af2308fc-0615-4db7-a86b-249334d266ef-1759998401060.png',
       mimeType: 'image/png',
-      file_name: 'fce8ca86-74e2-42c4-9704-cb69d04071b2',
-      file_size: 2397207,
+      file_name: 'af2308fc-0615-4db7-a86b-249334d266ef',
+      file_size: 1275576,
       file_extension: 'png',
     },
-    created_at: '2025-10-09T08:33:42.385Z',
+    created_at: '2025-10-09T08:26:42.038Z',
     creator: {
       _id: '01231629201321476459',
       name: '同思远',
@@ -88,33 +86,14 @@ const imageEditHistoryImages = ref([
 // 选中的历史图片索引
 const selectedHistoryIndex = ref(-1)
 
-// 加载历史生成图片
-async function loadHistoryImages() {
-  isLoadingHistory.value = true
-  try {
-    const { data } = await getHistoryImages(1, 16)
-    historyImages.value.splice(0, historyImages.value.length, ...data.value.data)
-    selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === imageData.value.id * 1)
-  }
-  catch (error) {
-    console.error('Error loading history images:', error)
-  }
-  finally {
-    isLoadingHistory.value = false
-  }
-}
-
-// 初始化数据
-onMounted(async () => {
-  // 从路由参数获取图片数据
-  if (route.query.creationId) {
-    const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
-    imageData.value = data.value
-  }
-
-  // 加载历史图片数据
-  await loadHistoryImages()
-})
+const { state: historyImages } = useAsyncState(
+  async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then((res) => {
+    return res.data.value.data
+  }),
+  {
+  },
+  { immediate: true },
+)
 
 // 选择工具
 function selectTool(toolId: string) {
@@ -125,7 +104,6 @@ function selectTool(toolId: string) {
 function selectHistoryImage(item: any) {
   selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
   imageData.value = { ...item }
-  console.log(item)
 }
 
 // 处理发送编辑提示词
@@ -142,7 +120,12 @@ async function handleSendPrompt() {
   historyImages.value.push(data.value)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // 从路由参数获取图片数据
+  if (route.query.creationId) {
+    const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
+    imageData.value = data.value
+  }
   nextTick(() => {
     KTDropdown.init()
   })
@@ -290,6 +273,7 @@ onMounted(() => {
               :src="`/api/s3/proxy?key=${item.response.file_key}`"
               :alt="item.prompt"
               class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+              @click="imageData = item"
             >
             <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
           </div>
@@ -305,7 +289,7 @@ onMounted(() => {
       <!-- 历史图片列表 -->
       <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 64px);">
         <div
-          v-for="(item, index) in historyImages"
+          v-for="item in historyImages"
           :key="item.id"
           class="relative group cursor-pointer"
           @click="selectHistoryImage(item)"
