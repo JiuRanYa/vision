@@ -332,7 +332,16 @@ function handleLike(item: any) {
 
                 <!-- ShareModal组件 -->
                 <ShareModal
-                  :item="image"
+                  :item="{
+                    ...image,
+                    user: {
+                      name: 'Current User',
+                      avatar: '',
+                      timeAgo: 'Just now',
+                    },
+                    likes: Math.floor(Math.random() * 100) + 50,
+                    tags: ['1:1', 'auto', 'auto:imagen3', 'Text to Image'],
+                  }"
                   :modal-id="`share-modal-${image.id}`"
                   @recreate="handleRecreateFromShare"
                   @copy-link="handleCopyLink"

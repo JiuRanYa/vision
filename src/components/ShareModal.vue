@@ -82,7 +82,7 @@ const displayPrompt = getDisplayPrompt()
         <div class="flex h-full">
           <!-- 左侧图片展示区域 -->
           <div class="w-2/3 p-6">
-            <div class="relative w-full h-full max-h-[600px] overflow-hidden rounded-lg">
+            <div class="relative w-full h-full max-h-[80vh] overflow-hidden rounded-lg">
               <img
                 :src="`/api/s3/proxy?key=${item.response.file_key}`"
                 :alt="item.prompt"
@@ -93,90 +93,71 @@ const displayPrompt = getDisplayPrompt()
 
           <!-- 右侧信息区域 -->
           <div class="w-1/3 p-6 border-l border-gray-200 dark:border-gray-700">
-            <div class="space-y-6">
-              <!-- 用户信息 -->
-              <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                  <img
-                    v-if="item.user?.avatar"
-                    :src="item.user.avatar"
-                    :alt="item.user.name"
-                    class="w-full h-full object-cover"
-                  >
-                  <div
-                    v-else
-                    class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400"
-                  >
-                    <i class="ki-outline ki-user text-lg" />
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        {{ item.user?.name || 'Anonymous' }}
-                      </h4>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ item.user?.timeAgo || 'Recently' }}
-                      </p>
-                    </div>
-                    <button
-                      class="kt-btn kt-btn-sm kt-btn-secondary"
-                      @click="handleFollow"
+            <div class="flex flex-col justify-between h-full">
+              <div class="flex flex-col gap-4">
+                <!-- 用户信息 -->
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                    <img
+                      v-if="item.user?.avatar"
+                      :src="item.user.avatar"
+                      :alt="item.user.name"
+                      class="w-full h-full object-cover"
                     >
-                      Follow
-                    </button>
+                    <div
+                      v-else
+                      class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400"
+                    >
+                      <i class="ki-outline ki-user text-lg" />
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                          {{ item.user?.name || 'Anonymous' }}
+                        </h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ item.user?.timeAgo || 'Recently' }}
+                        </p>
+                      </div>
+                      <button
+                        class="kt-btn kt-btn-sm kt-btn-secondary"
+                        @click="handleFollow"
+                      >
+                        Follow
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- Prompt信息 -->
-              <div>
-                <h5 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-                  Prompt
-                </h5>
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                  <p class="text-sm text-gray-700 dark:text-gray-400 leading-relaxed">
+                <!-- Prompt信息 -->
+                <div>
+                  <h5 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    Prompt
+                  </h5>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                     {{ displayPrompt.text }}
                     <span v-if="displayPrompt.showMore">... See more</span>
                   </p>
                 </div>
-              </div>
 
-              <!-- 标签信息 -->
-              <div>
-                <div class="flex flex-wrap gap-2">
-                  <span
-                    v-for="tag in (item.tags || ['1:1', 'auto', 'auto:imagen3', 'text to image'])"
-                    :key="tag"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >
-                    {{ tag }}
-                  </span>
+                <!-- 标签信息 -->
+                <div>
+                  <div class="flex flex-wrap gap-2">
+                    <span
+                      v-for="tag in (item.tags || ['1:1', 'auto', 'auto:imagen3', 'text to image'])"
+                      :key="tag"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                    >
+                      {{ tag }}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <!-- 操作按钮 -->
-              <div class="space-y-3">
-                <button
-                  class="w-full flex items-center justify-center space-x-2 kt-btn kt-btn-secondary"
-                  @click="handleCopyLink"
-                >
-                  <i class="ki-outline ki-link text-sm" />
-                  <span>Copy link</span>
-                </button>
-
-                <button
-                  class="w-full flex items-center justify-center space-x-2 kt-btn kt-btn-secondary"
-                  @click="handleCreateVideo"
-                >
-                  <i class="ki-outline ki-play text-sm" />
-                  <span>Create video</span>
-                </button>
-              </div>
-
               <!-- 主要操作按钮 -->
-              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div class="pt-4">
                 <button
                   class="w-full kt-btn kt-btn-primary flex items-center justify-center space-x-2"
                   @click="handleRecreate"
