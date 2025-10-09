@@ -23,6 +23,70 @@ const editPrompt = ref('')
 // 历史图片数据
 const historyImages = ref([])
 const isLoadingHistory = ref(false)
+const confirmSaving = ref(true)
+
+const imageEditHistoryImages = ref([
+  {
+    id: 30,
+    prompt: 'remove the black cat',
+    metadata: {
+      attachment: {
+        text: '',
+        file_key: 'vision/同思远/png/226ea18f-c139-4602-9068-6720d207176d-1759998763711.png',
+        mimeType: 'image/png',
+        file_name: '226ea18f-c139-4602-9068-6720d207176d',
+        file_size: 2446288,
+        file_extension: 'png',
+      },
+    },
+    response: {
+      text: '',
+      file_key: 'vision/同思远/png/fce8ca86-74e2-42c4-9704-cb69d04071b2-1759998821414.png',
+      mimeType: 'image/png',
+      file_name: 'fce8ca86-74e2-42c4-9704-cb69d04071b2',
+      file_size: 2397207,
+      file_extension: 'png',
+    },
+    created_at: '2025-10-09T08:33:42.385Z',
+    creator: {
+      _id: '01231629201321476459',
+      name: '同思远',
+      email: 'tongsiyuan@bolegames.com',
+      title: '全栈开发工程师',
+    },
+    is_archived: false,
+  },
+  {
+    id: 30,
+    prompt: 'remove the black cat',
+    metadata: {
+      attachment: {
+        text: '',
+        file_key: 'vision/同思远/png/226ea18f-c139-4602-9068-6720d207176d-1759998763711.png',
+        mimeType: 'image/png',
+        file_name: '226ea18f-c139-4602-9068-6720d207176d',
+        file_size: 2446288,
+        file_extension: 'png',
+      },
+    },
+    response: {
+      text: '',
+      file_key: 'vision/同思远/png/fce8ca86-74e2-42c4-9704-cb69d04071b2-1759998821414.png',
+      mimeType: 'image/png',
+      file_name: 'fce8ca86-74e2-42c4-9704-cb69d04071b2',
+      file_size: 2397207,
+      file_extension: 'png',
+    },
+    created_at: '2025-10-09T08:33:42.385Z',
+    creator: {
+      _id: '01231629201321476459',
+      name: '同思远',
+      email: 'tongsiyuan@bolegames.com',
+      title: '全栈开发工程师',
+    },
+    is_archived: false,
+  },
+])
 
 // 选中的历史图片索引
 const selectedHistoryIndex = ref(-1)
@@ -94,7 +158,7 @@ onMounted(() => {
 <template>
   <div class="relative h-full min-h-0 bg-white dark:bg-gray-900 flex">
     <!-- 主编辑区域 -->
-    <div class="relative flex-1 flex items-center justify-center p-8">
+    <div class="relative flex-1 flex items-center justify-center p-8 z-[120]">
       <div class="max-w-full max-h-full">
         <img
           v-if="imageData.imageUrl"
@@ -111,7 +175,7 @@ onMounted(() => {
       </div>
 
       <!-- 悬浮工具栏 -->
-      <div class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg">
+      <div v-if="!confirmSaving" class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg">
         <div class="flex items-center space-x-6">
           <!-- 自动增强 -->
           <div
@@ -217,11 +281,25 @@ onMounted(() => {
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
             ]"
             title="调整"
-            @click="selectTool('adjust')"
+            @click="confirmSaving = true"
           >
             <i class="ki-outline ki-setting-2" />
           </button>
         </div>
+      </div>
+
+      <!-- 确认保存 -->
+      <div v-else class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg flex gap-2 p-2">
+        <div v-for="(item, index) in imageEditHistoryImages" :key="index">
+          <img
+            :src="`/api/s3/proxy?key=${item.response.file_key}`"
+            :alt="item.prompt"
+            class="w-10 h-10 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+          >
+        </div>
+        <button class="w-10 h-10 flex items-center justify-center transition-colors me-0" @click="confirmSaving = false">
+          <i class="ki-outline ki-check" />
+        </button>
       </div>
     </div>
 
@@ -251,6 +329,8 @@ onMounted(() => {
       </div>
     </div>
   </div>
+
+  <div v-if="confirmSaving" class="fixed inset-0 bg-white opacity-70 size-full z-100" />
 </template>
 
 <style scoped>
