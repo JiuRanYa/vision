@@ -313,7 +313,7 @@ function handleLike(item: any) {
                   <!-- 悬停操作按钮 -->
                   <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <div class="flex space-x-2">
-                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(currentGeneratedImage)">
+                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click.stop="handleEditImage(currentGeneratedImage)">
                         <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
                       <button
@@ -407,7 +407,7 @@ function handleLike(item: any) {
                     <!-- 悬停操作按钮 -->
                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <div class="flex space-x-2">
-                        <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
+                        <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click.stop="handleEditImage(image)">
                           <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
                         </button>
                         <button
