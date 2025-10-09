@@ -298,7 +298,10 @@ function handleLike(item: any) {
             <!-- 当前生成的图片展示 -->
             <div v-else-if="currentGeneratedImage" class="grid grid-cols-2 gap-4 mb-8">
               <div class="space-y-2">
-                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                <div
+                  data-kt-modal-toggle="#share-modal-current"
+                  class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800"
+                >
                   <img
                     :src="`/api/s3/proxy?key=${currentGeneratedImage.response.file_key}`"
                     alt="Generated image"
@@ -386,14 +389,20 @@ function handleLike(item: any) {
             <div v-else-if="historyGeneratedImages.length > 0" class="grid grid-cols-2 gap-4">
               <template v-for="image in historyGeneratedImages" :key="image.id">
                 <div class="space-y-2">
-                  <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                  <div
+                    :data-kt-modal-toggle="`#share-modal-${image.id}`"
+                    class="cursor-pointer relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800"
+                  >
                     <img
                       :src="`/api/s3/proxy?key=${image.response.file_key}`"
                       alt="Generated image"
                       class="w-full h-full object-fit"
                     >
                     <!-- 遮罩层 -->
-                    <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+                    <div
+                      class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200"
+                      :data-kt-modal-toggle="`#share-modal-${image.id}`"
+                    />
 
                     <!-- 悬停操作按钮 -->
                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -403,7 +412,6 @@ function handleLike(item: any) {
                         </button>
                         <button
                           class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                          :data-kt-modal-toggle="`#share-modal-${image.id}`"
                         >
                           <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
                         </button>
