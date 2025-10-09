@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
 import CommunityGrid from '@/components/CommunityGrid.vue'
+import ShareModal from '@/components/ShareModal.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
 const router = useRouter()
@@ -164,6 +165,53 @@ function handleEditImage(image: any) {
     },
   })
 }
+
+// 处理重新创建（从分享modal）
+function handleRecreateFromShare(item: any) {
+  console.warn('Recreating from share modal:', item)
+  // 使用打字机动画填充prompt
+  typewriterEffect(item.prompt)
+}
+
+// 处理复制链接
+function handleCopyLink(item: any) {
+  console.warn('Copying link for:', item)
+  // 这里应该实现实际的链接复制功能
+  const link = `${window.location.origin}/share/${item.id}`
+  navigator.clipboard.writeText(link).then(() => {
+    // 可以添加toast提示
+    console.log('Link copied to clipboard')
+  })
+}
+
+// 处理创建视频
+function handleCreateVideo(item: any) {
+  console.warn('Creating video for:', item)
+  // 这里应该跳转到视频生成页面
+  router.push({
+    path: '/video-generator',
+    query: {
+      imageId: item.id,
+      file_key: item.response.file_key,
+      prompt: item.prompt || '',
+    },
+  })
+}
+
+// 处理关注用户
+function handleFollow(user: any) {
+  console.warn('Following user:', user)
+  // 这里应该实现关注功能
+}
+
+// 处理点赞
+function handleLike(item: any) {
+  console.warn('Liking item:', item)
+  // 这里应该实现点赞功能
+  if (selectedImageForShare.value) {
+    selectedImageForShare.value.likes = (selectedImageForShare.value.likes || 0) + 1
+  }
+}
 </script>
 
 <template>
@@ -251,36 +299,48 @@ function handleEditImage(image: any) {
 
             <!-- 生成结果布局 -->
             <div v-else-if="historyGeneratedImages.length > 0" class="grid grid-cols-2 gap-4">
-              <div
-                v-for="image in historyGeneratedImages"
-                :key="image.id"
-                class="space-y-2"
-              >
-                <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
-                  <img
-                    :src="`/api/s3/proxy?key=${image.response.file_key}`"
-                    alt="Generated image"
-                    class="w-full h-full object-fit"
-                  >
-                  <!-- 遮罩层 -->
-                  <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+              <template v-for="image in historyGeneratedImages" :key="image.id">
+                <div class="space-y-2">
+                  <div class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                    <img
+                      :src="`/api/s3/proxy?key=${image.response.file_key}`"
+                      alt="Generated image"
+                      class="w-full h-full object-fit"
+                    >
+                    <!-- 遮罩层 -->
+                    <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
 
-                  <!-- 悬停操作按钮 -->
-                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <div class="flex space-x-2">
-                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
-                        <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
-                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
-                      <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
-                      </button>
+                    <!-- 悬停操作按钮 -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div class="flex space-x-2">
+                        <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" @click="handleEditImage(image)">
+                          <i class="ki-outline ki-pencil text-gray-600 dark:text-gray-400 text-sm" />
+                        </button>
+                        <button
+                          class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          :data-kt-modal-toggle="`#share-modal-${image.id}`"
+                        >
+                          <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                        </button>
+                        <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                          <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                <!-- ShareModal组件 -->
+                <ShareModal
+                  :item="image"
+                  :modal-id="`share-modal-${image.id}`"
+                  @recreate="handleRecreateFromShare"
+                  @copy-link="handleCopyLink"
+                  @create-video="handleCreateVideo"
+                  @follow="handleFollow"
+                  @like="handleLike"
+                />
+              </template>
             </div>
 
             <!-- 空状态 -->
