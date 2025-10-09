@@ -2,10 +2,9 @@
 import { KTDropdown } from '@keenthemes/ktui/src'
 import { nextTick, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getHistoryImages } from '@/api/image'
+import { generateImage, getHistoryImages } from '@/api/image'
 
 const route = useRoute()
-const router = useRouter()
 
 // 图片数据
 const imageData = ref({
@@ -15,13 +14,14 @@ const imageData = ref({
   originalPrompt: '',
 })
 
-const editHistory = reactive([])
-
 // 编辑工具状态
 const activeTool = ref('auto-enhance')
 
+// 编辑提示词
+const editPrompt = ref('')
+
 // 历史图片数据
-const historyImages = reactive([])
+const historyImages = ref([])
 const isLoadingHistory = ref(false)
 
 // 选中的历史图片索引
@@ -32,7 +32,9 @@ async function loadHistoryImages() {
   isLoadingHistory.value = true
   try {
     const { data } = await getHistoryImages(1, 16)
-    historyImages.splice(0, historyImages.length, ...data.value.data)
+    historyImages.value.splice(0, historyImages.value.length, ...data.value.data)
+    selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === imageData.value.id * 1)
+    console.log(selectedHistoryIndex.value)
   }
   catch (error) {
     console.error('Error loading history images:', error)
@@ -63,9 +65,23 @@ function selectTool(toolId: string) {
 
 // 选择历史图片
 function selectHistoryImage(item: any) {
-  selectedHistoryIndex.value = historyImages.findIndex(img => img.id === item.id)
+  selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
   imageData.value.imageUrl = `/api/s3/proxy?key=${item.response.file_key}`
   imageData.value.prompt = item.prompt
+}
+
+// 处理发送编辑提示词
+async function handleSendPrompt() {
+  if (!editPrompt.value.trim()) {
+    return
+  }
+
+  const prompt = editPrompt.value
+  editPrompt.value = '' // 清空输入框
+  const { data } = await generateImage(prompt, {
+    attachment: historyImages.value[selectedHistoryIndex.value].response,
+  })
+  historyImages.value.push(data.value)
 }
 
 onMounted(() => {
@@ -119,9 +135,20 @@ onMounted(() => {
             </button>
 
             <!-- Chat聊天框 -->
-            <div class="kt-dropdown w-[500px] h-[100px] p-4 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
-              <!-- 标题 -->
-              <input class="w-full bg-transparent border-none hover:shadow-none outline-0" placeholder="What you want to change">
+            <div class="kt-dropdown w-[500px] h-[100px] p-4 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg relative" data-kt-dropdown-menu="true">
+              <!-- 输入框 -->
+              <input
+                v-model="editPrompt"
+                class="w-full bg-transparent border-none hover:shadow-none outline-0 pr-12"
+                placeholder="What you want to change"
+              >
+              <!-- 发送按钮 -->
+              <button
+                class="absolute right-2 bottom-2 w-8 h-8 bg-primary hover:bg-primary-dark text-white rounded-full flex items-center justify-center transition-colors"
+                @click="handleSendPrompt"
+              >
+                <i class="ki-outline ki-paper-plane text-sm" />
+              </button>
             </div>
           </div>
 

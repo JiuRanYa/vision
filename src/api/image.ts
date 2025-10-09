@@ -45,8 +45,8 @@ interface HistoryImagesResponse {
   }
 }
 
-export function generateImage(prompt: string) {
-  return ApiService.post<GenerateImageResponse>('/creation', { prompt })
+export function generateImage(prompt: string, metadata?: any) {
+  return ApiService.post<GenerateImageResponse>('/creation', { prompt, metadata })
 }
 
 export function getHistoryImages(page: number = 1, limit: number = 10) {
