@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
@@ -24,9 +24,13 @@ const emit = defineEmits<{
   recreate: [item: ShareModalProps['item']]
   copyLink: [item: ShareModalProps['item']]
   createVideo: [item: ShareModalProps['item']]
-  follow: [user: ShareModalProps['item']['user']]
   like: [item: ShareModalProps['item']]
 }>()
+
+const promptMaxLength = 150
+
+// Prompt展开状态
+const isPromptExpanded = ref(false)
 
 // 处理重新创建
 function handleRecreate() {
@@ -57,14 +61,26 @@ function handleLike() {
 
 // 处理prompt文本截断
 function getDisplayPrompt() {
-  const maxLength = 150
-  if (props.item.prompt.length <= maxLength) {
+  if (props.item.prompt.length <= promptMaxLength) {
     return { text: props.item.prompt, showMore: false }
   }
   return {
-    text: props.item.prompt.substring(0, maxLength),
+    text: props.item.prompt.substring(0, promptMaxLength),
     showMore: true,
   }
+}
+
+// 切换prompt展开状态
+function togglePromptExpansion() {
+  isPromptExpanded.value = !isPromptExpanded.value
+}
+
+// 获取当前显示的prompt文本
+function getCurrentPromptText() {
+  if (props.item.prompt.length <= promptMaxLength || isPromptExpanded.value) {
+    return props.item.prompt
+  }
+  return props.item.prompt.substring(0, promptMaxLength)
 }
 
 const displayPrompt = getDisplayPrompt()
@@ -137,9 +153,19 @@ const displayPrompt = getDisplayPrompt()
                     Prompt
                   </h5>
                   <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                    {{ displayPrompt.text }}
-                    <span v-if="displayPrompt.showMore">... See more</span>
+                    {{ getCurrentPromptText() }}
+                    <span v-if="props.item.prompt.length > promptMaxLength && !isPromptExpanded">...</span>
                   </p>
+
+                  <div>
+                    <button
+                      v-if="displayPrompt.showMore"
+                      class="text-blue-600 dark:text-blue-400 ml-1 text-xs font-semibold hover:underline"
+                      @click="togglePromptExpansion"
+                    >
+                      {{ isPromptExpanded ? 'See less' : 'See more' }}
+                    </button>
+                  </div>
                 </div>
 
                 <!-- 标签信息 -->
@@ -160,6 +186,7 @@ const displayPrompt = getDisplayPrompt()
               <div class="pt-4">
                 <button
                   class="w-full kt-btn kt-btn-mono flex items-center justify-center space-x-2"
+                  data-kt-modal-dismiss="true"
                   @click="handleRecreate"
                 >
                   <i class="ki-outline ki-refresh text-sm" />
