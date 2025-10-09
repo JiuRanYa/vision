@@ -94,7 +94,7 @@ const displayPrompt = getDisplayPrompt()
           <!-- 右侧信息区域 -->
           <div class="w-1/3 p-6 border-l border-gray-200 dark:border-gray-700">
             <div class="flex flex-col justify-between h-full">
-              <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-6">
                 <!-- 用户信息 -->
                 <div class="flex items-center space-x-3">
                   <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
@@ -159,7 +159,7 @@ const displayPrompt = getDisplayPrompt()
               <!-- 主要操作按钮 -->
               <div class="pt-4">
                 <button
-                  class="w-full kt-btn kt-btn-primary flex items-center justify-center space-x-2"
+                  class="w-full kt-btn kt-btn-mono flex items-center justify-center space-x-2"
                   @click="handleRecreate"
                 >
                   <i class="ki-outline ki-refresh text-sm" />
