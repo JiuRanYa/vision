@@ -114,9 +114,9 @@ async function handleSendPrompt() {
 
   const prompt = editPrompt.value
   editPrompt.value = '' // 清空输入框
-  const { data } = await generateImage(prompt, {
+  const { data } = await ApiService.post('/creation', { prompt, metadata: {
     attachment: historyImages.value[selectedHistoryIndex.value].response,
-  })
+  } })
   historyImages.value.push(data.value)
 }
 
@@ -266,7 +266,7 @@ onMounted(async () => {
       </div>
 
       <!-- 确认保存 -->
-      <div v-else class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg flex gap-2 p-2">
+      <div v-else class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center gap-2 p-2">
         <div v-for="(item, index) in imageEditHistoryImages" :key="index">
           <div class="size-10 relative">
             <img
@@ -278,8 +278,8 @@ onMounted(async () => {
             <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
           </div>
         </div>
-        <button class="w-10 h-10 flex items-center justify-center transition-colors me-0" @click="confirmSaving = false">
-          <i class="ki-outline ki-check" />
+        <button class="kt-btn kt-btn-mono" @click="confirmSaving = false">
+          Save
         </button>
       </div>
     </div>
