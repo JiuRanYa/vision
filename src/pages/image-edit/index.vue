@@ -64,11 +64,14 @@ async function handleSendPrompt() {
 
   const prompt = editPrompt.value
   editPrompt.value = '' // 清空输入框
+
   confirmSaving.value = true
 
   const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
     attachment: historyImages.value[selectedHistoryIndex.value].response,
   }, original_id: imageData.value.id })
+
+  // 放入编辑历史
   editHistoryImages.value.push(data.value)
 
   confirmSaving.value = false
