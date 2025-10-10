@@ -2,9 +2,8 @@
 import type { Creation } from '@/types/creation'
 import { KTDropdown } from '@keenthemes/ktui/src'
 import { useAsyncState } from '@vueuse/core'
-import { nextTick, onMounted, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { generateImage, getHistoryImages } from '@/api/image'
+import { nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { ApiService } from '@/service/fetch'
 
 const route = useRoute()
@@ -19,80 +18,30 @@ const activeTool = ref('auto-enhance')
 const editPrompt = ref('')
 const confirmSaving = ref(false)
 
-const imageEditHistoryImages = ref<Creation[]>([
-  {
-    id: 30,
-    prompt: 'remove the black cat',
-    metadata: {
-      attachment: {
-        text: '',
-        file_key: 'vision/同思远/png/226ea18f-c139-4602-9068-6720d207176d-1759998763711.png',
-        mimeType: 'image/png',
-        file_name: '226ea18f-c139-4602-9068-6720d207176d',
-        file_size: 2446288,
-        file_extension: 'png',
-      },
-    },
-    response: {
-      text: '',
-      file_key: 'vision/同思远/png/fce8ca86-74e2-42c4-9704-cb69d04071b2-1759998821414.png',
-      mimeType: 'image/png',
-      file_name: 'fce8ca86-74e2-42c4-9704-cb69d04071b2',
-      file_size: 2397207,
-      file_extension: 'png',
-    },
-    created_at: '2025-10-09T08:33:42.385Z',
-    creator: {
-      _id: '01231629201321476459',
-      name: '同思远',
-      email: 'tongsiyuan@bolegames.com',
-      title: '全栈开发工程师',
-    },
-    is_archived: false,
-  },
-  {
-    id: 25,
-    original_id: null,
-    prompt: 'change the hair color to blue',
-    metadata: {
-      attachment: {
-        text: 'Here\'s that beautiful, pink-haired girl for you! ',
-        file_key: 'vision/同思远/png/b8c54382-d484-4484-96eb-dfeb307b236f-1759995796422.png',
-        mimeType: 'image/png',
-        file_name: 'b8c54382-d484-4484-96eb-dfeb307b236f',
-        file_size: 1200573,
-        file_extension: 'png',
-      },
-    },
-    response: {
-      text: '',
-      file_key: 'vision/同思远/png/af2308fc-0615-4db7-a86b-249334d266ef-1759998401060.png',
-      mimeType: 'image/png',
-      file_name: 'af2308fc-0615-4db7-a86b-249334d266ef',
-      file_size: 1275576,
-      file_extension: 'png',
-    },
-    created_at: '2025-10-09T08:26:42.038Z',
-    creator: {
-      _id: '01231629201321476459',
-      name: '同思远',
-      email: 'tongsiyuan@bolegames.com',
-      title: '全栈开发工程师',
-    },
-    is_archived: false,
-  },
-])
-
 // 选中的历史图片索引
 const selectedHistoryIndex = ref(-1)
 
-const { state: historyImages } = useAsyncState(
-  async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then((res) => {
+const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
+  async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then(async (res) => {
+    selectedHistoryIndex.value = res.data.value.data.findIndex(img => img.id === imageData.value.id)
+    editHistoryImages.value = [{ ...res.data.value.data[selectedHistoryIndex.value] }]
     return res.data.value.data
   }),
   {
   },
-  { immediate: true },
+  { immediate: false },
+)
+
+const { state: editHistoryImages, execute: fetchEditHistoryImages } = useAsyncState(
+  async () => {
+    if (imageData.value?.original_id)
+      return
+    return ApiService.get(`/creation/${imageData.value.id}/history`).then((res) => {
+      return res.data.value
+    })
+  },
+  {},
+  { immediate: false },
 )
 
 // 选择工具
@@ -103,6 +52,7 @@ function selectTool(toolId: string) {
 // 选择历史图片
 function selectHistoryImage(item: any) {
   selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
+  editHistoryImages.value = [{ ...item }]
   imageData.value = { ...item }
 }
 
@@ -114,17 +64,32 @@ async function handleSendPrompt() {
 
   const prompt = editPrompt.value
   editPrompt.value = '' // 清空输入框
-  const { data } = await ApiService.post('/creation', { prompt, metadata: {
+  confirmSaving.value = true
+
+  const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
     attachment: historyImages.value[selectedHistoryIndex.value].response,
-  } })
-  historyImages.value.push(data.value)
+  }, original_id: imageData.value.id })
+  editHistoryImages.value.push(data.value)
+
+  confirmSaving.value = false
 }
+
+watch(
+  () => imageData.value,
+  () => {
+    if (imageData.value?.derivatives_count) {
+      fetchEditHistoryImages()
+    }
+  },
+  { immediate: true },
+)
 
 onMounted(async () => {
   // 从路由参数获取图片数据
   if (route.query.creationId) {
     const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
     imageData.value = data.value
+    fetchHistoryImages()
   }
   nextTick(() => {
     KTDropdown.init()
@@ -267,7 +232,7 @@ onMounted(async () => {
 
       <!-- 确认保存 -->
       <div v-else class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center gap-2 p-2">
-        <div v-for="(item, index) in imageEditHistoryImages" :key="index">
+        <div v-for="(item, index) in editHistoryImages" :key="index">
           <div class="size-10 relative">
             <img
               :src="`/api/s3/proxy?key=${item.response.file_key}`"

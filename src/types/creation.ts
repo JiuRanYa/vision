@@ -7,6 +7,7 @@ export interface Creation {
   created_at: string
   creator: Creator
   is_archived: boolean
+  derivatives_count: number
 }
 
 interface Metadata {
