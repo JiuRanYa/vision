@@ -25,7 +25,6 @@ const generatedImagesByExitImage = ref([])
 const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
   async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then(async (res) => {
     selectedHistoryIndex.value = res.data.value.data.findIndex(img => img.id === imageData.value.id)
-    editHistoryImages.value = [{ ...res.data.value.data[selectedHistoryIndex.value] }]
     return res.data.value.data
   }),
   {
@@ -45,7 +44,7 @@ const { state: editHistoryImages, execute: fetchEditHistoryImages } = useAsyncSt
   { immediate: false },
 )
 
-const { execute: createNewCreationByExitImage, isLoading: isCreatingNewCreationByExitImage } = useAsyncState(
+const { state: newCreationByExitImage, execute: createNewCreationByExitImage, isLoading: isCreatingNewCreationByExitImage } = useAsyncState(
   async (prompt: string, exitImage: Creation) => {
     const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
       attachment: exitImage.response,
@@ -83,10 +82,10 @@ async function handleSendPrompt() {
 
   confirmSaving.value = true
 
-  createNewCreationByExitImage(0, prompt, historyImages.value[selectedHistoryIndex.value])
+  await createNewCreationByExitImage(0, prompt, historyImages.value[selectedHistoryIndex.value])
 
   // 放入编辑历史
-  editHistoryImages.value.push(data.value)
+  editHistoryImages.value = [...editHistoryImages.value, newCreationByExitImage.value]
 
   // confirmSaving.value = false
 }
@@ -277,9 +276,7 @@ onMounted(async () => {
             <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
           </div>
         </div>
-        <div v-if="!isCreatingNewCreationByExitImage" class="size-10 border rounded-lg">
-          <i class="ki-outline ki-loading animate-spin" />
-        </div>
+        <div v-if="isCreatingNewCreationByExitImage" class="size-10 rounded-lg bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse bg-[length:200%_100%] animate-shimmer" />
         <button class="kt-btn kt-btn-mono" @click="confirmSaving = false">
           Save
         </button>
@@ -325,5 +322,19 @@ onMounted(async () => {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Shimmer动画 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
 }
 </style>
