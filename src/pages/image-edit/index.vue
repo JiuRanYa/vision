@@ -48,7 +48,7 @@ const { state: newCreationByExitImage, execute: createNewCreationByExitImage, is
   async (prompt: string, exitImage: Creation) => {
     const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
       attachment: exitImage.response,
-    }, original_id: imageData.value.id })
+    }, original_id: historyImages.value[selectedHistoryIndex.value].id })
 
     generatedImagesByExitImage.value = [...editHistoryImages.value]
     generatedImagesByExitImage.value.push(data.value)
@@ -134,7 +134,7 @@ onMounted(async () => {
       </div>
 
       <div class="absolute bottom-6 w-full">
-        <div class="flex gap-2 px-4">
+        <div class="flex gap-2 px-4 w-[200px] overflow-x-auto scrollbar-hide">
           <div v-for="(item, index) in editHistoryImages" :key="index">
             <div class="size-10 relative">
               <img
@@ -288,7 +288,7 @@ onMounted(async () => {
       <!-- 历史图片列表 -->
       <div class="p-4 space-y-3 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 64px);">
         <div
-          v-for="item in historyImages"
+          v-for="(item, index) in historyImages"
           :key="item.id"
           class="relative group cursor-pointer"
           @click="selectHistoryImage(item)"
@@ -302,7 +302,7 @@ onMounted(async () => {
           </div>
           <!-- 选中状态指示器 -->
           <div
-            v-if="imageData?.id === item.id"
+            v-if="selectedHistoryIndex === index"
             class="absolute inset-0 border-2 border-blue-500 rounded-lg"
           />
           <div v-if="item.derivatives_count" class="absolute bottom-1 right-1 text-[10px] bg-black text-white dark:bg-gray-800 rounded p-0.5">
