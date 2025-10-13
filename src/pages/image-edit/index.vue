@@ -174,7 +174,7 @@ onMounted(async () => {
             </button>
 
             <!-- Chat聊天框 -->
-            <div class="kt-dropdown w-[500px] h-[100px] p-4 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg relative" data-kt-dropdown-menu="true">
+            <div class="kt-dropdown w-[500px] h-[100px] p-4 text-sm bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border border-gray-200/50 dark:border-gray-600/50 rounded-lg shadow-lg relative" data-kt-dropdown-menu="true">
               <!-- 输入框 -->
               <input
                 v-model="editPrompt"
