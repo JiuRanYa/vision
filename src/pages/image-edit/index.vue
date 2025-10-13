@@ -12,7 +12,7 @@ const route = useRoute()
 const imageData = ref<Creation>()
 
 // 编辑工具状态
-const activeTool = ref('auto-enhance')
+const activeTool = ref()
 
 // 编辑提示词
 const editPrompt = ref('')
@@ -61,6 +61,10 @@ const { state: newCreationByExitImage, execute: createNewCreationByExitImage, is
 
 // 选择工具
 function selectTool(toolId: string) {
+  if (toolId === activeTool.value) {
+    activeTool.value = ''
+    return
+  }
   activeTool.value = toolId
 }
 
@@ -150,8 +154,8 @@ onMounted(async () => {
       </div>
 
       <!-- 悬浮工具栏 -->
-      <div v-if="!confirmSaving" class="absolute bottom-6  bg-gray-100 dark:bg-gray-600 rounded-lg">
-        <div class="flex items-center space-x-6">
+      <div v-if="!confirmSaving" class="absolute bottom-6 bg-gray-100 dark:bg-gray-600 rounded-lg">
+        <div class="flex items-center space-x-6 gap-2 m-2">
           <!-- 自动增强 -->
           <div
             class="inline-flex me-0"
@@ -160,11 +164,11 @@ onMounted(async () => {
             data-kt-dropdown-placement="top"
           >
             <button
-              class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+              class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
               :class="[
                 activeTool === 'auto-enhance'
-                  ? 'text-gray-900 dark:text-gray-100'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                  ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
               ]"
               title="自动增强"
               data-kt-dropdown-toggle="true"
@@ -193,11 +197,11 @@ onMounted(async () => {
 
           <!-- 修补 -->
           <button
-            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
             :class="[
               activeTool === 'patch'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
             ]"
             title="修补"
             @click="selectTool('patch')"
@@ -207,11 +211,11 @@ onMounted(async () => {
 
           <!-- 特效 -->
           <button
-            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
             :class="[
               activeTool === 'effects'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
             ]"
             title="特效"
             @click="selectTool('effects')"
@@ -221,11 +225,11 @@ onMounted(async () => {
 
           <!-- 对比 -->
           <button
-            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
             :class="[
               activeTool === 'compare'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
             ]"
             title="对比"
             @click="selectTool('compare')"
@@ -235,11 +239,11 @@ onMounted(async () => {
 
           <!-- 展开 -->
           <button
-            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
             :class="[
               activeTool === 'expand'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
             ]"
             title="展开"
             @click="selectTool('expand')"
@@ -249,11 +253,11 @@ onMounted(async () => {
 
           <!-- 调整 -->
           <button
-            class="w-10 h-10 flex items-center justify-center transition-colors me-0"
+            class="w-8 h-8 flex items-center justify-center transition-all me-0 rounded-lg"
             :class="[
               activeTool === 'adjust'
-                ? 'text-gray-900 dark:text-gray-100'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-primary text-white dark:bg-gray-700 dark:text-gray-100'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50',
             ]"
             title="调整"
           >
