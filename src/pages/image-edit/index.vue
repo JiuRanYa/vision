@@ -256,7 +256,6 @@ onMounted(async () => {
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
             ]"
             title="调整"
-            @click="confirmSaving = true"
           >
             <i class="ki-outline ki-setting-2" />
           </button>
