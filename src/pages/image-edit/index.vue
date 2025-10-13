@@ -34,7 +34,7 @@ const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
 
 const { state: editHistoryImages, executeImmediate: fetchEditHistoryImages, isLoading: isLoadingEditHistory } = useAsyncState(
   async () => {
-    if (imageData.value?.original_id)
+    if (imageData.value?.original_id || !imageData.value)
       return
     return ApiService.get(`/creation/${imageData.value.id}/history`).then((res) => {
       return res.data.value
@@ -73,6 +73,7 @@ function selectHistoryImage(item: any) {
   selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
   editHistoryImages.value = [{ ...item }]
   imageData.value = { ...item }
+  fetchEditHistoryImages()
 }
 
 // 处理发送编辑提示词
@@ -94,24 +95,22 @@ async function handleSendPrompt() {
   // confirmSaving.value = false
 }
 
-watch(
-  () => imageData.value,
-  () => {
-    fetchEditHistoryImages()
-  },
-  { immediate: true },
-)
+function selectEditImage(item: Creation) {
+  imageData.value = item
+}
 
 onMounted(async () => {
-  // 从路由参数获取图片数据
-  if (route.query.creationId) {
-    const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
-    imageData.value = data.value
-    fetchHistoryImages()
+  if (!route.query.creationId) {
+    return
   }
-  nextTick(() => {
-    KTDropdown.init()
-  })
+
+  const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
+  imageData.value = data.value
+
+  fetchHistoryImages()
+  fetchEditHistoryImages()
+
+  nextTick(KTDropdown.init)
 })
 </script>
 
@@ -142,7 +141,7 @@ onMounted(async () => {
                 :src="`/api/s3/proxy?key=${item.response.file_key}`"
                 :alt="item.prompt"
                 class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
-                @click="imageData = item"
+                @click="selectEditImage(item)"
               >
               <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
             </div>
