@@ -306,6 +306,9 @@ onMounted(async () => {
             v-if="imageData?.id === item.id"
             class="absolute inset-0 border-2 border-blue-500 rounded-lg"
           />
+          <div v-if="item.derivatives_count" class="absolute bottom-1 right-1 text-[10px] bg-black text-white dark:bg-gray-800 rounded p-0.5">
+            {{ item.derivatives_count }} edits
+          </div>
         </div>
       </div>
     </div>
