@@ -20,6 +20,7 @@ const confirmSaving = ref(false)
 
 // 选中的历史图片索引
 const selectedHistoryIndex = ref(-1)
+const generatedImagesByExitImage = ref([])
 
 const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
   async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then(async (res) => {
@@ -39,6 +40,21 @@ const { state: editHistoryImages, execute: fetchEditHistoryImages } = useAsyncSt
     return ApiService.get(`/creation/${imageData.value.id}/history`).then((res) => {
       return res.data.value
     })
+  },
+  {},
+  { immediate: false },
+)
+
+const { execute: createNewCreationByExitImage, isLoading: isCreatingNewCreationByExitImage } = useAsyncState(
+  async (prompt: string, exitImage: Creation) => {
+    const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
+      attachment: exitImage.response,
+    }, original_id: imageData.value.id })
+
+    generatedImagesByExitImage.value = [...editHistoryImages.value]
+    generatedImagesByExitImage.value.push(data.value)
+
+    return data.value as any
   },
   {},
   { immediate: false },
@@ -67,14 +83,12 @@ async function handleSendPrompt() {
 
   confirmSaving.value = true
 
-  const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
-    attachment: historyImages.value[selectedHistoryIndex.value].response,
-  }, original_id: imageData.value.id })
+  createNewCreationByExitImage(0, prompt, historyImages.value[selectedHistoryIndex.value])
 
   // 放入编辑历史
   editHistoryImages.value.push(data.value)
 
-  confirmSaving.value = false
+  // confirmSaving.value = false
 }
 
 watch(
@@ -262,6 +276,9 @@ onMounted(async () => {
             >
             <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
           </div>
+        </div>
+        <div v-if="!isCreatingNewCreationByExitImage" class="size-10 border rounded-lg">
+          <i class="ki-outline ki-loading animate-spin" />
         </div>
         <button class="kt-btn kt-btn-mono" @click="confirmSaving = false">
           Save
