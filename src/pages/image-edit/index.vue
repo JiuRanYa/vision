@@ -2,6 +2,7 @@
 import type { Creation } from '@/types/creation'
 import { KTDropdown } from '@keenthemes/ktui/src'
 import { useAsyncState } from '@vueuse/core'
+import { ScrollArea } from 'panda-ui'
 import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ApiService } from '@/service/fetch'
@@ -133,19 +134,26 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="absolute bottom-6 w-full">
-        <div class="flex gap-2 px-4 w-[200px] overflow-x-auto scrollbar-hide">
-          <div v-for="(item, index) in editHistoryImages" :key="index">
-            <div class="size-10 relative">
-              <img
-                :src="`/api/s3/proxy?key=${item.response.file_key}`"
-                :alt="item.prompt"
-                class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
-                @click="selectEditImage(item)"
-              >
-              <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
+      <div class="absolute bottom-6 w-full ms-4">
+        <div>
+          <ScrollArea
+            width="200px"
+            mode="horizontal"
+          >
+            <div class="flex gap-2">
+              <div v-for="(item, index) in editHistoryImages" :key="index">
+                <div class="size-10 relative">
+                  <img
+                    :src="`/api/s3/proxy?key=${item.response.file_key}`"
+                    :alt="item.prompt"
+                    class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+                    @click="selectEditImage(item)"
+                  >
+                  <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
+                </div>
+              </div>
             </div>
-          </div>
+          </ScrollArea>
         </div>
         <div />
       </div>
