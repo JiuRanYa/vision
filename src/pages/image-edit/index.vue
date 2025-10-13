@@ -136,24 +136,19 @@ onMounted(async () => {
 
       <div class="absolute bottom-6 w-full ms-4">
         <div>
-          <ScrollArea
-            width="200px"
-            mode="horizontal"
-          >
-            <div class="flex gap-2">
-              <div v-for="(item, index) in editHistoryImages" :key="index">
-                <div class="size-10 relative">
-                  <img
-                    :src="`/api/s3/proxy?key=${item.response.file_key}`"
-                    :alt="item.prompt"
-                    class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
-                    @click="selectEditImage(item)"
-                  >
-                  <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
-                </div>
+          <div class="flex gap-2 overflow-auto scrollbar-hide">
+            <div v-for="(item, index) in editHistoryImages" :key="index">
+              <div class="size-10 relative">
+                <img
+                  :src="`/api/s3/proxy?key=${item.response.file_key}`"
+                  :alt="item.prompt"
+                  class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
+                  @click="selectEditImage(item)"
+                >
+                <div v-if="imageData?.id === item.id" class="absolute inset-0 border-2 border-blue-500 rounded-lg" />
               </div>
             </div>
-          </ScrollArea>
+          </div>
         </div>
         <div />
       </div>
