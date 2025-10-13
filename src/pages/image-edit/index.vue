@@ -32,7 +32,7 @@ const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
   { immediate: false },
 )
 
-const { state: editHistoryImages, execute: fetchEditHistoryImages } = useAsyncState(
+const { state: editHistoryImages, executeImmediate: fetchEditHistoryImages, isLoading: isLoadingEditHistory } = useAsyncState(
   async () => {
     if (imageData.value?.original_id)
       return
@@ -97,9 +97,7 @@ async function handleSendPrompt() {
 watch(
   () => imageData.value,
   () => {
-    if (imageData.value?.derivatives_count) {
-      fetchEditHistoryImages()
-    }
+    fetchEditHistoryImages()
   },
   { immediate: true },
 )
