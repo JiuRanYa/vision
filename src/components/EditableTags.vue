@@ -26,17 +26,19 @@ const emit = defineEmits<{
 // 使用tags store
 const tagsStore = useTagsStore()
 
-// 编辑模式
-const isEditMode = ref(true)
+// 编辑模式（默认为非编辑状态）
+const isEditMode = ref(false)
 
-// 当前编辑的tag ID
-const editingTagId = ref<string | null>(null)
-
-// 编辑中的tag数据
-const editingTag = ref<{ text: string, background: string }>({ text: '', background: '' })
-
-// 保存loading状态
+// 保存loading状态（批量保存所有tags）
 const isSaving = ref(false)
+
+// 工作副本（编辑时的临时数据）
+const workingTags = ref<Tag[]>([])
+
+// 初始化工作副本
+function initWorkingTags() {
+  workingTags.value = JSON.parse(JSON.stringify(props.modelValue))
+}
 
 // 预设颜色列表
 const colorPresets = [
@@ -54,96 +56,98 @@ const colorPresets = [
 const existingTags = computed(() => tagsStore.existingTags)
 const isLoadingTags = computed(() => tagsStore.isLoading)
 
-// 内部tags
-const internalTags = computed({
-  get: () => props.modelValue,
-  set: value => emit('update:modelValue', value),
-})
+// 显示的tags（编辑模式用workingTags，非编辑模式用props.modelValue）
+const displayTags = computed(() => isEditMode.value ? workingTags.value : props.modelValue)
 
-// 切换编辑模式
-function toggleEditMode() {
-  isEditMode.value = !isEditMode.value
-  if (!isEditMode.value) {
-    editingTagId.value = null
-  }
+// 进入编辑模式
+function enterEditMode() {
+  initWorkingTags()
+  isEditMode.value = true
   nextTick(() => {
     KTDropdown.init()
   })
 }
 
-// 打开tag编辑
-function openTagEdit(tag: Tag) {
-  if (!isEditMode.value)
+// 批量保存所有tags（点击对勾时）
+async function saveAllTags() {
+  if (isSaving.value)
     return
-
-  editingTagId.value = tag.id
-  editingTag.value = {
-    text: tag.text,
-    background: tag.background,
-  }
-}
-
-// 保存tag编辑
-async function saveTagEdit(tagId: string) {
-  const tagIndex = internalTags.value.findIndex(t => t.id === tagId)
-  if (tagIndex === -1 || isSaving.value)
-    return
-
-  const currentTag = internalTags.value[tagIndex]
-  const updatedTagData = {
-    text: editingTag.value.text,
-    background: editingTag.value.background,
-  }
 
   isSaving.value = true
 
   try {
-    // 判断是新建还是更新
-    const isNewTag = tagId.startsWith('tag-') // 临时ID格式
+    const savedTags: Tag[] = []
 
-    if (isNewTag) {
-      // POST创建新标签
-      const response = await ApiService.post<Tag>('/tag', updatedTagData)
-      const savedTag = response.data.value
+    // 处理每个tag
+    for (const tag of workingTags.value) {
+      const isNewTag = tag.id.startsWith('tag-') // 临时ID格式
 
-      // 用后端返回的真实ID替换临时ID
-      const updatedTags = [...internalTags.value]
-      updatedTags[tagIndex] = savedTag
-      internalTags.value = updatedTags
+      if (isNewTag) {
+        // POST创建新标签
+        const response = await ApiService.post<Tag>('/tag', {
+          text: tag.text,
+          background: tag.background,
+        })
+        const savedTag = response.data.value
+        savedTags.push(savedTag)
 
-      // 添加到store
-      tagsStore.addTag(savedTag)
-    }
-    else {
-      // PATCH更新现有标签
-      await ApiService.patch(`/tag/${currentTag.id}`, updatedTagData)
-
-      // 更新本地数据
-      const updatedTags = [...internalTags.value]
-      updatedTags[tagIndex] = {
-        ...currentTag,
-        ...updatedTagData,
+        // 添加到store
+        tagsStore.addTag(savedTag)
       }
-      internalTags.value = updatedTags
+      else {
+        // 检查是否有变化
+        const originalTag = props.modelValue.find(t => t.id === tag.id)
+        const hasChanges = originalTag
+          && (originalTag.text !== tag.text || originalTag.background !== tag.background)
 
-      // 更新store中的标签
-      tagsStore.updateTag(currentTag.id, updatedTagData)
+        if (hasChanges) {
+          // PATCH更新现有标签
+          await ApiService.patch(`/tag/${tag.id}`, {
+            text: tag.text,
+            background: tag.background,
+          })
+
+          // 更新store中的标签
+          tagsStore.updateTag(tag.id, {
+            text: tag.text,
+            background: tag.background,
+          })
+        }
+
+        savedTags.push(tag)
+      }
     }
+
+    // 更新父组件的值
+    emit('update:modelValue', savedTags)
+
+    // 退出编辑模式
+    isEditMode.value = false
+    workingTags.value = []
   }
   catch (error) {
-    console.error('Failed to save tag:', error)
+    console.error('Failed to save tags:', error)
     // 可以添加错误提示
   }
   finally {
     isSaving.value = false
-    editingTagId.value = null
+  }
+}
+
+// 更新tag属性
+function updateTag(tagId: string, updates: Partial<Tag>) {
+  const index = workingTags.value.findIndex(t => t.id === tagId)
+  if (index !== -1) {
+    workingTags.value[index] = {
+      ...workingTags.value[index],
+      ...updates,
+    }
   }
 }
 
 // 删除tag
 function deleteTag(tagId: string) {
-  internalTags.value = internalTags.value.filter(t => t.id !== tagId)
-  editingTagId.value = null
+  workingTags.value = workingTags.value.filter(t => t.id !== tagId)
 }
 
 // 添加新tag
@@ -153,25 +157,28 @@ function addNewTag() {
     text: 'New Tag',
     background: colorPresets[0].value,
   }
-  internalTags.value = [...internalTags.value, newTag]
+  workingTags.value = [...workingTags.value, newTag]
 
-  // 自动进入编辑
   nextTick(() => {
-    openTagEdit(newTag)
     KTDropdown.init()
   })
 }
 
 // 使用已有标签
-function useExistingTag(existingTag: Tag) {
-  editingTag.value.text = existingTag.text
-  editingTag.value.background = existingTag.background
+function useExistingTag(existingTag: Tag, targetTagId: string) {
+  updateTag(targetTagId, {
+    text: existingTag.text,
+    background: existingTag.background,
+  })
 }
 
 onMounted(async () => {
-  KTDropdown.init()
   // 从store加载已有标签（如果还没加载过，则会发起请求；否则使用缓存）
   await tagsStore.fetchExistingTags()
+
+  nextTick(() => {
+    KTDropdown.init()
+  })
 })
 </script>
 
@@ -179,7 +186,7 @@ onMounted(async () => {
   <div>
     <div class="flex flex-wrap items-center gap-2">
       <!-- Tag列表 -->
-      <template v-for="tag in internalTags" :key="tag.id">
+      <template v-for="tag in displayTags" :key="tag.id">
         <div class="relative group">
           <!-- 非编辑模式：普通展示 -->
           <span
@@ -202,7 +209,6 @@ onMounted(async () => {
               :class="tag.background"
               class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
               data-kt-dropdown-toggle="true"
-              @click="openTagEdit(tag)"
             >
               <span>{{ tag.text }}</span>
 
@@ -224,10 +230,10 @@ onMounted(async () => {
                   Text
                 </label>
                 <input
-                  v-model="editingTag.text"
+                  :value="tag.text"
                   type="text"
                   class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  @keyup.enter="saveTagEdit(tag.id)"
+                  @input="updateTag(tag.id, { text: ($event.target as HTMLInputElement).value })"
                 >
               </div>
 
@@ -243,10 +249,10 @@ onMounted(async () => {
                     type="button"
                     :class="[
                       color.value,
-                      editingTag.background === color.value ? 'ring-2 ring-blue-500' : '',
+                      tag.background === color.value ? 'ring-2 ring-blue-500' : '',
                     ]"
                     class="w-full h-8 rounded-lg text-[10px] font-medium hover:opacity-80 transition-all"
-                    @click="editingTag.background = color.value"
+                    @click="updateTag(tag.id, { background: color.value })"
                   >
                     {{ color.name }}
                   </button>
@@ -271,7 +277,7 @@ onMounted(async () => {
                     :key="index"
                     type="button"
                     class="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
-                    @click="useExistingTag(existingTag)"
+                    @click="useExistingTag(existingTag, tag.id)"
                   >
                     <span
                       :class="existingTag.background"
@@ -286,27 +292,6 @@ onMounted(async () => {
                 <div v-else class="text-center py-4 text-xs text-gray-400">
                   No existing tags
                 </div>
-              </div>
-
-              <!-- 操作按钮 -->
-              <div class="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  class="flex-1 kt-btn kt-btn-sm"
-                  :disabled="isSaving"
-                  @click="saveTagEdit(tag.id)"
-                >
-                  <i v-if="isSaving" class="ki-outline ki-loading animate-spin" />
-                  <span v-else>Save</span>
-                </button>
-                <button
-                  type="button"
-                  class="flex-1 kt-btn kt-btn-sm kt-btn-ghost"
-                  :disabled="isSaving"
-                  @click="editingTagId = null"
-                >
-                  Cancel
-                </button>
               </div>
             </div>
           </div>
@@ -324,15 +309,17 @@ onMounted(async () => {
         <span>Add</span>
       </button>
 
-      <!-- 编辑模式切换按钮 -->
+      <!-- 编辑/完成按钮 -->
       <button
         type="button"
         class="kt-btn kt-btn-icon kt-btn-ghost kt-btn-sm"
-        :title="isEditMode ? 'Done' : 'Edit Tags'"
-        @click="toggleEditMode"
+        :title="isEditMode ? 'Save all changes' : 'Edit tags'"
+        :disabled="isSaving"
+        @click="isEditMode ? saveAllTags() : enterEditMode()"
       >
-        <i v-if="!isEditMode" class="ki-outline ki-pencil" />
-        <i v-else class="ki-outline ki-check" />
+        <i v-if="isSaving" class="ki-outline ki-loading animate-spin" />
+        <i v-else-if="isEditMode" class="ki-outline ki-check" />
+        <i v-else class="ki-outline ki-pencil" />
       </button>
     </div>
   </div>
