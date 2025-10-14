@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { KTDropdown } from '@keenthemes/ktui/src'
-import { useAsyncState } from '@vueuse/core'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { ApiService } from '@/service/fetch'
+import { useTagsStore } from '@/store/tags'
 
 // Tag数据结构
 export interface Tag {
@@ -22,6 +22,9 @@ const props = defineProps<EditableTagsProps>()
 const emit = defineEmits<{
   'update:modelValue': [tags: Tag[]]
 }>()
+
+// 使用tags store
+const tagsStore = useTagsStore()
 
 // 编辑模式
 const isEditMode = ref(true)
@@ -47,16 +50,9 @@ const colorPresets = [
   { name: 'Indigo', value: 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200' },
 ]
 
-// 已有标签（从接口获取）
-// 使用与Tag相同的结构
-const { state: existingTags, isLoading: isLoadingTags } = useAsyncState<Tag[]>(
-  async () => {
-    const response = await ApiService.get('/tag')
-    return response.data.value
-  },
-  [],
-  { immediate: false },
-)
+// 已有标签（从store获取）
+const existingTags = computed(() => tagsStore.existingTags)
+const isLoadingTags = computed(() => tagsStore.isLoading)
 
 // 内部tags
 const internalTags = computed({
@@ -115,8 +111,8 @@ async function saveTagEdit(tagId: string) {
       updatedTags[tagIndex] = savedTag
       internalTags.value = updatedTags
 
-      // 刷新已有标签列表
-      existingTags.value = [...existingTags.value, savedTag]
+      // 添加到store
+      tagsStore.addTag(savedTag)
     }
     else {
       // PATCH更新现有标签
@@ -130,14 +126,8 @@ async function saveTagEdit(tagId: string) {
       }
       internalTags.value = updatedTags
 
-      // 更新已有标签列表中的对应项
-      const existingIndex = existingTags.value.findIndex(t => t.id === currentTag.id)
-      if (existingIndex !== -1) {
-        existingTags.value[existingIndex] = {
-          ...existingTags.value[existingIndex],
-          ...updatedTagData,
-        }
-      }
+      // 更新store中的标签
+      tagsStore.updateTag(currentTag.id, updatedTagData)
     }
   }
   catch (error) {
@@ -178,8 +168,10 @@ function useExistingTag(existingTag: Tag) {
   editingTag.value.background = existingTag.background
 }
 
-onMounted(() => {
+onMounted(async () => {
   KTDropdown.init()
+  // 从store加载已有标签（如果还没加载过，则会发起请求；否则使用缓存）
+  await tagsStore.fetchExistingTags()
 })
 </script>
 
