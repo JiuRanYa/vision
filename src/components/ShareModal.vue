@@ -106,10 +106,10 @@ async function handlePublishToCommunity() {
 <template>
   <div
     :id="props.modalId || `share-modal-${item.id}`"
-    class="kt-modal kt-modal-center"
+    class="kt-modal"
     data-kt-modal="true"
   >
-    <div class="kt-modal-content w-[90vw] max-h-[90vh]">
+    <div class="kt-modal-content w-[90vw] max-h-[90vh] top-[5%]">
       <!-- Modal Body -->
       <div class="kt-modal-body p-0">
         <div class="flex h-full">
