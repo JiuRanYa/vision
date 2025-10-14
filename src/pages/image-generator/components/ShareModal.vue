@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { Tag } from './EditableTags.vue'
 import type { Creation } from '@/types/creation'
-import { computed, defineEmits, defineProps, ref } from 'vue'
-import EditableTags from './EditableTags.vue'
+import { computed, defineEmits, defineProps } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
   item: Creation
   modalId?: string
-  onPublish?: (item: Creation) => Promise<void>
 }
 
 // 定义props
@@ -21,13 +18,8 @@ const emit = defineEmits<{
   createVideo: [item: Creation]
   like: [item: Creation]
   follow: [user: Creation['creator']]
+  publish: [item: Creation]
 }>()
-
-// Loading状态
-const isPublishing = ref(false)
-
-// 计算属性：获取tags（写死）
-const tags = ref<Tag[]>([])
 
 // 计算属性：获取用户信息（从creator映射）
 const userInfo = computed(() => {
@@ -60,16 +52,6 @@ function handleRecreate() {
   emit('recreate', props.item)
 }
 
-// 处理复制链接
-function handleCopyLink() {
-  emit('copyLink', props.item)
-}
-
-// 处理创建视频
-function handleCreateVideo() {
-  emit('createVideo', props.item)
-}
-
 // 处理关注用户
 function handleFollow() {
   emit('follow', props.item.creator)
@@ -78,23 +60,6 @@ function handleFollow() {
 // 处理点赞
 function handleLike() {
   emit('like', props.item)
-}
-
-// 处理发布到社区
-async function handlePublishToCommunity() {
-  if (!props.onPublish || isPublishing.value)
-    return
-
-  isPublishing.value = true
-  try {
-    await props.onPublish(props.item)
-  }
-  catch (error) {
-    console.error('Failed to publish:', error)
-  }
-  finally {
-    isPublishing.value = false
-  }
 }
 </script>
 
@@ -189,9 +154,6 @@ async function handlePublishToCommunity() {
                   </div>
                 </div>
 
-                <!-- 标签信息 -->
-                <EditableTags v-model="tags" />
-
                 <!-- 操作图标 -->
                 <div>
                   <div class="flex items-center gap-2">
@@ -200,11 +162,9 @@ async function handlePublishToCommunity() {
                       type="button"
                       class="kt-btn kt-btn-icon kt-btn-ghost"
                       title="Publish to Community"
-                      :disabled="isPublishing"
-                      @click="handlePublishToCommunity"
+                      :data-kt-modal-toggle="`#publish-modal-${item.id}`"
                     >
-                      <i v-if="!isPublishing" class="ki-outline ki-share" />
-                      <i v-else class="ki-outline ki-loading animate-spin" />
+                      <i class="ki-outline ki-share" />
                     </button>
 
                     <!-- Like -->

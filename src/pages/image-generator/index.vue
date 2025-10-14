@@ -3,7 +3,8 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
 import CommunityGrid from '@/components/CommunityGrid.vue'
-import ShareModal from '@/components/ShareModal.vue'
+import PublishModal from '@/pages/image-generator/components/PublishModal.vue'
+import ShareModal from '@/pages/image-generator/components/ShareModal.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 
 const router = useRouter()
@@ -89,18 +90,7 @@ async function handleGenerate() {
     const newImage = data.value
 
     // 设置当前生成的图片
-    currentGeneratedImage.value = {
-      ...newImage,
-      user: {
-        name: 'Current User',
-        avatar: '',
-        timeAgo: 'Just now',
-      },
-      likes: Math.floor(Math.random() * 100) + 50,
-      tags: ['1:1', 'auto', 'auto:imagen3', 'Text to Image'],
-    }
-
-    console.log(currentGeneratedImage.value)
+    currentGeneratedImage.value = newImage
 
     // 添加到历史记录
     historyGeneratedImages.unshift(newImage)
@@ -197,7 +187,7 @@ function handleCopyLink(item: any) {
   const link = `${window.location.origin}/share/${item.id}`
   navigator.clipboard.writeText(link).then(() => {
     // 可以添加toast提示
-    console.log('Link copied to clipboard')
+    console.warn('Link copied to clipboard')
   })
 }
 
@@ -228,6 +218,12 @@ function handleLike(item: any) {
   if (currentGeneratedImage.value && currentGeneratedImage.value.id === item.id) {
     currentGeneratedImage.value.likes = (currentGeneratedImage.value.likes || 0) + 1
   }
+}
+
+// 处理发布到社区成功
+function handlePublished(item: any, tags: any[]) {
+  console.warn('Published to community successfully:', item, tags)
+  // 发布成功后的操作，例如显示提示、刷新列表等
 }
 </script>
 
@@ -337,6 +333,14 @@ function handleLike(item: any) {
                 @create-video="handleCreateVideo"
                 @follow="handleFollow"
                 @like="handleLike"
+                @publish="(item) => {}"
+              />
+
+              <!-- 当前生成图片的PublishModal -->
+              <PublishModal
+                :item="currentGeneratedImage"
+                modal-id="publish-modal-current"
+                @published="handlePublished"
               />
             </div>
 
@@ -423,22 +427,21 @@ function handleLike(item: any) {
 
                 <!-- ShareModal组件 -->
                 <ShareModal
-                  :item="{
-                    ...image,
-                    user: {
-                      name: 'Current User',
-                      avatar: '',
-                      timeAgo: 'Just now',
-                    },
-                    likes: Math.floor(Math.random() * 100) + 50,
-                    tags: ['1:1', 'auto', 'auto:imagen3', 'Text to Image'],
-                  }"
+                  :item="image"
                   :modal-id="`share-modal-${image.id}`"
                   @recreate="handleRecreateFromShare"
                   @copy-link="handleCopyLink"
                   @create-video="handleCreateVideo"
                   @follow="handleFollow"
                   @like="handleLike"
+                  @publish="(item) => {}"
+                />
+
+                <!-- PublishModal组件 -->
+                <PublishModal
+                  :item="image"
+                  :modal-id="`publish-modal-${image.id}`"
+                  @published="handlePublished"
                 />
               </template>
             </div>
