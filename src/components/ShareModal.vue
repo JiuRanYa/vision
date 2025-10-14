@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Creation } from '@/types/creation'
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
   item: Creation
   modalId?: string
+  onPublish?: (item: Creation) => Promise<void>
 }
 
 // 定义props
@@ -18,8 +19,10 @@ const emit = defineEmits<{
   createVideo: [item: Creation]
   like: [item: Creation]
   follow: [user: Creation['creator']]
-  publishToCommunity: [item: Creation]
 }>()
+
+// Loading状态
+const isPublishing = ref(false)
 
 // 计算属性：获取tags（写死）
 const tags = computed(() => {
@@ -78,8 +81,20 @@ function handleLike() {
 }
 
 // 处理发布到社区
-function handlePublishToCommunity() {
-  emit('publishToCommunity', props.item)
+async function handlePublishToCommunity() {
+  if (!props.onPublish || isPublishing.value)
+    return
+
+  isPublishing.value = true
+  try {
+    await props.onPublish(props.item)
+  }
+  catch (error) {
+    console.error('Failed to publish:', error)
+  }
+  finally {
+    isPublishing.value = false
+  }
 }
 </script>
 
@@ -195,9 +210,11 @@ function handlePublishToCommunity() {
                       type="button"
                       class="kt-btn kt-btn-icon kt-btn-ghost"
                       title="Publish to Community"
+                      :disabled="isPublishing"
                       @click="handlePublishToCommunity"
                     >
-                      <i class="ki-outline ki-share" />
+                      <i v-if="!isPublishing" class="ki-outline ki-share" />
+                      <i v-else class="ki-outline ki-loading animate-spin" />
                     </button>
 
                     <!-- Like -->
