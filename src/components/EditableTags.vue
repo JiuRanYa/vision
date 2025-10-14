@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { KTDropdown } from '@keenthemes/ktui/src'
+import { useAsyncState } from '@vueuse/core'
 import { computed, nextTick, onMounted, ref } from 'vue'
+import { ApiService } from '@/service/fetch'
 
 // Tag数据结构
 export interface Tag {
   id: string
   text: string
-  color: string
+  background: string
 }
 
 // Props定义
@@ -28,7 +30,7 @@ const isEditMode = ref(true)
 const editingTagId = ref<string | null>(null)
 
 // 编辑中的tag数据
-const editingTag = ref<{ text: string, color: string }>({ text: '', color: '' })
+const editingTag = ref<{ text: string, background: string }>({ text: '', background: '' })
 
 // 预设颜色列表
 const colorPresets = [
@@ -41,6 +43,17 @@ const colorPresets = [
   { name: 'Pink', value: 'bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200' },
   { name: 'Indigo', value: 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200' },
 ]
+
+// 已有标签（从接口获取）
+// 使用与Tag相同的结构
+const { state: existingTags, isLoading: isLoadingTags } = useAsyncState<Tag[]>(
+  async () => {
+    const response = await ApiService.get('/tag')
+    return response.data.value
+  },
+  [],
+  { immediate: true },
+)
 
 // 内部tags
 const internalTags = computed({
@@ -67,7 +80,7 @@ function openTagEdit(tag: Tag) {
   editingTagId.value = tag.id
   editingTag.value = {
     text: tag.text,
-    color: tag.color,
+    background: tag.background,
   }
 }
 
@@ -79,7 +92,7 @@ function saveTagEdit(tagId: string) {
     updatedTags[tagIndex] = {
       ...updatedTags[tagIndex],
       text: editingTag.value.text,
-      color: editingTag.value.color,
+      background: editingTag.value.background,
     }
     internalTags.value = updatedTags
   }
@@ -97,14 +110,21 @@ function addNewTag() {
   const newTag: Tag = {
     id: `tag-${Date.now()}`,
     text: 'New Tag',
-    color: colorPresets[0].value,
+    background: colorPresets[0].value,
   }
   internalTags.value = [...internalTags.value, newTag]
 
   // 自动进入编辑
   nextTick(() => {
     openTagEdit(newTag)
+    KTDropdown.init()
   })
+}
+
+// 使用已有标签
+function useExistingTag(existingTag: Tag) {
+  editingTag.value.text = existingTag.text
+  editingTag.value.background = existingTag.background
 }
 
 onMounted(() => {
@@ -121,7 +141,7 @@ onMounted(() => {
           <!-- 非编辑模式：普通展示 -->
           <span
             v-if="!isEditMode"
-            :class="tag.color"
+            :class="tag.background"
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
           >
             {{ tag.text }}
@@ -136,7 +156,7 @@ onMounted(() => {
           >
             <button
               type="button"
-              :class="tag.color"
+              :class="tag.background"
               class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
               data-kt-dropdown-toggle="true"
               @click="openTagEdit(tag)"
@@ -180,13 +200,48 @@ onMounted(() => {
                     type="button"
                     :class="[
                       color.value,
-                      editingTag.color === color.value ? 'ring-2 ring-blue-500' : '',
+                      editingTag.background === color.value ? 'ring-2 ring-blue-500' : '',
                     ]"
                     class="w-full h-8 rounded-lg text-[10px] font-medium hover:opacity-80 transition-all"
-                    @click="editingTag.color = color.value"
+                    @click="editingTag.background = color.value"
                   >
                     {{ color.name }}
                   </button>
+                </div>
+              </div>
+
+              <!-- 已有标签 -->
+              <div>
+                <label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                  Existing Tags
+                </label>
+
+                <!-- Loading状态 -->
+                <div v-if="isLoadingTags" class="text-center py-4">
+                  <i class="ki-outline ki-loading animate-spin text-gray-400" />
+                </div>
+
+                <!-- 标签列表 -->
+                <div v-else-if="existingTags.length > 0" class="max-h-32 overflow-y-auto space-y-1">
+                  <button
+                    v-for="(existingTag, index) in existingTags"
+                    :key="index"
+                    type="button"
+                    class="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                    @click="useExistingTag(existingTag)"
+                  >
+                    <span
+                      :class="existingTag.background"
+                      class="px-2 py-0.5 rounded-full text-[10px] font-medium flex-shrink-0"
+                    >
+                      {{ existingTag.text }}
+                    </span>
+                  </button>
+                </div>
+
+                <!-- 空状态 -->
+                <div v-else class="text-center py-4 text-xs text-gray-400">
+                  No existing tags
                 </div>
               </div>
 
