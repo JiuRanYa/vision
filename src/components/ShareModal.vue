@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import type { Creation } from '@/types/creation'
+import { computed, defineEmits, defineProps } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
-  item: {
-    id: number
-    prompt: string
-    type: 'image' | 'video'
-    // 扩展的用户信息
-    tags?: string[]
-    response: {
-      file_key: string
-    }
-  }
+  item: Creation
   modalId?: string
 }
 
@@ -21,11 +13,43 @@ const props = defineProps<ShareModalProps>()
 
 // 定义emits
 const emit = defineEmits<{
-  recreate: [item: ShareModalProps['item']]
-  copyLink: [item: ShareModalProps['item']]
-  createVideo: [item: ShareModalProps['item']]
-  like: [item: ShareModalProps['item']]
+  recreate: [item: Creation]
+  copyLink: [item: Creation]
+  createVideo: [item: Creation]
+  like: [item: Creation]
+  follow: [user: Creation['creator']]
 }>()
+
+// 计算属性：获取tags（写死）
+const tags = computed(() => {
+  return ['1:1', 'auto', 'auto:imagen3', 'Text to Image']
+})
+
+// 计算属性：获取用户信息（从creator映射）
+const userInfo = computed(() => {
+  return {
+    name: props.item.creator?.name || 'Anonymous',
+    avatar: '', // Creation类型中没有avatar字段，写死为空
+    timeAgo: formatTimeAgo(props.item.created_at),
+  }
+})
+
+// 格式化时间为相对时间
+function formatTimeAgo(dateString: string) {
+  const now = new Date()
+  const created = new Date(dateString)
+  const diffInSeconds = Math.floor((now.getTime() - created.getTime()) / 1000)
+
+  if (diffInSeconds < 60)
+    return 'Just now'
+  if (diffInSeconds < 3600)
+    return `${Math.floor(diffInSeconds / 60)} minutes ago`
+  if (diffInSeconds < 86400)
+    return `${Math.floor(diffInSeconds / 3600)} hours ago`
+  if (diffInSeconds < 2592000)
+    return `${Math.floor(diffInSeconds / 86400)} days ago`
+  return `${Math.floor(diffInSeconds / 2592000)} months ago`
+}
 
 // 处理重新创建
 function handleRecreate() {
@@ -44,9 +68,7 @@ function handleCreateVideo() {
 
 // 处理关注用户
 function handleFollow() {
-  if (props.item.user) {
-    emit('follow', props.item.user)
-  }
+  emit('follow', props.item.creator)
 }
 
 // 处理点赞
@@ -84,9 +106,9 @@ function handleLike() {
                 <div class="flex items-center space-x-3">
                   <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
                     <img
-                      v-if="item.user?.avatar"
-                      :src="item.user.avatar"
-                      :alt="item.user.name"
+                      v-if="userInfo.avatar"
+                      :src="userInfo.avatar"
+                      :alt="userInfo.name"
                       class="w-full h-full object-cover"
                     >
                     <div
@@ -100,10 +122,10 @@ function handleLike() {
                     <div class="flex items-center justify-between">
                       <div>
                         <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                          {{ item.user?.name || 'Anonymous' }}
+                          {{ userInfo.name }}
                         </h4>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ item.user?.timeAgo || 'Recently' }}
+                          {{ userInfo.timeAgo }}
                         </p>
                       </div>
                       <button
@@ -150,7 +172,7 @@ function handleLike() {
                 <div>
                   <div class="flex flex-wrap gap-2">
                     <span
-                      v-for="tag in (item.tags || ['1:1', 'auto', 'auto:imagen3', 'text to image'])"
+                      v-for="tag in tags"
                       :key="tag"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                     >
