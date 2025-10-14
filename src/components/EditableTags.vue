@@ -32,6 +32,9 @@ const editingTagId = ref<string | null>(null)
 // 编辑中的tag数据
 const editingTag = ref<{ text: string, background: string }>({ text: '', background: '' })
 
+// 保存loading状态
+const isSaving = ref(false)
+
 // 预设颜色列表
 const colorPresets = [
   { name: 'Gray', value: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' },
@@ -85,18 +88,66 @@ function openTagEdit(tag: Tag) {
 }
 
 // 保存tag编辑
-function saveTagEdit(tagId: string) {
+async function saveTagEdit(tagId: string) {
   const tagIndex = internalTags.value.findIndex(t => t.id === tagId)
-  if (tagIndex !== -1) {
-    const updatedTags = [...internalTags.value]
-    updatedTags[tagIndex] = {
-      ...updatedTags[tagIndex],
-      text: editingTag.value.text,
-      background: editingTag.value.background,
-    }
-    internalTags.value = updatedTags
+  if (tagIndex === -1 || isSaving.value)
+    return
+
+  const currentTag = internalTags.value[tagIndex]
+  const updatedTagData = {
+    text: editingTag.value.text,
+    background: editingTag.value.background,
   }
-  editingTagId.value = null
+
+  isSaving.value = true
+
+  try {
+    // 判断是新建还是更新
+    const isNewTag = tagId.startsWith('tag-') // 临时ID格式
+
+    if (isNewTag) {
+      // POST创建新标签
+      const response = await ApiService.post<Tag>('/tag', updatedTagData)
+      const savedTag = response.data.value
+
+      // 用后端返回的真实ID替换临时ID
+      const updatedTags = [...internalTags.value]
+      updatedTags[tagIndex] = savedTag
+      internalTags.value = updatedTags
+
+      // 刷新已有标签列表
+      existingTags.value = [...existingTags.value, savedTag]
+    }
+    else {
+      // PATCH更新现有标签
+      await ApiService.patch(`/tag/${currentTag.id}`, updatedTagData)
+
+      // 更新本地数据
+      const updatedTags = [...internalTags.value]
+      updatedTags[tagIndex] = {
+        ...currentTag,
+        ...updatedTagData,
+      }
+      internalTags.value = updatedTags
+
+      // 更新已有标签列表中的对应项
+      const existingIndex = existingTags.value.findIndex(t => t.id === currentTag.id)
+      if (existingIndex !== -1) {
+        existingTags.value[existingIndex] = {
+          ...existingTags.value[existingIndex],
+          ...updatedTagData,
+        }
+      }
+    }
+  }
+  catch (error) {
+    console.error('Failed to save tag:', error)
+    // 可以添加错误提示
+  }
+  finally {
+    isSaving.value = false
+    editingTagId.value = null
+  }
 }
 
 // 删除tag
@@ -250,13 +301,16 @@ onMounted(() => {
                 <button
                   type="button"
                   class="flex-1 kt-btn kt-btn-sm"
+                  :disabled="isSaving"
                   @click="saveTagEdit(tag.id)"
                 >
-                  Save
+                  <i v-if="isSaving" class="ki-outline ki-loading animate-spin" />
+                  <span v-else>Save</span>
                 </button>
                 <button
                   type="button"
                   class="flex-1 kt-btn kt-btn-sm kt-btn-ghost"
+                  :disabled="isSaving"
                   @click="editingTagId = null"
                 >
                   Cancel

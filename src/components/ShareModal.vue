@@ -27,12 +27,7 @@ const emit = defineEmits<{
 const isPublishing = ref(false)
 
 // 计算属性：获取tags（写死）
-const tags = ref<Tag[]>([
-  { id: '1', text: '1:1', background: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' },
-  { id: '2', text: 'auto', background: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200' },
-  { id: '3', text: 'auto:imagen3', background: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200' },
-  { id: '4', text: 'Text to Image', background: 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200' },
-])
+const tags = ref<Tag[]>([])
 
 // 计算属性：获取用户信息（从creator映射）
 const userInfo = computed(() => {
