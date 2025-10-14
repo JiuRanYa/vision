@@ -18,6 +18,7 @@ const emit = defineEmits<{
   createVideo: [item: Creation]
   like: [item: Creation]
   follow: [user: Creation['creator']]
+  publishToCommunity: [item: Creation]
 }>()
 
 // 计算属性：获取tags（写死）
@@ -74,6 +75,11 @@ function handleFollow() {
 // 处理点赞
 function handleLike() {
   emit('like', props.item)
+}
+
+// 处理发布到社区
+function handlePublishToCommunity() {
+  emit('publishToCommunity', props.item)
 }
 </script>
 
@@ -178,6 +184,31 @@ function handleLike() {
                     >
                       {{ tag }}
                     </span>
+                  </div>
+                </div>
+
+                <!-- 操作图标 -->
+                <div>
+                  <div class="flex items-center gap-2">
+                    <!-- Publish to Community -->
+                    <button
+                      type="button"
+                      class="kt-btn kt-btn-icon kt-btn-ghost"
+                      title="Publish to Community"
+                      @click="handlePublishToCommunity"
+                    >
+                      <i class="ki-outline ki-share" />
+                    </button>
+
+                    <!-- Like -->
+                    <button
+                      type="button"
+                      class="kt-btn kt-btn-icon kt-btn-ghost"
+                      title="Like"
+                      @click="handleLike"
+                    >
+                      <i class="ki-outline ki-heart" />
+                    </button>
                   </div>
                 </div>
               </div>
