@@ -6,7 +6,7 @@ import { useTagsStore } from '@/store/tags'
 
 // Tag数据结构
 export interface Tag {
-  id: string
+  id?: number // 可选，后端返回的tag有id，新建的tag没有id
   text: string
   background: string
 }
@@ -32,12 +32,15 @@ const isEditMode = ref(false)
 // 保存loading状态（批量保存所有tags）
 const isSaving = ref(false)
 
-// 工作副本（编辑时的临时数据）
-const workingTags = ref<Tag[]>([])
+// 工作副本（编辑时的临时数据，添加临时key用于v-for）
+const workingTags = ref<Array<Tag & { _key: string }>>([])
 
 // 初始化工作副本
 function initWorkingTags() {
-  workingTags.value = JSON.parse(JSON.stringify(props.modelValue))
+  workingTags.value = props.modelValue.map(tag => ({
+    ...tag,
+    _key: tag.id ? `tag-${tag.id}` : `new-${Date.now()}-${Math.random()}`,
+  }))
 }
 
 // 预设颜色列表
@@ -56,8 +59,19 @@ const colorPresets = [
 const existingTags = computed(() => tagsStore.existingTags)
 const isLoadingTags = computed(() => tagsStore.isLoading)
 
-// 显示的tags（编辑模式用workingTags，非编辑模式用props.modelValue）
-const displayTags = computed(() => isEditMode.value ? workingTags.value : props.modelValue)
+// 显示的tags（编辑模式用workingTags，非编辑模式用props.modelValue加_key）
+const displayTags = computed(() => {
+  if (isEditMode.value) {
+    return workingTags.value
+  }
+  else {
+    // 非编辑模式也需要_key用于v-for
+    return props.modelValue.map(tag => ({
+      ...tag,
+      _key: tag.id ? `tag-${tag.id}` : `readonly-${Math.random()}`,
+    }))
+  }
+})
 
 // 进入编辑模式
 function enterEditMode() {
@@ -80,10 +94,11 @@ async function saveAllTags() {
 
     // 处理每个tag
     for (const tag of workingTags.value) {
-      const isNewTag = tag.id.startsWith('tag-') // 临时ID格式
+      // 判断是否为新tag：没有id就是新tag
+      const isNewTag = !tag.id
 
       if (isNewTag) {
-        // POST创建新标签
+        // POST创建新标签（不发送id字段）
         const response = await ApiService.post<Tag>('/tag', {
           text: tag.text,
           background: tag.background,
@@ -108,7 +123,7 @@ async function saveAllTags() {
           })
 
           // 更新store中的标签
-          tagsStore.updateTag(tag.id, {
+          tagsStore.updateTag(String(tag.id), {
             text: tag.text,
             background: tag.background,
           })
@@ -134,9 +149,9 @@ async function saveAllTags() {
   }
 }
 
-// 更新tag属性
-function updateTag(tagId: string, updates: Partial<Tag>) {
-  const index = workingTags.value.findIndex(t => t.id === tagId)
+// 更新tag属性（通过_key查找）
+function updateTag(tagKey: string, updates: Partial<Tag>) {
+  const index = workingTags.value.findIndex(t => t._key === tagKey)
   if (index !== -1) {
     workingTags.value[index] = {
       ...workingTags.value[index],
@@ -145,17 +160,18 @@ function updateTag(tagId: string, updates: Partial<Tag>) {
   }
 }
 
-// 删除tag
-function deleteTag(tagId: string) {
-  workingTags.value = workingTags.value.filter(t => t.id !== tagId)
+// 删除tag（通过_key）
+function deleteTag(tagKey: string) {
+  workingTags.value = workingTags.value.filter(t => t._key !== tagKey)
 }
 
 // 添加新tag
 function addNewTag() {
-  const newTag: Tag = {
-    id: `tag-${Date.now()}`,
+  const newTag: Tag & { _key: string } = {
+    // 不设置id，新tag没有id
     text: 'New Tag',
     background: colorPresets[0].value,
+    _key: `new-${Date.now()}-${Math.random()}`, // 临时key用于v-for
   }
   workingTags.value = [...workingTags.value, newTag]
 
@@ -164,12 +180,25 @@ function addNewTag() {
   })
 }
 
-// 使用已有标签
-function useExistingTag(existingTag: Tag, targetTagId: string) {
-  updateTag(targetTagId, {
-    text: existingTag.text,
-    background: existingTag.background,
-  })
+// 使用已有标签（直接替换为已有tag，不创建新tag）
+function useExistingTag(existingTag: Tag, targetKey: string) {
+  const index = workingTags.value.findIndex(t => t._key === targetKey)
+  if (index !== -1) {
+    // 检查是否已经存在这个tag
+    const alreadyExists = workingTags.value.some(t => t.id === existingTag.id)
+
+    if (alreadyExists) {
+      // 如果已经存在，只删除当前正在编辑的tag
+      workingTags.value.splice(index, 1)
+    }
+    else {
+      // 如果不存在，替换为已有tag
+      workingTags.value[index] = {
+        ...existingTag,
+        _key: existingTag.id ? `tag-${existingTag.id}` : `new-${Date.now()}-${Math.random()}`,
+      }
+    }
+  }
 }
 
 onMounted(async () => {
@@ -186,7 +215,7 @@ onMounted(async () => {
   <div>
     <div class="flex flex-wrap items-center gap-2">
       <!-- Tag列表 -->
-      <template v-for="tag in displayTags" :key="tag.id">
+      <template v-for="tag in displayTags" :key="tag._key">
         <div class="relative group">
           <!-- 非编辑模式：普通展示 -->
           <span
@@ -215,7 +244,7 @@ onMounted(async () => {
               <!-- 删除按钮 -->
               <i
                 class="ki-outline ki-cross text-[10px] hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                @click.stop="deleteTag(tag.id)"
+                @click.stop="deleteTag(tag._key)"
               />
             </button>
 
@@ -233,7 +262,7 @@ onMounted(async () => {
                   :value="tag.text"
                   type="text"
                   class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  @input="updateTag(tag.id, { text: ($event.target as HTMLInputElement).value })"
+                  @input="updateTag(tag._key, { text: ($event.target as HTMLInputElement).value })"
                 >
               </div>
 
@@ -252,7 +281,7 @@ onMounted(async () => {
                       tag.background === color.value ? 'ring-2 ring-blue-500' : '',
                     ]"
                     class="w-full h-8 rounded-lg text-[10px] font-medium hover:opacity-80 transition-all"
-                    @click="updateTag(tag.id, { background: color.value })"
+                    @click="updateTag(tag._key, { background: color.value })"
                   >
                     {{ color.name }}
                   </button>
@@ -277,7 +306,7 @@ onMounted(async () => {
                     :key="index"
                     type="button"
                     class="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
-                    @click="useExistingTag(existingTag, tag.id)"
+                    @click="useExistingTag(existingTag, tag._key)"
                   >
                     <span
                       :class="existingTag.background"
