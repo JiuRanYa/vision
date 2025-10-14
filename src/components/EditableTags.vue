@@ -22,7 +22,7 @@ const emit = defineEmits<{
 }>()
 
 // 编辑模式
-const isEditMode = ref(false)
+const isEditMode = ref(true)
 
 // 当前编辑的tag ID
 const editingTagId = ref<string | null>(null)
@@ -69,10 +69,6 @@ function openTagEdit(tag: Tag) {
     text: tag.text,
     color: tag.color,
   }
-
-  nextTick(() => {
-    KTDropdown.init()
-  })
 }
 
 // 保存tag编辑
@@ -134,36 +130,28 @@ onMounted(() => {
           <!-- 编辑模式：可点击编辑 -->
           <div
             v-else
-            class="inline-flex"
             data-kt-dropdown="true"
             data-kt-dropdown-trigger="click"
             data-kt-dropdown-placement="bottom-start"
           >
-            <!-- Tag显示 -->
             <button
               type="button"
               :class="tag.color"
-              class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
+              class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
               data-kt-dropdown-toggle="true"
               @click="openTagEdit(tag)"
             >
               <span>{{ tag.text }}</span>
-              <i class="ki-outline ki-down text-[10px]" />
-            </button>
 
-            <!-- 删除按钮 -->
-            <button
-              type="button"
-              class="ml-1 w-4 h-4 flex items-center justify-center rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 transition-colors"
-              title="Delete"
-              @click.stop="deleteTag(tag.id)"
-            >
-              <i class="ki-outline ki-cross text-[10px]" />
+              <!-- 删除按钮 -->
+              <i
+                class="ki-outline ki-cross text-[10px] hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                @click.stop="deleteTag(tag.id)"
+              />
             </button>
 
             <!-- 编辑下拉面板 -->
             <div
-              v-if="editingTagId === tag.id"
               class="kt-dropdown w-64 p-4 space-y-3"
               data-kt-dropdown-menu="true"
             >
