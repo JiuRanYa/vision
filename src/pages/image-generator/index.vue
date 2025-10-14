@@ -6,6 +6,7 @@ import CommunityGrid from '@/components/CommunityGrid.vue'
 import PublishModal from '@/pages/image-generator/components/PublishModal.vue'
 import ShareModal from '@/pages/image-generator/components/ShareModal.vue'
 import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
+import { ApiService } from '@/service/fetch'
 
 const router = useRouter()
 
@@ -104,25 +105,40 @@ async function handleGenerate() {
   }
 }
 
-// 组件挂载时加载历史数据
+// Inspiration社区图片数据
+const inspirationImages = reactive([])
+const isLoadingInspiration = ref(false)
+
+// 加载Inspiration数据
+async function loadInspirationImages() {
+  isLoadingInspiration.value = true
+  try {
+    const { data } = await ApiService.get('/inspiration')
+
+    // 映射数据结构以匹配CommunityGrid的需求
+    const mappedImages = data.value.map((item: any) => ({
+      id: item.id,
+      imageUrl: `/api/s3/proxy?key=${item.creation.response.file_key}`,
+      prompt: item.creation.prompt,
+      type: 'image' as const,
+      creation: item.creation, // 保留完整的creation数据以便后续使用
+    }))
+
+    inspirationImages.splice(0, inspirationImages.length, ...mappedImages)
+  }
+  catch (error) {
+    console.error('Error loading inspiration images:', error)
+  }
+  finally {
+    isLoadingInspiration.value = false
+  }
+}
+
+// 组件挂载时加载数据
 onMounted(() => {
   loadHistoryImages()
+  loadInspirationImages()
 })
-
-// 瀑布流图片数据
-const communityImages = reactive([
-  { id: 1, imageUrl: 'https://picsum.photos/400/600?random=1', prompt: 'A beautiful portrait of a woman with flowing hair, soft lighting, professional photography style', type: 'image' as const },
-  { id: 2, imageUrl: 'https://picsum.photos/400/500?random=2', prompt: 'Underwater scene with jellyfish floating gracefully, blue ocean theme, ethereal lighting', type: 'image' as const },
-  { id: 3, imageUrl: 'https://picsum.photos/400/550?random=3', prompt: 'Sunset portrait of a woman with golden hour lighting, warm tones, cinematic style', type: 'image' as const },
-  { id: 4, imageUrl: 'https://picsum.photos/400/700?random=4', prompt: 'Medieval fantasy warrior with sword, dramatic lighting, epic fantasy art style', type: 'image' as const },
-  { id: 5, imageUrl: 'https://picsum.photos/400/450?random=5', prompt: 'Modern luxury car in urban setting, sleek design, professional automotive photography', type: 'image' as const },
-  { id: 6, imageUrl: 'https://picsum.photos/400/600?random=6', prompt: 'Cute sloth hanging from tree branch, soft pastel colors, adorable animal illustration', type: 'image' as const },
-  { id: 7, imageUrl: 'https://picsum.photos/400/650?random=7', prompt: 'Professional headshot of businesswoman, clean background, corporate photography style', type: 'image' as const },
-  { id: 8, imageUrl: 'https://picsum.photos/400/500?random=8', prompt: 'Artistic portrait with warm lighting, creative composition, artistic photography', type: 'image' as const },
-  { id: 9, imageUrl: 'https://picsum.photos/400/550?random=9', prompt: 'Minimalist portrait with clean lines, soft lighting, modern photography style', type: 'image' as const },
-  { id: 10, imageUrl: 'https://picsum.photos/400/450?random=10', prompt: 'Abstract geometric composition, minimalist design, modern art style', type: 'image' as const },
-  { id: 11, imageUrl: 'https://picsum.photos/400/600?random=11', prompt: 'Portrait of a man with confident expression, professional lighting, business photography', type: 'image' as const },
-])
 
 function typewriterEffect(text: string, callback?: () => void) {
   if (isTyping.value) {
@@ -150,8 +166,8 @@ function typewriterEffect(text: string, callback?: () => void) {
   typeNextChar()
 }
 
-function handleRecreate(item: typeof communityImages[0]) {
-  console.warn('Recreating from community item:', item)
+function handleRecreate(item: typeof inspirationImages[0]) {
+  console.warn('Recreating from inspiration item:', item)
   // 使用打字机动画填充prompt
   typewriterEffect(item.prompt)
 }
@@ -223,7 +239,8 @@ function handleLike(item: any) {
 // 处理发布到社区成功
 function handlePublished(item: any, tags: any[]) {
   console.warn('Published to community successfully:', item, tags)
-  // 发布成功后的操作，例如显示提示、刷新列表等
+  // 发布成功后刷新Inspiration列表
+  loadInspirationImages()
 }
 </script>
 
@@ -463,9 +480,23 @@ function handlePublished(item: any, tags: any[]) {
 
         <!-- Inspiration标签页 -->
         <div v-else-if="activeTab === 'inspiration'">
-          <!-- 社区组件 -->
+          <!-- Loading状态 -->
+          <div v-if="isLoadingInspiration" class="text-center py-12">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
+              <i class="ki-outline ki-loading text-2xl text-gray-600 dark:text-gray-400" />
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+              Loading inspiration...
+            </h3>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+              Please wait while we load community creations
+            </p>
+          </div>
+
+          <!-- Inspiration内容 -->
           <CommunityGrid
-            :items="communityImages"
+            v-else
+            :items="inspirationImages"
             @recreate="handleRecreate"
           />
         </div>

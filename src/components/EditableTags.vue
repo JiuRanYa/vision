@@ -55,7 +55,7 @@ const { state: existingTags, isLoading: isLoadingTags } = useAsyncState<Tag[]>(
     return response.data.value
   },
   [],
-  { immediate: true },
+  { immediate: false },
 )
 
 // 内部tags
