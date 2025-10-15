@@ -171,11 +171,11 @@ function handleLike() {
                     <button
                       v-else
                       type="button"
-                      class="kt-btn kt-btn-icon kt-btn-ghost text-blue-600 dark:text-blue-400"
-                      title="Unpublish from Community"
+                      class="kt-btn kt-btn-icon kt-btn-ghost bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all"
+                      title="Published - Click to unpublish"
                       @click="emit('unpublish', item)"
                     >
-                      <i class="ki-solid ki-check-circle" />
+                      <i class="ki-outline ki-share" />
                     </button>
 
                     <!-- Like -->
