@@ -1,24 +1,20 @@
 <script setup lang="ts">
+import type { Inspiration } from '@/types/creation'
 import { defineEmits, defineProps } from 'vue'
 import CommunityModal from './CommunityModal.vue'
 
 // 定义props
 const _props = defineProps<{
-  items: Array<{
-    id: number
-    imageUrl: string
-    prompt: string
-    type: 'image' | 'video'
-  }>
+  items: Inspiration[]
 }>()
 
 // 定义emits
 const emit = defineEmits<{
-  recreate: [item: typeof _props.items[0]]
+  recreate: [item: Inspiration]
 }>()
 
 // 处理重新创建
-function handleRecreate(item: typeof _props.items[0]) {
+function handleRecreate(item: Inspiration) {
   emit('recreate', item)
 }
 </script>
@@ -34,8 +30,8 @@ function handleRecreate(item: typeof _props.items[0]) {
         :data-kt-modal-toggle="`#community-modal-${item.id}`"
       >
         <img
-          :src="item.imageUrl"
-          :alt="item.prompt"
+          :src="`/api/s3/proxy?key=${item.creation.response.file_key}`"
+          :alt="item.creation.prompt"
           class="w-full h-auto object-cover"
           loading="lazy"
         >

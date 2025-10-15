@@ -115,16 +115,8 @@ async function loadInspirationImages() {
   try {
     const { data } = await ApiService.get('/inspiration')
 
-    // 映射数据结构以匹配CommunityGrid的需求
-    const mappedImages = data.value.map((item: any) => ({
-      id: item.id,
-      imageUrl: `/api/s3/proxy?key=${item.creation.response.file_key}`,
-      prompt: item.creation.prompt,
-      type: 'image' as const,
-      creation: item.creation, // 保留完整的creation数据以便后续使用
-    }))
-
-    inspirationImages.splice(0, inspirationImages.length, ...mappedImages)
+    // 直接使用API返回的Inspiration数据
+    inspirationImages.splice(0, inspirationImages.length, ...data.value)
   }
   catch (error) {
     console.error('Error loading inspiration images:', error)
@@ -169,7 +161,7 @@ function typewriterEffect(text: string, callback?: () => void) {
 function handleRecreate(item: typeof inspirationImages[0]) {
   console.warn('Recreating from inspiration item:', item)
   // 使用打字机动画填充prompt
-  typewriterEffect(item.prompt)
+  typewriterEffect(item.creation.prompt)
 }
 
 // 切换标签页

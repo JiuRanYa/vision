@@ -1,20 +1,26 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue'
+import type { Inspiration } from '@/types/creation'
+import { computed, defineEmits, defineProps } from 'vue'
 
 // 定义props
 const props = defineProps<{
-  item: {
-    id: number
-    imageUrl: string
-    prompt: string
-    type: 'image' | 'video'
-  }
+  item: Inspiration
 }>()
 
 // 定义emits
 const emit = defineEmits<{
-  recreate: [item: typeof props.item]
+  recreate: [item: Inspiration]
 }>()
+
+// 计算属性：获取图片URL
+const imageUrl = computed(() => {
+  return `/api/s3/proxy?key=${props.item.creation.response.file_key}`
+})
+
+// 计算属性：获取prompt
+const prompt = computed(() => {
+  return props.item.creation.prompt
+})
 
 // 处理重新创建
 function handleRecreate() {
@@ -32,7 +38,7 @@ function handleRecreate() {
       <!-- Modal Header -->
       <div class="kt-modal-header">
         <h3 class="kt-modal-title">
-          {{ item.type === 'image' ? 'Image Details' : 'Video Details' }}
+          Image Details
         </h3>
         <button
           type="button"
@@ -65,8 +71,8 @@ function handleRecreate() {
         <div class="mb-6">
           <div class="relative w-full max-h-96 overflow-hidden rounded-lg">
             <img
-              :src="item.imageUrl"
-              :alt="item.prompt"
+              :src="imageUrl"
+              :alt="prompt"
               class="w-full h-auto max-h-96 object-contain"
             >
           </div>
@@ -76,11 +82,11 @@ function handleRecreate() {
         <div class="space-y-4">
           <div>
             <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-              {{ item.type === 'image' ? 'Image Prompt' : 'Video Prompt' }}
+              Image Prompt
             </h4>
             <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
               <p class="text-sm text-gray-700 dark:text-gray-400 leading-relaxed">
-                {{ item.prompt }}
+                {{ prompt }}
               </p>
             </div>
           </div>
@@ -88,10 +94,19 @@ function handleRecreate() {
           <!-- 标签信息 -->
           <div class="flex flex-wrap gap-2">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              {{ item.type === 'image' ? 'Image' : 'Video' }}
+              Image
             </span>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
               Community
+            </span>
+            <!-- 用户标签 -->
+            <span
+              v-for="tag in item.tags"
+              :key="tag.id"
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              :class="tag.background"
+            >
+              {{ tag.text }}
             </span>
           </div>
         </div>

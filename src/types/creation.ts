@@ -41,7 +41,17 @@ export interface Inspiration {
   id: number
   creation_id: number
   created_at: string
+  creation: Creation
   creator: Creator
   is_archived: boolean
-  tags: any[]
+  tags: Tag[]
+}
+
+export interface Tag {
+  id: number
+  text: string
+  background: string
+  created_at: string
+  creator: Creator
+  is_archived: boolean
 }
