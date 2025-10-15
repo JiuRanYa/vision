@@ -237,22 +237,49 @@ function handleLike(item: any) {
 }
 
 // 处理发布到社区成功
-function handlePublished(item: any, tags: any[]) {
-  console.warn('Published to community successfully:', item, tags)
+function handlePublished(item: any, tags: any[], inspirationData: any) {
+  console.warn('Published to community successfully:', item, tags, inspirationData)
 
   // 更新当前生成的图片的inspiration标识
   if (currentGeneratedImage.value && currentGeneratedImage.value.id === item.id) {
-    currentGeneratedImage.value.inspiration = { published: true }
+    currentGeneratedImage.value.inspiration = inspirationData
   }
 
   // 更新历史图片列表中的inspiration标识
   const historyImageIndex = historyGeneratedImages.findIndex(img => img.id === item.id)
   if (historyImageIndex !== -1) {
-    historyGeneratedImages[historyImageIndex].inspiration = { published: true }
+    historyGeneratedImages[historyImageIndex].inspiration = inspirationData
   }
 
   // 发布成功后刷新Inspiration列表
   loadInspirationImages()
+}
+
+// 处理取消发布
+async function handleUnpublish(item: any) {
+  console.warn('Unpublishing from community:', item)
+
+  try {
+    // 发送DELETE请求取消发布
+    await ApiService.delete(`/inspiration/${item.inspiration.id}`)
+
+    // 更新当前生成的图片，移除inspiration标识
+    if (currentGeneratedImage.value && currentGeneratedImage.value.id === item.id) {
+      currentGeneratedImage.value.inspiration = null
+    }
+
+    // 更新历史图片列表，移除inspiration标识
+    const historyImageIndex = historyGeneratedImages.findIndex(img => img.id === item.id)
+    if (historyImageIndex !== -1) {
+      historyGeneratedImages[historyImageIndex].inspiration = null
+    }
+
+    // 刷新Inspiration列表
+    loadInspirationImages()
+  }
+  catch (error) {
+    console.error('Failed to unpublish:', error)
+  }
 }
 </script>
 
@@ -373,6 +400,7 @@ function handlePublished(item: any, tags: any[]) {
                 @follow="handleFollow"
                 @like="handleLike"
                 @publish="(item) => {}"
+                @unpublish="handleUnpublish"
               />
 
               <!-- 当前生成图片的PublishModal -->
@@ -484,6 +512,7 @@ function handlePublished(item: any, tags: any[]) {
                   @follow="handleFollow"
                   @like="handleLike"
                   @publish="(item) => {}"
+                  @unpublish="handleUnpublish"
                 />
 
                 <!-- PublishModal组件 -->

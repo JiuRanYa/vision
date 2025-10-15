@@ -8,6 +8,7 @@ export interface Creation {
   creator: Creator
   is_archived: boolean
   derivatives_count: number
+  inspiration?: Inspiration
 }
 
 interface Metadata {
@@ -34,4 +35,13 @@ interface Creator {
   name: string
   email: string
   title: string
+}
+
+export interface Inspiration {
+  id: number
+  creation_id: number
+  created_at: string
+  creator: Creator
+  is_archived: boolean
+  tags: any[]
 }

@@ -17,7 +17,7 @@ const props = defineProps<PublishModalProps>()
 
 // 定义emits
 const emit = defineEmits<{
-  published: [item: Creation, tags: Tag[]]
+  published: [item: Creation, tags: Tag[], inspirationData: any]
 }>()
 
 // Tags数据
@@ -36,16 +36,16 @@ async function handlePublish() {
     // 发送POST请求到 /inspiration
     // 过滤出有效的数字ID（排除临时ID如 'tag-123456'）
     const tagIds = tags.value
-      .map(tag => Number.parseInt(tag.id, 10))
-      .filter(id => !Number.isNaN(id) && id > 0)
+      .filter(tag => tag.id !== undefined && !Number.isNaN(tag.id))
+      .map(tag => tag.id as number)
 
-    await ApiService.post('/inspiration', {
+    const response = await ApiService.post('/inspiration', {
       creation_id: props.item.id,
       tag_ids: tagIds,
     })
 
     // 发布成功后触发事件并关闭Modal
-    emit('published', props.item, tags.value)
+    emit('published', props.item, tags.value, response.data.value)
 
     // 关闭Modal
     const modalId = props.modalId || `publish-modal-${props.item.id}`

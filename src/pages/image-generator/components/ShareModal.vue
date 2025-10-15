@@ -19,6 +19,7 @@ const emit = defineEmits<{
   like: [item: Creation]
   follow: [user: Creation['creator']]
   publish: [item: Creation]
+  unpublish: [item: Creation]
 }>()
 
 // 计算属性：获取用户信息（从creator映射）
@@ -157,14 +158,24 @@ function handleLike() {
                 <!-- 操作图标 -->
                 <div>
                   <div class="flex items-center gap-2">
-                    <!-- Publish to Community -->
+                    <!-- Publish/Unpublish to Community -->
                     <button
+                      v-if="!item.inspiration"
                       type="button"
                       class="kt-btn kt-btn-icon kt-btn-ghost"
                       title="Publish to Community"
                       :data-kt-modal-toggle="`#publish-modal-${item.id}`"
                     >
                       <i class="ki-outline ki-share" />
+                    </button>
+                    <button
+                      v-else
+                      type="button"
+                      class="kt-btn kt-btn-icon kt-btn-ghost text-blue-600 dark:text-blue-400"
+                      title="Unpublish from Community"
+                      @click="emit('unpublish', item)"
+                    >
+                      <i class="ki-solid ki-check-circle" />
                     </button>
 
                     <!-- Like -->
