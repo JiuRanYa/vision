@@ -300,20 +300,16 @@ onMounted(async () => {
                 </div>
 
                 <!-- 标签列表 -->
-                <div v-else-if="existingTags.length > 0" class="max-h-32 overflow-y-auto space-y-1">
+                <div v-else-if="existingTags.length > 0" class="max-h-32 overflow-y-auto flex flex-wrap gap-2">
                   <button
                     v-for="(existingTag, index) in existingTags"
                     :key="index"
                     type="button"
-                    class="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                    :class="existingTag.background"
+                    class="px-2.5 py-1 rounded-full text-[10px] font-medium hover:opacity-80 transition-opacity cursor-pointer"
                     @click="useExistingTag(existingTag, tag._key)"
                   >
-                    <span
-                      :class="existingTag.background"
-                      class="px-2 py-0.5 rounded-full text-[10px] font-medium flex-shrink-0"
-                    >
-                      {{ existingTag.text }}
-                    </span>
+                    {{ existingTag.text }}
                   </button>
                 </div>
 
