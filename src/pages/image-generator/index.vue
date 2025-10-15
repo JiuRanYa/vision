@@ -239,6 +239,18 @@ function handleLike(item: any) {
 // 处理发布到社区成功
 function handlePublished(item: any, tags: any[]) {
   console.warn('Published to community successfully:', item, tags)
+
+  // 更新当前生成的图片的inspiration标识
+  if (currentGeneratedImage.value && currentGeneratedImage.value.id === item.id) {
+    currentGeneratedImage.value.inspiration = { published: true }
+  }
+
+  // 更新历史图片列表中的inspiration标识
+  const historyImageIndex = historyGeneratedImages.findIndex(img => img.id === item.id)
+  if (historyImageIndex !== -1) {
+    historyGeneratedImages[historyImageIndex].inspiration = { published: true }
+  }
+
   // 发布成功后刷新Inspiration列表
   loadInspirationImages()
 }
@@ -318,6 +330,16 @@ function handlePublished(item: any, tags: any[]) {
                     alt="Generated image"
                     class="w-full h-full object-fit"
                   >
+
+                  <!-- 已发布到社区标识 -->
+                  <div
+                    v-if="currentGeneratedImage.inspiration"
+                    class="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg"
+                  >
+                    <i class="ki-solid ki-check-circle text-xs" />
+                    <span>Published</span>
+                  </div>
+
                   <!-- 遮罩层 -->
                   <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
 
@@ -417,6 +439,16 @@ function handlePublished(item: any, tags: any[]) {
                       alt="Generated image"
                       class="w-full h-full object-fit"
                     >
+
+                    <!-- 已发布到社区标识 -->
+                    <div
+                      v-if="image.inspiration"
+                      class="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg"
+                    >
+                      <i class="ki-solid ki-check-circle text-xs" />
+                      <span>Published</span>
+                    </div>
+
                     <!-- 遮罩层 -->
                     <div
                       class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-200"
