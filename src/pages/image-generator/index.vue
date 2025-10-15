@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
 import CommunityGrid from '@/components/CommunityGrid.vue'
@@ -9,6 +9,10 @@ import ImageConfig from '@/pages/image-generator/ImageConfig.vue'
 import { ApiService } from '@/service/fetch'
 
 const router = useRouter()
+
+// 加载更多触发器的ref
+const loadMoreTrigger = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
 
 const imageConfig = ref({
   prompt: '',
@@ -39,6 +43,7 @@ const tabs = [
 // 历史生成图片
 const historyGeneratedImages = reactive([])
 const isLoadingHistory = ref(false)
+const isLoadingMoreHistory = ref(false)
 
 // 当前生成的图片
 const currentGeneratedImage = ref(null)
@@ -53,11 +58,11 @@ const pagination = reactive({
   hasPrev: false,
 })
 
-// 加载历史生成图片
+// 加载历史生成图片（初始加载）
 async function loadHistoryImages() {
   isLoadingHistory.value = true
   try {
-    const { data } = await getHistoryImages(pagination.page, pagination.limit)
+    const { data } = await getHistoryImages(1, pagination.limit)
 
     // 直接使用接口返回的数据
     const mappedImages = data.value.data
@@ -65,6 +70,7 @@ async function loadHistoryImages() {
     historyGeneratedImages.splice(0, historyGeneratedImages.length, ...mappedImages)
 
     // 更新分页信息
+    pagination.page = 1
     pagination.total = data.value.pagination.total
     pagination.totalPages = data.value.pagination.totalPages
     pagination.hasNext = data.value.pagination.hasNext
@@ -75,6 +81,35 @@ async function loadHistoryImages() {
   }
   finally {
     isLoadingHistory.value = false
+  }
+}
+
+// 加载更多历史图片
+async function loadMoreHistoryImages() {
+  if (isLoadingMoreHistory.value || !pagination.hasNext)
+    return
+
+  isLoadingMoreHistory.value = true
+  try {
+    const nextPage = pagination.page + 1
+    const { data } = await getHistoryImages(nextPage, pagination.limit)
+
+    // 追加新数据
+    const mappedImages = data.value.data
+    historyGeneratedImages.push(...mappedImages)
+
+    // 更新分页信息
+    pagination.page = nextPage
+    pagination.total = data.value.pagination.total
+    pagination.totalPages = data.value.pagination.totalPages
+    pagination.hasNext = data.value.pagination.hasNext
+    pagination.hasPrev = data.value.pagination.hasPrev
+  }
+  catch (error) {
+    console.error('Error loading more history images:', error)
+  }
+  finally {
+    isLoadingMoreHistory.value = false
   }
 }
 
@@ -126,10 +161,48 @@ async function loadInspirationImages() {
   }
 }
 
+// 设置无限滚动观察器
+function setupInfiniteScroll() {
+  if (observer) {
+    observer.disconnect()
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && pagination.hasNext && !isLoadingMoreHistory.value) {
+          loadMoreHistoryImages()
+        }
+      })
+    },
+    {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1,
+    },
+  )
+
+  if (loadMoreTrigger.value) {
+    observer.observe(loadMoreTrigger.value)
+  }
+}
+
 // 组件挂载时加载数据
-onMounted(() => {
-  loadHistoryImages()
-  loadInspirationImages()
+onMounted(async () => {
+  await loadHistoryImages()
+  await loadInspirationImages()
+
+  // 等待DOM更新后设置观察器
+  nextTick(() => {
+    setupInfiniteScroll()
+  })
+})
+
+// 组件卸载时清理观察器
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
 })
 
 function typewriterEffect(text: string, callback?: () => void) {
@@ -514,6 +587,17 @@ async function handleUnpublish(item: any) {
                   @published="handlePublished"
                 />
               </template>
+
+              <!-- 加载更多触发器 -->
+              <div
+                v-if="pagination.hasNext"
+                ref="loadMoreTrigger"
+                class="col-span-2 py-8 text-center"
+              >
+                <div v-if="isLoadingMoreHistory" class="flex justify-center">
+                  <i class="ki-outline ki-loading animate-spin text-2xl text-gray-600 dark:text-gray-400" />
+                </div>
+              </div>
             </div>
 
             <!-- 空状态 -->
