@@ -71,7 +71,7 @@ async function handlePublish() {
 <template>
   <div
     :id="props.modalId || `publish-modal-${item.id}`"
-    class="kt-modal"
+    class="kt-modal z-[1000]"
     data-kt-modal="true"
   >
     <div class="kt-modal-content max-w-2xl top-[5%]">

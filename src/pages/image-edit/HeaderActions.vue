@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import type { Tag } from '@/components/EditableTags.vue'
+import { KTModal } from '@keenthemes/ktui/src'
+import { computed, nextTick, onMounted, ref } from 'vue'
+import PublishModal from '@/pages/image-generator/components/PublishModal.vue'
 import { useImageEditStore } from '@/store/image-edit'
 
 const imageEditStore = useImageEditStore()
@@ -11,27 +14,30 @@ const imageData = computed(() => imageEditStore.imageData)
 const isPublished = computed(() => !!imageData.value?.inspiration)
 
 // Loading状态
-const isPublishing = ref(false)
 const isLiking = ref(false)
 
-// 处理发布
-async function handlePublish() {
-  if (!imageData.value || isPublishing.value) {
+// Modal ID
+const publishModalId = 'header-publish-modal'
+
+// 处理发布成功
+function handlePublished(_item: any, _tags: Tag[], inspirationData: any) {
+  // 更新store中的图片数据
+  if (imageEditStore.imageData) {
+    imageEditStore.imageData.inspiration = inspirationData
+  }
+}
+
+// 处理取消发布
+async function handleUnpublish() {
+  if (!imageData.value?.inspiration) {
     return
   }
 
-  // TODO: 打开PublishModal让用户选择tags
-  // 这里暂时使用空数组
-  isPublishing.value = true
   try {
-    await imageEditStore.publishToCommuinty([])
-    console.warn('Published successfully')
+    await imageEditStore.unpublishFromCommunity()
   }
   catch (error) {
-    console.error('Failed to publish:', error)
-  }
-  finally {
-    isPublishing.value = false
+    console.error('Failed to unpublish:', error)
   }
 }
 
@@ -53,32 +59,38 @@ async function handleLike() {
     isLiking.value = false
   }
 }
+
+// 初始化Modal
+onMounted(() => {
+  nextTick(() => {
+    KTModal.init()
+  })
+})
 </script>
 
 <template>
   <div class="flex items-center gap-2">
-    <!-- Publish按钮 -->
+    <!-- Publish按钮（未发布状态） -->
     <button
       v-if="!isPublished"
       type="button"
       class="kt-btn kt-btn-icon kt-btn-ghost"
       title="Publish to Community"
-      :disabled="isPublishing || !imageData"
-      @click="handlePublish"
+      :disabled="!imageData"
+      :data-kt-modal-toggle="`#${publishModalId}`"
     >
-      <i v-if="isPublishing" class="ki-outline ki-loading animate-spin" />
-      <i v-else class="ki-outline ki-share" />
+      <i class="ki-outline ki-share" />
     </button>
 
-    <!-- 已发布状态按钮 -->
+    <!-- 已发布状态按钮（点击可取消发布） -->
     <button
       v-else
       type="button"
-      class="kt-btn kt-btn-icon kt-btn-ghost bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-      title="Published to Community"
-      disabled
+      class="kt-btn kt-btn-icon kt-btn-ghost bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all"
+      title="Published - Click to unpublish"
+      @click="handleUnpublish"
     >
-      <i class="ki-solid ki-check-circle" />
+      <i class="ki-outline ki-share" />
     </button>
 
     <!-- Like按钮 -->
@@ -92,5 +104,13 @@ async function handleLike() {
       <i v-if="isLiking" class="ki-outline ki-loading animate-spin" />
       <i v-else class="ki-outline ki-heart" />
     </button>
+
+    <!-- PublishModal -->
+    <PublishModal
+      v-if="imageData"
+      :item="imageData"
+      :modal-id="publishModalId"
+      @published="handlePublished"
+    />
   </div>
 </template>

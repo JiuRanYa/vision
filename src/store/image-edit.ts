@@ -179,6 +179,26 @@ export const useImageEditStore = defineStore('image-edit', () => {
     }
   }
 
+  // 取消发布
+  async function unpublishFromCommunity() {
+    if (!imageData.value?.inspiration) {
+      throw new Error('No inspiration data to unpublish')
+    }
+
+    try {
+      await ApiService.delete(`/inspiration/${imageData.value.inspiration.id}`)
+
+      // 移除当前图片的inspiration数据
+      if (imageData.value) {
+        imageData.value.inspiration = undefined
+      }
+    }
+    catch (error) {
+      console.error('Failed to unpublish from community:', error)
+      throw error
+    }
+  }
+
   // 点赞当前图片
   async function likeCurrentImage() {
     if (!imageData.value) {
@@ -232,8 +252,8 @@ export const useImageEditStore = defineStore('image-edit', () => {
     createNewCreationByExitImage,
     handleSendPrompt,
     publishToCommuinty,
+    unpublishFromCommunity,
     likeCurrentImage,
     $reset,
   }
 })
-
