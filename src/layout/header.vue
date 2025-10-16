@@ -1,0 +1,77 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
+import { mainNavItems, pinnedItems } from './config'
+
+// 获取当前路由
+const route = useRoute()
+
+// 生成面包屑导航
+const breadcrumbs = computed(() => {
+  const currentPath = route.path
+
+  // 检查是否匹配pinnedItems中的link
+  const pinnedItem = pinnedItems.find(item => item.link === currentPath)
+  if (pinnedItem) {
+    return [
+      { text: 'AI Suite', link: '#' },
+      { text: pinnedItem.text, link: pinnedItem.link, isActive: true },
+    ]
+  }
+
+  // 检查是否匹配mainNavItems中的link
+  const mainItem = mainNavItems.find(item => item.link === currentPath)
+  if (mainItem) {
+    return [
+      { text: mainItem.text, link: mainItem.link, isActive: true },
+    ]
+  }
+
+  // 默认面包屑
+  return [
+    { text: 'AI Suite', link: '#' },
+    { text: 'Image Generator', link: '/ai-image-generator', isActive: true },
+  ]
+})
+
+const user = useAuthStore()
+</script>
+
+<template>
+  <!-- 顶部导航栏 -->
+  <header class="h-16 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-6 flex items-center justify-between flex-shrink-0 gap-4">
+    <!-- 左侧：面包屑导航 -->
+    <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+      <template v-for="(crumb, index) in breadcrumbs" :key="crumb.text">
+        <span
+          class="transition-colors kt-btn kt-btn-ghost"
+          :class="[
+            crumb.isActive
+              ? 'text-gray-900 dark:text-gray-100 font-medium'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]"
+        >
+          {{ crumb.text }}
+        </span>
+        <span v-if="index < breadcrumbs.length - 1" class="text-gray-400 dark:text-gray-500">/</span>
+      </template>
+    </div>
+
+    <!-- 右侧：用户信息 -->
+    <div class="flex items-center space-x-3">
+      <!-- 中间：自定义组件区域 -->
+      <div v-if="route.meta.headerActions" class="flex-1 flex items-center justify-center">
+        <component :is="route.meta.headerActions" />
+      </div>
+      <!-- 用户头像 -->
+      <div v-if="user.currentUserProfile" class="flex items-center space-x-3">
+        <img
+          :src="user.currentUserProfile.avatar"
+          :alt="user.currentUserProfile.name"
+          class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+        >
+      </div>
+    </div>
+  </header>
+</template>
