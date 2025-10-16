@@ -4,7 +4,6 @@ import KTUI from '@keenthemes/ktui/src/index.ts'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import ImageEditHeaderActions from '@/pages/image-edit/HeaderActions.vue'
-import ImageGeneratorHeaderActions from '@/pages/image-generator/HeaderActions.vue'
 import { REDIRECT_PATH, useAuthStore } from '@/store/auth'
 import { useUserStore } from '@/store/user'
 
@@ -25,9 +24,6 @@ const routes = [
       {
         path: '/image-generator',
         component: () => import('@/pages/image-generator/index.vue'),
-        meta: {
-          headerActions: ImageGeneratorHeaderActions,
-        },
       },
       {
         path: '/image-edit',
