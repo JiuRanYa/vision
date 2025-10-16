@@ -30,14 +30,15 @@ export const useImageEditStore = defineStore('image-edit', () => {
   // 确认保存状态
   const confirmSaving = ref(false)
 
-  const editHistoryUrl = ref('')
+  // 使用getter函数让useFetch自动跟踪imageData的变化
   const {
     data: editHistoryData,
     isFetching: isLoadingEditHistory,
     execute: executeEditHistoryFetch,
-  } = useFetch<Creation[]>(editHistoryUrl, {
-    immediate: false,
-  }).get().json<Creation[]>()
+  } = useFetch(
+    () => `/api/creation/${imageData.value?.id}/history`,
+    { immediate: false },
+  ).get().json<Creation[]>()
 
   // 加载当前图片详情
   async function loadImageData(creationId: string | number) {
@@ -84,10 +85,8 @@ export const useImageEditStore = defineStore('image-edit', () => {
       return
     }
 
-    // 更新URL，这会触发新的请求并自动中断之前的请求
-    editHistoryUrl.value = `/api/creation/${imageData.value.id}/history`
-
-    // 执行请求，会自动中断之前未完成的请求
+    // 执行请求，useFetch会自动使用最新的imageData.value.id
+    // 会自动中断之前未完成的请求
     await executeEditHistoryFetch()
 
     // 更新editHistoryImages
