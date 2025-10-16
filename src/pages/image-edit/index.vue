@@ -1,64 +1,26 @@
 <script setup lang="ts">
-import type { Creation } from '@/types/creation'
 import { KTDropdown } from '@keenthemes/ktui/src'
-import { useAsyncState } from '@vueuse/core'
-import { ScrollArea } from 'panda-ui'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { ApiService } from '@/service/fetch'
+import { useImageEditStore } from '@/store/image-edit'
 
 const route = useRoute()
+const imageEditStore = useImageEditStore()
 
-// 图片数据
-const imageData = ref<Creation>()
+// 从store获取状态
+const {
+  imageData,
+  historyImages,
+  editHistoryImages,
+  selectedHistoryIndex,
+  isCreatingNewCreation: isCreatingNewCreationByExitImage,
+  editPrompt,
+  confirmSaving,
+} = storeToRefs(imageEditStore)
 
 // 编辑工具状态
 const activeTool = ref()
-
-// 编辑提示词
-const editPrompt = ref('')
-const confirmSaving = ref(false)
-
-// 选中的历史图片索引
-const selectedHistoryIndex = ref(-1)
-const generatedImagesByExitImage = ref([])
-
-const { state: historyImages, execute: fetchHistoryImages } = useAsyncState(
-  async () => ApiService.get('creation/history', { page: 1, limit: 16 }).then(async (res) => {
-    selectedHistoryIndex.value = res.data.value.data.findIndex(img => img.id === imageData.value.id)
-    return res.data.value.data
-  }),
-  {
-  },
-  { immediate: false },
-)
-
-const { state: editHistoryImages, executeImmediate: fetchEditHistoryImages, isLoading: isLoadingEditHistory } = useAsyncState(
-  async () => {
-    if (imageData.value?.original_id || !imageData.value)
-      return
-    return ApiService.get(`/creation/${imageData.value.id}/history`).then((res) => {
-      return res.data.value
-    })
-  },
-  {},
-  { immediate: false },
-)
-
-const { state: newCreationByExitImage, execute: createNewCreationByExitImage, isLoading: isCreatingNewCreationByExitImage } = useAsyncState(
-  async (prompt: string, exitImage: Creation) => {
-    const { data } = await ApiService.post<Creation>('/creation', { prompt, metadata: {
-      attachment: exitImage.response,
-    }, original_id: historyImages.value[selectedHistoryIndex.value].id })
-
-    generatedImagesByExitImage.value = [...editHistoryImages.value]
-    generatedImagesByExitImage.value.push(data.value)
-
-    return data.value as any
-  },
-  {},
-  { immediate: false },
-)
 
 // 选择工具
 function selectTool(toolId: string) {
@@ -69,49 +31,27 @@ function selectTool(toolId: string) {
   activeTool.value = toolId
 }
 
-// 选择历史图片
-function selectHistoryImage(item: any) {
-  selectedHistoryIndex.value = historyImages.value.findIndex(img => img.id === item.id)
-  editHistoryImages.value = [{ ...item }]
-  imageData.value = { ...item }
-  fetchEditHistoryImages()
-}
-
-// 处理发送编辑提示词
-async function handleSendPrompt() {
-  if (!editPrompt.value.trim()) {
-    return
-  }
-
-  const prompt = editPrompt.value
-  editPrompt.value = '' // 清空输入框
-
-  confirmSaving.value = true
-
-  await createNewCreationByExitImage(0, prompt, historyImages.value[selectedHistoryIndex.value])
-
-  // 放入编辑历史
-  editHistoryImages.value = [...editHistoryImages.value, newCreationByExitImage.value]
-
-  // confirmSaving.value = false
-}
-
-function selectEditImage(item: Creation) {
-  imageData.value = item
-}
+// 使用store的方法
+const selectHistoryImage = imageEditStore.selectHistoryImage
+const selectEditImage = imageEditStore.selectEditImage
+const handleSendPrompt = imageEditStore.handleSendPrompt
 
 onMounted(async () => {
   if (!route.query.creationId) {
     return
   }
 
-  const { data } = await ApiService.get(`/creation/${route.query.creationId}`)
-  imageData.value = data.value
-
-  fetchHistoryImages()
-  fetchEditHistoryImages()
+  // 使用store加载数据
+  await imageEditStore.loadImageData(route.query.creationId as string)
+  await imageEditStore.loadHistoryImages()
+  await imageEditStore.loadEditHistoryImages()
 
   nextTick(KTDropdown.init)
+})
+
+// 组件卸载时重置store
+onUnmounted(() => {
+  imageEditStore.$reset()
 })
 </script>
 
