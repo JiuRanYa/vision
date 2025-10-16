@@ -22,6 +22,9 @@ const {
 // 编辑工具状态
 const activeTool = ref()
 
+// Dropdown元素ref
+const autoEnhanceDropdown = ref<HTMLElement | null>(null)
+
 // 选择工具
 function selectTool(toolId: string) {
   if (toolId === activeTool.value) {
@@ -36,6 +39,24 @@ const selectHistoryImage = imageEditStore.selectHistoryImage
 const selectEditImage = imageEditStore.selectEditImage
 const handleSendPrompt = imageEditStore.handleSendPrompt
 
+// 设置dropdown事件监听
+function setupDropdownListeners() {
+  if (!autoEnhanceDropdown.value)
+    return
+
+  // 获取KTDropdown实例
+  const dropdownInstance = KTDropdown.getInstance(autoEnhanceDropdown.value)
+  if (!dropdownInstance)
+    return
+
+  // 监听dropdown关闭事件
+  dropdownInstance.on('hide', () => {
+    if (activeTool.value === 'auto-enhance') {
+      activeTool.value = ''
+    }
+  })
+}
+
 onMounted(async () => {
   if (!route.query.creationId) {
     return
@@ -46,7 +67,10 @@ onMounted(async () => {
   await imageEditStore.loadHistoryImages()
   await imageEditStore.loadEditHistoryImages()
 
-  nextTick(KTDropdown.init)
+  nextTick(() => {
+    KTDropdown.init()
+    setupDropdownListeners()
+  })
 })
 
 // 组件卸载时重置store
@@ -98,6 +122,7 @@ onUnmounted(() => {
         <div class="flex items-center space-x-6 gap-2 m-2">
           <!-- 自动增强 -->
           <div
+            ref="autoEnhanceDropdown"
             class="inline-flex me-0"
             data-kt-dropdown="true"
             data-kt-dropdown-trigger="click"
