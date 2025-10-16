@@ -1,4 +1,5 @@
 import type { Creation } from '@/types/creation'
+import { useFetch } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { ApiService } from '@/service/fetch'
@@ -21,7 +22,6 @@ export const useImageEditStore = defineStore('image-edit', () => {
 
   // Loading状态
   const isLoadingHistory = ref(false)
-  const isLoadingEditHistory = ref(false)
   const isCreatingNewCreation = ref(false)
 
   // 编辑提示词
@@ -29,6 +29,15 @@ export const useImageEditStore = defineStore('image-edit', () => {
 
   // 确认保存状态
   const confirmSaving = ref(false)
+
+  const editHistoryUrl = ref('')
+  const {
+    data: editHistoryData,
+    isFetching: isLoadingEditHistory,
+    execute: executeEditHistoryFetch,
+  } = useFetch<Creation[]>(editHistoryUrl, {
+    immediate: false,
+  }).get().json<Creation[]>()
 
   // 加载当前图片详情
   async function loadImageData(creationId: string | number) {
@@ -71,21 +80,19 @@ export const useImageEditStore = defineStore('image-edit', () => {
   // 加载编辑历史
   async function loadEditHistoryImages() {
     if (!imageData.value || imageData.value.original_id) {
+      editHistoryImages.value = []
       return
     }
 
-    isLoadingEditHistory.value = true
-    try {
-      const { data } = await ApiService.get(`/creation/${imageData.value.id}/history`)
-      editHistoryImages.value = data.value
-      return data.value
-    }
-    catch (error) {
-      console.error('Failed to load edit history:', error)
-      throw error
-    }
-    finally {
-      isLoadingEditHistory.value = false
+    // 更新URL，这会触发新的请求并自动中断之前的请求
+    editHistoryUrl.value = `/api/creation/${imageData.value.id}/history`
+
+    // 执行请求，会自动中断之前未完成的请求
+    await executeEditHistoryFetch()
+
+    // 更新editHistoryImages
+    if (editHistoryData.value) {
+      editHistoryImages.value = editHistoryData.value
     }
   }
 
@@ -224,7 +231,6 @@ export const useImageEditStore = defineStore('image-edit', () => {
     selectedHistoryIndex.value = -1
     generatedImagesByExitImage.value = []
     isLoadingHistory.value = false
-    isLoadingEditHistory.value = false
     isCreatingNewCreation.value = false
     editPrompt.value = ''
     confirmSaving.value = false
