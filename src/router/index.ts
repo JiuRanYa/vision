@@ -25,10 +25,6 @@ const routes = [
         path: '/',
         component: () => import('@/pages/home/index.vue'),
       },
-      { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
-      { path: '/community', component: () => import('@/pages/community/index.vue') },
-      { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },
-      { path: '/admin-board', component: () => import('@/pages/admin/index.vue') },
     ],
   },
   // 使用完整 Layout 的路由（有 Header）
@@ -47,6 +43,10 @@ const routes = [
           headerActions: ImageEditHeaderActions,
         },
       },
+      { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
+      { path: '/community', component: () => import('@/pages/community/index.vue') },
+      { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },
+      { path: '/admin-board', component: () => import('@/pages/admin/index.vue') },
     ],
   },
   {
