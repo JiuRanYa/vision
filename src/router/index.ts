@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import KTUI from '@keenthemes/ktui/src/index.ts'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import ImageEditHeaderActions from '@/pages/image-edit/HeaderActions.vue'
 import ImageGeneratorHeaderActions from '@/pages/image-generator/HeaderActions.vue'
 import { REDIRECT_PATH, useAuthStore } from '@/store/auth'
 import { useUserStore } from '@/store/user'
@@ -28,7 +29,13 @@ const routes = [
           headerActions: ImageGeneratorHeaderActions,
         },
       },
-      { path: '/image-edit', component: () => import('@/pages/image-edit/index.vue') },
+      {
+        path: '/image-edit',
+        component: () => import('@/pages/image-edit/index.vue'),
+        meta: {
+          headerActions: ImageEditHeaderActions,
+        },
+      },
       { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
       { path: '/community', component: () => import('@/pages/community/index.vue') },
       { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },

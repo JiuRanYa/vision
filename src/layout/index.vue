@@ -63,15 +63,14 @@ const user = useAuthStore()
           </template>
         </div>
 
-        <!-- 中间：自定义组件区域 -->
-        <div v-if="route.meta.headerActions" class="flex-1 flex items-center justify-center">
-          <component :is="route.meta.headerActions" />
-        </div>
-
         <!-- 右侧：用户信息 -->
-        <div v-if="user.currentUserProfile" class="flex items-center space-x-3">
+        <div class="flex items-center space-x-3">
+          <!-- 中间：自定义组件区域 -->
+          <div v-if="route.meta.headerActions" class="flex-1 flex items-center justify-center">
+            <component :is="route.meta.headerActions" />
+          </div>
           <!-- 用户头像 -->
-          <div class="flex items-center space-x-3">
+          <div v-if="user.currentUserProfile" class="flex items-center space-x-3">
             <img
               :src="user.currentUserProfile.avatar"
               :alt="user.currentUserProfile.name"
