@@ -60,7 +60,6 @@ async function handlePublish() {
   }
   catch (error) {
     console.error('Failed to publish:', error)
-    // 可以在这里添加错误提示
   }
   finally {
     isPublishing.value = false

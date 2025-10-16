@@ -9,11 +9,9 @@ export const useTagsStore = defineStore('tags', () => {
 
   // 加载状态
   const isLoading = ref(false)
-
   // 是否已加载过
   const isLoaded = ref(false)
 
-  // 错误状态
   const error = ref<Error | null>(null)
 
   // 加载已有标签
