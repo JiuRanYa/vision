@@ -1,9 +1,19 @@
+import type { Component } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import KTUI from '@keenthemes/ktui/src/index.ts'
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import ImageGeneratorHeaderActions from '@/pages/image-generator/HeaderActions.vue'
 import { REDIRECT_PATH, useAuthStore } from '@/store/auth'
 import { useUserStore } from '@/store/user'
+
+// 扩展路由meta类型
+declare module 'vue-router' {
+  interface RouteMeta {
+    middleware?: string
+    headerActions?: Component
+  }
+}
 
 const routes = [
   {
@@ -11,7 +21,13 @@ const routes = [
     component: () => import('@/layout/index.vue'),
     children: [
       { path: '/', redirect: '/image-generator' },
-      { path: '/image-generator', component: () => import('@/pages/image-generator/index.vue') },
+      {
+        path: '/image-generator',
+        component: () => import('@/pages/image-generator/index.vue'),
+        meta: {
+          headerActions: ImageGeneratorHeaderActions,
+        },
+      },
       { path: '/image-edit', component: () => import('@/pages/image-edit/index.vue') },
       { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
       { path: '/community', component: () => import('@/pages/community/index.vue') },
