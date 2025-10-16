@@ -16,11 +16,26 @@ declare module 'vue-router' {
 }
 
 const routes = [
+  // 使用 SimpleLayout 的路由（无 Header）
+  {
+    path: '/',
+    component: () => import('@/layout/simple.vue'),
+    children: [
+      {
+        path: '/',
+        component: () => import('@/pages/home/index.vue'),
+      },
+      { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
+      { path: '/community', component: () => import('@/pages/community/index.vue') },
+      { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },
+      { path: '/admin-board', component: () => import('@/pages/admin/index.vue') },
+    ],
+  },
+  // 使用完整 Layout 的路由（有 Header）
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
-      { path: '/', redirect: '/image-generator' },
       {
         path: '/image-generator',
         component: () => import('@/pages/image-generator/index.vue'),
@@ -32,10 +47,6 @@ const routes = [
           headerActions: ImageEditHeaderActions,
         },
       },
-      { path: '/video-generator', component: () => import('@/pages/video-generator/index.vue') },
-      { path: '/community', component: () => import('@/pages/community/index.vue') },
-      { path: '/my-creations', component: () => import('@/pages/my-creations/index.vue') },
-      { path: '/admin-board', component: () => import('@/pages/admin/index.vue') },
     ],
   },
   {
