@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { Creation } from '@/types/creation'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getHistoryImages } from '@/api/image'
 
 const router = useRouter()
 
@@ -67,39 +69,9 @@ const workflowTabs = [
 ]
 const activeWorkflowTab = ref('Featured')
 
-// Recent creations 数据（模拟数据）
-const recentCreations = ref([
-  {
-    id: 1,
-    image: 'https://picsum.photos/600/800?random=1',
-    prompt: 'Cinematic low-angle portrait of a young person',
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-  },
-  {
-    id: 2,
-    image: 'https://picsum.photos/600/800?random=2',
-    prompt: 'a cat under a tree',
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 3,
-    image: 'https://picsum.photos/600/800?random=3',
-    prompt: 'a cat under a tree',
-    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // last week
-  },
-  {
-    id: 4,
-    image: 'https://picsum.photos/600/800?random=4',
-    prompt: 'a cat under a tree',
-    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 5,
-    image: 'https://picsum.photos/600/800?random=5',
-    prompt: 'Modern architecture design',
-    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-])
+// Recent creations 数据
+const recentCreations = reactive<Creation[]>([])
+const isLoadingCreations = ref(false)
 
 // Videos 数据
 const videos = ref([
@@ -134,6 +106,25 @@ const videos = ref([
     category: 'Social Media',
   },
 ])
+
+// 加载最近创作
+async function loadRecentCreations() {
+  isLoadingCreations.value = true
+  try {
+    const { data } = await getHistoryImages(1, 5)
+
+    // 直接使用接口返回的数据，并转换为Creation类型
+    const mappedImages = data.value.data as Creation[]
+
+    recentCreations.splice(0, recentCreations.length, ...mappedImages)
+  }
+  catch (error) {
+    console.error('Error loading recent creations:', error)
+  }
+  finally {
+    isLoadingCreations.value = false
+  }
+}
 
 // 导航到指定页面
 function navigateTo(link: string) {
@@ -176,9 +167,9 @@ function formatTimeAgo(dateString: string): string {
   return 'last month'
 }
 
-// onMounted(() => {
-//   // 不需要加载数据，使用模拟数据
-// })
+onMounted(() => {
+  loadRecentCreations()
+})
 </script>
 
 <template>
@@ -273,7 +264,16 @@ function formatTimeAgo(dateString: string): string {
         </div>
 
         <!-- 创作卡片网格 -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- Loading状态 -->
+        <div v-if="isLoadingCreations" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div
+            v-for="i in 5"
+            :key="i"
+            class="aspect-[3/4] bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse"
+          />
+        </div>
+        <!-- 数据展示 -->
+        <div v-else-if="recentCreations.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div
             v-for="creation in recentCreations"
             :key="creation.id"
@@ -282,7 +282,7 @@ function formatTimeAgo(dateString: string): string {
           >
             <div class="aspect-[3/4] overflow-hidden">
               <img
-                :src="creation.image"
+                :src="`/api/s3/proxy?key=${creation.response.file_key}`"
                 :alt="creation.prompt"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               >
@@ -299,6 +299,15 @@ function formatTimeAgo(dateString: string): string {
               </div>
             </div>
           </div>
+        </div>
+        <!-- 空状态 -->
+        <div v-else class="text-center py-12">
+          <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="ki-outline ki-picture text-2xl text-gray-400" />
+          </div>
+          <p class="text-gray-500 dark:text-gray-400">
+            No recent creations yet. Start creating!
+          </p>
         </div>
       </div>
 
