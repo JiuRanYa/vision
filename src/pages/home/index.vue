@@ -31,18 +31,6 @@ const createTools = [
     bgColor: 'bg-gray-50 dark:bg-gray-800',
   },
   {
-    icon: 'ki-microphone',
-    title: 'Create voiceover',
-    link: '/video-generator',
-    bgColor: 'bg-gray-50 dark:bg-gray-800',
-  },
-  {
-    icon: 'ki-message-text',
-    title: 'Chat with AI',
-    link: '/image-generator',
-    bgColor: 'bg-gray-50 dark:bg-gray-800',
-  },
-  {
     icon: 'ki-element-11',
     title: 'More tools',
     link: '/community',
