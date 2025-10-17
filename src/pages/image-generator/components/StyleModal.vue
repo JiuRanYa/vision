@@ -212,8 +212,12 @@ function selectStyle(style: StyleItem) {
 </script>
 
 <template>
-  <div class="kt-modal" data-kt-modal="true" :id="modalId">
-    <div class="kt-modal-content max-w-[1200px] top-[5%] max-h-[90vh]">
+  <div
+    :id="modalId"
+    class="kt-modal"
+    data-kt-modal="true"
+  >
+    <div class="kt-modal-content max-w-[1200px] top-[5%] h-[85vh]">
       <div class="kt-modal-header">
         <h3 class="kt-modal-title">
           Style
@@ -348,4 +352,3 @@ function selectStyle(style: StyleItem) {
   background-color: rgb(75 85 99);
 }
 </style>
-
