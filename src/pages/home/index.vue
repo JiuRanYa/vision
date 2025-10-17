@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Creation } from '@/types/creation'
-import { onMounted, reactive, ref } from 'vue'
+import { useAsyncState } from '@vueuse/core'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getHistoryImages } from '@/api/image'
 
@@ -69,9 +70,21 @@ const workflowTabs = [
 ]
 const activeWorkflowTab = ref('Featured')
 
-// Recent creations 数据
-const recentCreations = reactive<Creation[]>([])
-const isLoadingCreations = ref(false)
+// Recent creations 数据 - 使用 useAsyncState
+const {
+  state: recentCreations,
+  isLoading: isLoadingCreations,
+} = useAsyncState(
+  async () => {
+    const { data } = await getHistoryImages(1, 5)
+    return (data.value.data || []) as Creation[]
+  },
+  [], // 初始值为空数组
+  {
+    immediate: true, // 立即执行
+    resetOnExecute: false, // 执行时不重置状态
+  },
+)
 
 // Videos 数据
 const videos = ref([
@@ -106,25 +119,6 @@ const videos = ref([
     category: 'Social Media',
   },
 ])
-
-// 加载最近创作
-async function loadRecentCreations() {
-  isLoadingCreations.value = true
-  try {
-    const { data } = await getHistoryImages(1, 5)
-
-    // 直接使用接口返回的数据，并转换为Creation类型
-    const mappedImages = data.value.data as Creation[]
-
-    recentCreations.splice(0, recentCreations.length, ...mappedImages)
-  }
-  catch (error) {
-    console.error('Error loading recent creations:', error)
-  }
-  finally {
-    isLoadingCreations.value = false
-  }
-}
 
 // 导航到指定页面
 function navigateTo(link: string) {
@@ -167,9 +161,7 @@ function formatTimeAgo(dateString: string): string {
   return 'last month'
 }
 
-onMounted(() => {
-  loadRecentCreations()
-})
+// 不需要 onMounted，因为 useAsyncState 设置了 immediate: true
 </script>
 
 <template>
@@ -273,7 +265,7 @@ onMounted(() => {
           />
         </div>
         <!-- 数据展示 -->
-        <div v-else-if="recentCreations.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div v-else-if="recentCreations && recentCreations.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div
             v-for="creation in recentCreations"
             :key="creation.id"
