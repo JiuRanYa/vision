@@ -25,7 +25,7 @@ const createTools = [
     bgColor: 'bg-gray-50 dark:bg-gray-800',
   },
   {
-    icon: 'ki-video',
+    icon: 'ki-youtube',
     title: 'Generate video',
     link: '/video-generator',
     bgColor: 'bg-gray-50 dark:bg-gray-800',
@@ -173,12 +173,6 @@ function formatTimeAgo(dateString: string): string {
             <i class="ki-outline ki-picture text-gray-600 dark:text-gray-300" />
           </button>
         </div>
-        <button class="kt-btn kt-btn-ghost text-orange-600 dark:text-orange-400 font-medium">
-          Pricing
-        </button>
-        <button class="w-10 h-10 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-          👑
-        </button>
       </div>
 
       <!-- 主标题区域 -->
