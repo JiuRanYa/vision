@@ -2,6 +2,7 @@
 import { defineEmits, defineProps } from 'vue'
 import ModelSelectModal from '@/components/ModelSelectModal.vue'
 import { imageModels } from '@/config/models'
+import StyleModal from './components/StyleModal.vue'
 
 // 定义props
 const props = defineProps<{
@@ -43,8 +44,8 @@ function handleModelSelect(model: { id: number, name: string }) {
   })
 }
 
-// 配置选项数据
-const styleOptions = [
+// 配置选项数据（未使用，保留以备将来使用）
+const _styleOptions = [
   'Realistic',
   'Anime',
   'Cartoon',
@@ -77,7 +78,7 @@ const effectsOptions = [
   'HDR',
 ]
 
-const characterOptions = [
+const _characterOptions = [
   'None',
   'Human',
   'Animal',
@@ -90,7 +91,7 @@ const characterOptions = [
   'Elderly',
 ]
 
-const objectOptions = [
+const _objectOptions = [
   'None',
   'Vehicle',
   'Building',
@@ -103,7 +104,7 @@ const objectOptions = [
   'Clothing',
 ]
 
-const colorOptions = [
+const _colorOptions = [
   'None',
   'Monochrome',
   'Vibrant',
@@ -119,6 +120,31 @@ const colorOptions = [
 // 处理选项选择
 function handleOptionSelect(key: string, value: string) {
   updateConfig({ [key]: value })
+}
+
+// 处理风格选择
+function handleStyleSelect(style: { id: string, name: string, prompt: string }) {
+  // 如果选择的是 "all"，清空风格相关的 prompt
+  if (style.id === 'all') {
+    updateConfig({ style: '' })
+    return
+  }
+
+  // 将风格的 prompt 添加到现有 prompt 中
+  const currentPrompt = props.config.prompt.trim()
+  const stylePrompt = style.prompt
+
+  // 如果当前 prompt 为空，直接使用风格 prompt
+  if (!currentPrompt) {
+    updateConfig({ prompt: stylePrompt, style: style.name })
+  }
+  else {
+    // 否则将风格 prompt 添加到末尾
+    updateConfig({
+      prompt: `${currentPrompt}, ${stylePrompt}`,
+      style: style.name,
+    })
+  }
 }
 </script>
 
@@ -157,31 +183,16 @@ function handleOptionSelect(key: string, value: string) {
       <!-- Style -->
       <div
         class="kt-card cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-        data-kt-dropdown="true"
-        data-kt-dropdown-trigger="click"
+        data-kt-modal-toggle="#style-select-modal"
       >
-        <div class="flex items-center justify-between p-3" data-kt-dropdown-toggle="true">
+        <div class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-3">
             <i class="ki-outline ki-star text-xs text-gray-600 dark:text-gray-400" />
             <span class="text-xs font-medium">Style</span>
           </div>
           <div class="flex items-center space-x-2">
-            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.style }}</span>
+            <span class="text-xs text-gray-600 dark:text-gray-400">{{ config.style || 'Select style' }}</span>
             <i class="ki-outline ki-right text-xs text-gray-500" />
-          </div>
-        </div>
-        <div class="kt-dropdown w-full max-w-48 p-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg" data-kt-dropdown-menu="true">
-          <div class="space-y-1">
-            <button
-              v-for="option in styleOptions"
-              :key="option"
-              class="w-full text-left px-3 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
-              :class="{ 'bg-gray-100 dark:bg-gray-700': config.style === option }"
-              data-kt-dropdown-dismiss="true"
-              @click="handleOptionSelect('style', option)"
-            >
-              {{ option }}
-            </button>
           </div>
         </div>
       </div>
@@ -317,6 +328,12 @@ function handleOptionSelect(key: string, value: string) {
       :selected-model-id="config.modelId"
       modal-id="image-model-select-modal"
       @select-model="handleModelSelect"
+    />
+
+    <!-- Style选择Modal -->
+    <StyleModal
+      modal-id="style-select-modal"
+      @select="handleStyleSelect"
     />
   </div>
 </template>
