@@ -335,7 +335,7 @@ function formatTimeAgo(dateString: string): string {
             <!-- 播放按钮图标 -->
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="w-16 h-16 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-black/70 transition-colors">
-                <i class="ki-solid ki-play text-white text-2xl ml-1" />
+                <i class="ki-solid ki-to-right text-white text-2xl ml-1" />
               </div>
             </div>
             <!-- 类别标签 -->
