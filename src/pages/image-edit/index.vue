@@ -90,12 +90,11 @@ onUnmounted(() => {
           :alt="imageData.prompt"
           class="max-h-[80vh] object-contain rounded-lg shadow-lg"
         >
-        <div v-else class="text-gray-400 dark:text-gray-500 text-center">
-          <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="ki-outline ki-picture text-2xl" />
-          </div>
-          <p>没有图片可编辑</p>
-        </div>
+        <!-- 骨架屏占位符 -->
+        <div
+          v-else
+          class="w-[600px] h-[80vh] max-h-[800px] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse bg-[length:200%_100%] animate-shimmer"
+        />
       </div>
 
       <div class="absolute bottom-6 w-full ms-4">
