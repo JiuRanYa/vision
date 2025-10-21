@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { KTModal } from '@keenthemes/ktui/src'
 import { computed, ref } from 'vue'
 
 interface StyleItem {
@@ -17,7 +18,7 @@ interface Emits {
   (e: 'select', style: StyleItem): void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 // 搜索关键词
@@ -208,6 +209,15 @@ const filteredStyles = computed(() => {
 // 选择风格
 function selectStyle(style: StyleItem) {
   emit('select', style)
+
+  // 关闭 modal
+  const modalElement = document.getElementById(props.modalId)
+  if (modalElement) {
+    const modal = KTModal.getInstance(modalElement)
+    if (modal) {
+      modal.hide()
+    }
+  }
 }
 </script>
 
