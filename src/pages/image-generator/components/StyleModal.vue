@@ -289,11 +289,6 @@ function selectStyle(style: StyleItem) {
               >
             </div>
 
-            <!-- Featured 图标 -->
-            <div v-if="style.featured" class="absolute top-2 right-2">
-              <span class="text-yellow-400 text-lg">👑</span>
-            </div>
-
             <!-- 风格名称 -->
             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
               <p class="text-white text-xs font-medium truncate">
