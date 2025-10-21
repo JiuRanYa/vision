@@ -160,7 +160,7 @@ function handleRecreate(item: typeof communityImages[0]) {
                     <i class="ki-outline ki-download text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
                   <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                    <i class="ki-outline ki-exit-right-corner text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
                   <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
@@ -186,7 +186,7 @@ function handleRecreate(item: typeof communityImages[0]) {
               <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-50">
                 <div class="flex space-x-2">
                   <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                    <i class="ki-outline ki-exit-right-corner text-gray-600 dark:text-gray-400 text-sm" />
                   </button>
                   <button class="w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />

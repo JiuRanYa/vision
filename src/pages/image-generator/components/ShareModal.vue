@@ -166,7 +166,7 @@ function handleLike() {
                       title="Publish to Community"
                       :data-kt-modal-toggle="`#publish-modal-${item.id}`"
                     >
-                      <i class="ki-outline ki-share" />
+                      <i class="ki-outline ki-exit-right-corner" />
                     </button>
                     <button
                       v-else
@@ -175,7 +175,7 @@ function handleLike() {
                       title="Published - Click to unpublish"
                       @click="emit('unpublish', item)"
                     >
-                      <i class="ki-outline ki-share" />
+                      <i class="ki-outline ki-exit-right-corner" />
                     </button>
 
                     <!-- Like -->

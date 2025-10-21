@@ -79,7 +79,7 @@ onMounted(() => {
       :disabled="!imageData"
       :data-kt-modal-toggle="`#${publishModalId}`"
     >
-      <i class="ki-outline ki-share" />
+      <i class="ki-outline ki-exit-right-corner" />
     </button>
 
     <!-- 已发布状态按钮（点击可取消发布） -->
@@ -90,7 +90,7 @@ onMounted(() => {
       title="Published - Click to unpublish"
       @click="handleUnpublish"
     >
-      <i class="ki-outline ki-share" />
+      <i class="ki-outline ki-exit-right-corner" />
     </button>
 
     <!-- Like按钮 -->

@@ -346,6 +346,32 @@ async function handleUnpublish(item: any) {
     console.error('Failed to unpublish:', error)
   }
 }
+
+// 处理下载图片
+function handleDownloadImage(item: any) {
+  console.warn('Downloading image:', item)
+
+  try {
+    // 创建图片URL
+    const imageUrl = `/api/s3/proxy?key=${item.response.file_key}`
+
+    // 创建一个临时的a标签来触发下载
+    const link = document.createElement('a')
+    link.href = imageUrl
+    link.download = `${item.prompt.substring(0, 50)}_${item.id}.${item.response.file_extension || 'png'}`
+    link.target = '_blank'
+
+    // 添加到DOM并触发点击
+    document.body.appendChild(link)
+    link.click()
+
+    // 清理
+    document.body.removeChild(link)
+  }
+  catch (error) {
+    console.error('Failed to download image:', error)
+  }
+}
 </script>
 
 <template>
@@ -443,9 +469,9 @@ async function handleUnpublish(item: any) {
                       </button>
                       <button
                         class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        data-kt-modal-toggle="#share-modal-current"
+                        @click.stop="handleDownloadImage(currentGeneratedImage)"
                       >
-                        <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                        <i class="ki-outline ki-download text-gray-600 dark:text-gray-400 text-sm" />
                       </button>
                       <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
@@ -548,8 +574,9 @@ async function handleUnpublish(item: any) {
                         </button>
                         <button
                           class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          @click.stop="handleDownloadImage(image)"
                         >
-                          <i class="ki-outline ki-share text-gray-600 dark:text-gray-400 text-sm" />
+                          <i class="ki-outline ki-download text-gray-600 dark:text-gray-400 text-sm" />
                         </button>
                         <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                           <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
