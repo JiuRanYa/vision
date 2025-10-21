@@ -496,14 +496,6 @@ async function handleUnpublish(item: any) {
               <h2 class="text-md font-bold text-gray-900 dark:text-gray-100">
                 Generated Images
               </h2>
-              <div class="flex items-center space-x-2">
-                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-                  <span class="ml-1">Regenerate</span>
-                </button>
-                <button class="kt-btn kt-btn-sm kt-btn-ghost text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
-                  <span class="ml-1">Download All</span>
-                </button>
-              </div>
             </div>
 
             <!-- 历史数据Loading状态 -->
