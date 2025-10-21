@@ -44,19 +44,146 @@ function handleGenerate() {
   }, 5000)
 }
 
-// 瀑布流视频数据
+// 瀑布流视频数据 - 使用正确的 Inspiration 格式
 const communityImages = reactive([
-  { id: 1, imageUrl: 'https://picsum.photos/400/600?random=21', prompt: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion', type: 'video' as const },
-  { id: 2, imageUrl: 'https://picsum.photos/400/500?random=22', prompt: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement', type: 'video' as const },
-  { id: 3, imageUrl: 'https://picsum.photos/400/550?random=23', prompt: 'Time-lapse video of sunset over mountains, warm tones, cinematic style', type: 'video' as const },
-  { id: 4, imageUrl: 'https://picsum.photos/400/700?random=24', prompt: 'Epic fantasy video of warrior in battle, dramatic lighting, action sequence', type: 'video' as const },
-  { id: 5, imageUrl: 'https://picsum.photos/400/450?random=25', prompt: 'Smooth video of luxury car driving through city streets, professional cinematography', type: 'video' as const },
-  { id: 6, imageUrl: 'https://picsum.photos/400/600?random=26', prompt: 'Cute video of sloth moving slowly on tree branch, adorable animal behavior', type: 'video' as const },
-  { id: 7, imageUrl: 'https://picsum.photos/400/650?random=27', prompt: 'Professional video portrait of businesswoman, clean background, corporate style', type: 'video' as const },
-  { id: 8, imageUrl: 'https://picsum.photos/400/500?random=28', prompt: 'Artistic video with creative transitions, warm lighting, artistic cinematography', type: 'video' as const },
-  { id: 9, imageUrl: 'https://picsum.photos/400/550?random=29', prompt: 'Minimalist video with clean lines, soft lighting, modern cinematography', type: 'video' as const },
-  { id: 10, imageUrl: 'https://picsum.photos/400/450?random=30', prompt: 'Abstract video with geometric patterns, minimalist design, modern art style', type: 'video' as const },
-  { id: 11, imageUrl: 'https://picsum.photos/400/600?random=31', prompt: 'Confident video portrait of a man, professional lighting, business cinematography', type: 'video' as const },
+  {
+    id: 1,
+    creation_id: 1,
+    created_at: '2024-01-15T10:30:00Z',
+    creator: {
+      _id: 'creator1',
+      name: 'Video Artist',
+      email: 'artist@example.com',
+      title: 'Creative Director',
+    },
+    is_archived: false,
+    tags: [
+      { id: 1, text: 'cinematic', background: 'bg-blue-500', created_at: '2024-01-15T10:30:00Z', creator: { _id: 'creator1', name: 'Video Artist', email: 'artist@example.com', title: 'Creative Director' }, is_archived: false },
+    ],
+    creation: {
+      id: 1,
+      prompt: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion',
+      metadata: {
+        attachment: {
+          text: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion',
+          file_key: 'video1.mp4',
+          mimeType: 'video/mp4',
+          file_name: 'flower_field_video.mp4',
+          file_size: 1024000,
+          file_extension: 'mp4',
+        },
+      },
+      response: {
+        text: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion',
+        file_key: 'video1.mp4',
+        mimeType: 'video/mp4',
+        file_name: 'flower_field_video.mp4',
+        file_size: 1024000,
+        file_extension: 'mp4',
+      },
+      created_at: '2024-01-15T10:30:00Z',
+      creator: {
+        _id: 'creator1',
+        name: 'Video Artist',
+        email: 'artist@example.com',
+        title: 'Creative Director',
+      },
+      is_archived: false,
+      derivatives_count: 0,
+    },
+  },
+  {
+    id: 2,
+    creation_id: 2,
+    created_at: '2024-01-14T15:45:00Z',
+    creator: {
+      _id: 'creator2',
+      name: 'Ocean Explorer',
+      email: 'ocean@example.com',
+      title: 'Marine Videographer',
+    },
+    is_archived: false,
+    tags: [
+      { id: 2, text: 'underwater', background: 'bg-cyan-500', created_at: '2024-01-14T15:45:00Z', creator: { _id: 'creator2', name: 'Ocean Explorer', email: 'ocean@example.com', title: 'Marine Videographer' }, is_archived: false },
+    ],
+    creation: {
+      id: 2,
+      prompt: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement',
+      metadata: {
+        attachment: {
+          text: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement',
+          file_key: 'video2.mp4',
+          mimeType: 'video/mp4',
+          file_name: 'jellyfish_video.mp4',
+          file_size: 2048000,
+          file_extension: 'mp4',
+        },
+      },
+      response: {
+        text: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement',
+        file_key: 'video2.mp4',
+        mimeType: 'video/mp4',
+        file_name: 'jellyfish_video.mp4',
+        file_size: 2048000,
+        file_extension: 'mp4',
+      },
+      created_at: '2024-01-14T15:45:00Z',
+      creator: {
+        _id: 'creator2',
+        name: 'Ocean Explorer',
+        email: 'ocean@example.com',
+        title: 'Marine Videographer',
+      },
+      is_archived: false,
+      derivatives_count: 0,
+    },
+  },
+  {
+    id: 3,
+    creation_id: 3,
+    created_at: '2024-01-13T08:20:00Z',
+    creator: {
+      _id: 'creator3',
+      name: 'Nature Filmmaker',
+      email: 'nature@example.com',
+      title: 'Wildlife Cinematographer',
+    },
+    is_archived: false,
+    tags: [
+      { id: 3, text: 'timelapse', background: 'bg-orange-500', created_at: '2024-01-13T08:20:00Z', creator: { _id: 'creator3', name: 'Nature Filmmaker', email: 'nature@example.com', title: 'Wildlife Cinematographer' }, is_archived: false },
+    ],
+    creation: {
+      id: 3,
+      prompt: 'Time-lapse video of sunset over mountains, warm tones, cinematic style',
+      metadata: {
+        attachment: {
+          text: 'Time-lapse video of sunset over mountains, warm tones, cinematic style',
+          file_key: 'video3.mp4',
+          mimeType: 'video/mp4',
+          file_name: 'sunset_timelapse.mp4',
+          file_size: 1536000,
+          file_extension: 'mp4',
+        },
+      },
+      response: {
+        text: 'Time-lapse video of sunset over mountains, warm tones, cinematic style',
+        file_key: 'video3.mp4',
+        mimeType: 'video/mp4',
+        file_name: 'sunset_timelapse.mp4',
+        file_size: 1536000,
+        file_extension: 'mp4',
+      },
+      created_at: '2024-01-13T08:20:00Z',
+      creator: {
+        _id: 'creator3',
+        name: 'Nature Filmmaker',
+        email: 'nature@example.com',
+        title: 'Wildlife Cinematographer',
+      },
+      is_archived: false,
+      derivatives_count: 0,
+    },
+  },
 ])
 
 // 打字机动画函数
@@ -88,7 +215,7 @@ function typewriterEffect(text: string, callback?: () => void) {
 
 function handleRecreate(item: typeof communityImages[0]) {
   console.warn('Recreating from community item:', item)
-  typewriterEffect(item.prompt)
+  typewriterEffect(item.creation.prompt)
 }
 </script>
 
