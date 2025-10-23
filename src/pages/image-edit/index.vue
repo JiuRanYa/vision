@@ -235,7 +235,7 @@ onUnmounted(() => {
         <div v-for="(item, index) in editHistoryImages" :key="index">
           <div class="size-10 relative">
             <img
-              :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
+              :src="`/api/s3/proxy?key=${item.response.compressed.medium.file_key}`"
               :alt="item.prompt"
               class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
               @click="imageData = item"
