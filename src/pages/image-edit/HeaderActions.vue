@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Tag } from '@/components/EditableTags.vue'
-import { KTModal } from '@keenthemes/ktui/src'
+import { KTModal, KTToast } from '@keenthemes/ktui/src'
+import { PhDownloadSimple, PhShareNetwork } from '@phosphor-icons/vue'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import PublishModal from '@/pages/image-generator/components/PublishModal.vue'
 import { useImageEditStore } from '@/store/image-edit'
@@ -25,6 +26,14 @@ function handlePublished(_item: any, _tags: Tag[], inspirationData: any) {
   if (imageEditStore.imageData) {
     imageEditStore.imageData.inspiration = inspirationData
   }
+
+  // 显示成功Toast
+  KTToast.show({
+    message: 'Published to community successfully',
+    variant: 'success',
+    duration: 3000,
+    position: 'top-end',
+  })
 }
 
 // 处理取消发布
@@ -35,28 +44,53 @@ async function handleUnpublish() {
 
   try {
     await imageEditStore.unpublishFromCommunity()
+
+    // 显示成功Toast
+    KTToast.show({
+      message: 'Unpublished from community successfully',
+      variant: 'success',
+      duration: 3000,
+      position: 'top-end',
+    })
   }
   catch (error) {
     console.error('Failed to unpublish:', error)
+
+    // 显示错误Toast
+    KTToast.show({
+      message: 'Failed to unpublish from community',
+      variant: 'error',
+      duration: 3000,
+      position: 'top-end',
+    })
   }
 }
 
-// 处理点赞
-async function handleLike() {
-  if (!imageData.value || isLiking.value) {
+// 处理下载图片
+function handleDownloadImage() {
+  if (!imageData.value) {
     return
   }
 
-  isLiking.value = true
   try {
-    await imageEditStore.likeCurrentImage()
-    console.warn('Liked successfully')
+    // 创建图片URL
+    const imageUrl = `/api/s3/proxy?key=${imageData.value.response.compressed.large.file_key}`
+
+    // 创建一个临时的a标签来触发下载
+    const link = document.createElement('a')
+    link.href = imageUrl
+    link.download = `${imageData.value.prompt.substring(0, 50)}_${imageData.value.id}.${imageData.value.response.compressed.large.file_extension || 'png'}`
+    link.target = '_blank'
+
+    // 添加到DOM并触发点击
+    document.body.appendChild(link)
+    link.click()
+
+    // 清理
+    document.body.removeChild(link)
   }
   catch (error) {
-    console.error('Failed to like:', error)
-  }
-  finally {
-    isLiking.value = false
+    console.error('Failed to download image:', error)
   }
 }
 
@@ -70,6 +104,17 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center gap-2">
+    <!-- 下载按钮 -->
+    <button
+      type="button"
+      class="kt-btn kt-btn-icon kt-btn-ghost"
+      title="Download Image"
+      :disabled="!imageData"
+      @click="handleDownloadImage"
+    >
+      <PhDownloadSimple :size="16" class="text-gray-600 dark:text-gray-400" />
+    </button>
+
     <!-- Publish按钮（未发布状态） -->
     <button
       v-if="!isPublished"
@@ -79,7 +124,7 @@ onMounted(() => {
       :disabled="!imageData"
       :data-kt-modal-toggle="`#${publishModalId}`"
     >
-      <i class="ki-outline ki-exit-right-corner" />
+      <PhShareNetwork :size="16" class="text-gray-600 dark:text-gray-400" />
     </button>
 
     <!-- 已发布状态按钮（点击可取消发布） -->
@@ -90,7 +135,7 @@ onMounted(() => {
       title="Published - Click to unpublish"
       @click="handleUnpublish"
     >
-      <i class="ki-outline ki-exit-right-corner" />
+      <PhShareNetwork :size="16" class="text-gray-600 dark:text-gray-400" />
     </button>
 
     <!-- Like按钮 -->
