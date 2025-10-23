@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Creation } from '@/types/creation'
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 
 // 定义props类型
 interface ShareModalProps {
@@ -22,12 +22,39 @@ const emit = defineEmits<{
   unpublish: [item: Creation]
 }>()
 
+// 缩放相关状态
+const zoomLevel = ref(100)
+const isFitToScreen = ref(true)
+
 // 计算属性：获取用户信息（从creator映射）
 const userInfo = computed(() => {
   return {
     name: props.item.creator?.name || 'Anonymous',
     avatar: '', // Creation类型中没有avatar字段，写死为空
     timeAgo: formatTimeAgo(props.item.created_at),
+  }
+})
+
+// 计算属性：获取图片尺寸
+const imageDimensions = computed(() => {
+  const metadata = props.item.response.original_metadata
+  if (metadata && metadata.width && metadata.height) {
+    return `${metadata.width}x${metadata.height} px`
+  }
+  return 'Unknown size'
+})
+
+// 计算属性：获取图片样式
+const imageStyle = computed(() => {
+  if (isFitToScreen.value) {
+    return {
+      transform: 'scale(1)',
+      transformOrigin: 'center',
+    }
+  }
+  return {
+    transform: `scale(${zoomLevel.value / 100})`,
+    transformOrigin: 'center',
   }
 })
 
@@ -62,6 +89,28 @@ function handleFollow() {
 function handleLike() {
   emit('like', props.item)
 }
+
+// 缩放功能
+function handleZoomChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  zoomLevel.value = Number.parseInt(target.value)
+  isFitToScreen.value = false
+}
+
+function handleFitToScreen() {
+  isFitToScreen.value = true
+  zoomLevel.value = 100
+}
+
+// 监听缩放变化
+watch(zoomLevel, (newValue) => {
+  if (newValue === 100) {
+    isFitToScreen.value = true
+  }
+  else {
+    isFitToScreen.value = false
+  }
+})
 </script>
 
 <template>
@@ -76,12 +125,45 @@ function handleLike() {
         <div class="flex h-full">
           <!-- 左侧图片展示区域 -->
           <div class="w-2/3 p-6">
-            <div class="relative w-full h-full max-h-[80vh] overflow-hidden rounded-lg">
-              <img
-                :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
-                :alt="item.prompt"
-                class="w-full h-full object-contain"
-              >
+            <div class="flex flex-col h-full max-h-[80vh]">
+              <!-- 图片显示区域 -->
+              <div class="flex-1 flex justify-center items-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 mb-3">
+                <img
+                  :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
+                  :alt="item.prompt"
+                  :style="imageStyle"
+                  class="max-w-full max-h-full object-contain transition-transform duration-200 ease-in-out"
+                >
+              </div>
+
+              <!-- 控制面板容器 -->
+              <div class="flex items-center">
+                <!-- 左侧空div -->
+                <div class="flex-1" />
+
+                <!-- 控制面板 -->
+                <div class="flex items-center gap-3 bg-black/80 backdrop-blur-sm rounded-lg px-4 py-3">
+                  <!-- 尺寸显示 -->
+                  <span class="text-white text-sm font-medium">
+                    {{ imageDimensions }}
+                  </span>
+
+                  <!-- 缩放滑块 -->
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="100"
+                      max="500"
+                      :value="zoomLevel"
+                      class="w-24 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                      @input="handleZoomChange"
+                    >
+                    <span class="text-white text-sm font-medium min-w-[3rem]">
+                      {{ zoomLevel }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -209,3 +291,48 @@ function handleLike() {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 滑块样式 */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #4b5563;
+  outline: none;
+  border-radius: 0.5rem;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}
+
+/* 滑块轨道样式 */
+.slider::-webkit-slider-track {
+  background: #4b5563;
+  height: 4px;
+  border-radius: 0.5rem;
+}
+
+.slider::-moz-range-track {
+  background: #4b5563;
+  height: 4px;
+  border-radius: 0.5rem;
+  border: none;
+}
+</style>
