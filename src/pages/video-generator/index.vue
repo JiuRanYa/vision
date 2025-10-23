@@ -165,11 +165,55 @@ const communityImages = reactive([
       },
       response: {
         text: 'Underwater video of jellyfish swimming gracefully, blue ocean theme, ethereal movement',
-        file_key: 'video2.mp4',
-        mimeType: 'video/mp4',
-        file_name: 'jellyfish_video.mp4',
-        file_size: 2048000,
-        file_extension: 'mp4',
+        original: {
+          file_key: 'jellyfish_video.jpg',
+          mimeType: 'image/jpeg',
+          file_name: 'jellyfish_video.jpg',
+          file_size: 768000,
+          file_extension: 'jpg',
+        },
+        compressed: {
+          large: {
+            file_key: 'jellyfish_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'jellyfish_video.jpg',
+            file_size: 768000,
+            file_extension: 'jpg',
+          },
+          medium: {
+            file_key: 'jellyfish_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'jellyfish_video.jpg',
+            file_size: 384000,
+            file_extension: 'jpg',
+          },
+          small: {
+            file_key: 'jellyfish_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'jellyfish_video.jpg',
+            file_size: 192000,
+            file_extension: 'jpg',
+          },
+        },
+        original_metadata: {
+          size: 768000,
+          depth: '8',
+          space: 'sRGB',
+          width: 1920,
+          format: 'JPEG',
+          height: 1080,
+          density: 72,
+          channels: 3,
+          hasAlpha: false,
+          isPalette: false,
+          autoOrient: {
+            width: 1920,
+            height: 1080,
+          },
+          hasProfile: true,
+          bitsPerSample: 8,
+          isProgressive: false,
+        },
       },
       created_at: '2024-01-14T15:45:00Z',
       creator: {
@@ -211,11 +255,55 @@ const communityImages = reactive([
       },
       response: {
         text: 'Time-lapse video of sunset over mountains, warm tones, cinematic style',
-        file_key: 'video3.mp4',
-        mimeType: 'video/mp4',
-        file_name: 'sunset_timelapse.mp4',
-        file_size: 1536000,
-        file_extension: 'mp4',
+        original: {
+          file_key: 'sunset_timelapse.jpg',
+          mimeType: 'image/jpeg',
+          file_name: 'sunset_timelapse.jpg',
+          file_size: 640000,
+          file_extension: 'jpg',
+        },
+        compressed: {
+          large: {
+            file_key: 'sunset_timelapse.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'sunset_timelapse.jpg',
+            file_size: 640000,
+            file_extension: 'jpg',
+          },
+          medium: {
+            file_key: 'sunset_timelapse.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'sunset_timelapse.jpg',
+            file_size: 320000,
+            file_extension: 'jpg',
+          },
+          small: {
+            file_key: 'sunset_timelapse.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'sunset_timelapse.jpg',
+            file_size: 160000,
+            file_extension: 'jpg',
+          },
+        },
+        original_metadata: {
+          size: 640000,
+          depth: '8',
+          space: 'sRGB',
+          width: 1920,
+          format: 'JPEG',
+          height: 1080,
+          density: 72,
+          channels: 3,
+          hasAlpha: false,
+          isPalette: false,
+          autoOrient: {
+            width: 1920,
+            height: 1080,
+          },
+          hasProfile: true,
+          bitsPerSample: 8,
+          isProgressive: false,
+        },
       },
       created_at: '2024-01-13T08:20:00Z',
       creator: {
@@ -383,7 +471,7 @@ function handleRecreate(item: typeof communityImages[0]) {
       </div>
 
       <!-- 社区组件 -->
-      <CommunityGrid
+      <WaterfallGrid
         :items="communityImages"
         @recreate="handleRecreate"
       />
