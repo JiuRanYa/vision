@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Creation } from '@/types/creation'
+import { PhShareNetwork } from '@phosphor-icons/vue'
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 
 // 定义props类型
@@ -88,6 +89,11 @@ function handleFollow() {
 // 处理点赞
 function handleLike() {
   emit('like', props.item)
+}
+
+// 处理复制链接
+function handleCopyLink() {
+  emit('copyLink', props.item)
 }
 
 // 缩放功能
@@ -252,7 +258,7 @@ watch(zoomLevel, (newValue) => {
                       title="Publish to Community"
                       :data-kt-modal-toggle="`#publish-modal-${item.id}`"
                     >
-                      <i class="ki-outline ki-exit-right-corner" />
+                      <PhShareNetwork :size="16" class="text-gray-600 dark:text-gray-400" />
                     </button>
                     <button
                       v-else
@@ -261,7 +267,7 @@ watch(zoomLevel, (newValue) => {
                       title="Published - Click to unpublish"
                       @click="emit('unpublish', item)"
                     >
-                      <i class="ki-outline ki-exit-right-corner" />
+                      <PhShareNetwork :size="16" class="text-gray-600 dark:text-gray-400" />
                     </button>
 
                     <!-- Like -->
