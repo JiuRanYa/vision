@@ -52,7 +52,7 @@ const activeLabel = ref('Downloads')
         <div class="flex items-center justify-between">
           <!-- 左侧标题 -->
           <div class="flex items-center space-x-2">
-            <i class="ki-outline ki-download text-xl text-gray-600 dark:text-gray-400" />
+            <i class="ki-outline ki-arrow-down text-xl text-gray-600 dark:text-gray-400" />
             <h1 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {{ activeLabel }}
             </h1>
