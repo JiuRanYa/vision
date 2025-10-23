@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import CommunityGrid from '@/components/CommunityGrid.vue'
+import WaterfallGrid from '@/components/WaterfallGrid.vue'
 import VideoConfig from './VideoConfig.vue'
 
 // Video Generator 侧边栏配置面板
@@ -75,11 +75,55 @@ const communityImages = reactive([
       },
       response: {
         text: 'Cinematic video of a woman walking through a flower field, golden hour lighting, slow motion',
-        file_key: 'video1.mp4',
-        mimeType: 'video/mp4',
-        file_name: 'flower_field_video.mp4',
-        file_size: 1024000,
-        file_extension: 'mp4',
+        original: {
+          file_key: 'flower_field_video.jpg',
+          mimeType: 'image/jpeg',
+          file_name: 'flower_field_video.jpg',
+          file_size: 512000,
+          file_extension: 'jpg',
+        },
+        compressed: {
+          large: {
+            file_key: 'flower_field_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'flower_field_video.jpg',
+            file_size: 512000,
+            file_extension: 'jpg',
+          },
+          medium: {
+            file_key: 'flower_field_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'flower_field_video.jpg',
+            file_size: 256000,
+            file_extension: 'jpg',
+          },
+          small: {
+            file_key: 'flower_field_video.jpg',
+            mimeType: 'image/jpeg',
+            file_name: 'flower_field_video.jpg',
+            file_size: 128000,
+            file_extension: 'jpg',
+          },
+        },
+        original_metadata: {
+          size: 512000,
+          depth: '8',
+          space: 'sRGB',
+          width: 1920,
+          format: 'JPEG',
+          height: 1080,
+          density: 72,
+          channels: 3,
+          hasAlpha: false,
+          isPalette: false,
+          autoOrient: {
+            width: 1920,
+            height: 1080,
+          },
+          hasProfile: true,
+          bitsPerSample: 8,
+          isProgressive: false,
+        },
       },
       created_at: '2024-01-15T10:30:00Z',
       creator: {
