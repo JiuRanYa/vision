@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PhDownloadSimple, PhExport } from '@phosphor-icons/vue'
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateImage, getHistoryImages } from '@/api/image'
@@ -471,7 +472,7 @@ function handleDownloadImage(item: any) {
                         class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         @click.stop="handleDownloadImage(currentGeneratedImage)"
                       >
-                        <i class="ki-filled ki-arrow-down text-gray-600 dark:text-gray-400 text-sm" />
+                        <PhExport :size="14" class="text-gray-600 dark:text-gray-400" />
                       </button>
                       <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
@@ -576,7 +577,7 @@ function handleDownloadImage(item: any) {
                           class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                           @click.stop="handleDownloadImage(image)"
                         >
-                          <i class="ki-outline ki-arrow-down text-gray-600 dark:text-gray-400 text-sm" />
+                          <PhDownloadSimple :size="14" class="text-gray-600 dark:text-gray-400" />
                         </button>
                         <button class="cursor-pointer w-8 h-8 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                           <i class="ki-outline ki-heart text-gray-600 dark:text-gray-400 text-sm" />
