@@ -153,7 +153,7 @@ watch(zoomLevel, (newValue) => {
                       min="100"
                       max="500"
                       :value="zoomLevel"
-                      class="w-24 h-1 bg-gray-400 rounded-lg appearance-none cursor-pointer slider"
+                      class="w-24 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 slider"
                       @input="handleZoomChange"
                     >
                   </div>
@@ -297,39 +297,38 @@ watch(zoomLevel, (newValue) => {
 </template>
 
 <style scoped>
-/* 滑块样式 */
+/* 滑块样式 - 使用Tailwind变量 */
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  background: #4b5563;
+  background: transparent;
   outline: none;
-  border-radius: 0.5rem;
 }
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #3b82f6;
+  width: 1rem;
+  height: 1rem;
+  background: theme('colors.blue.500');
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid theme('colors.white');
 }
 
 .slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background: #3b82f6;
+  width: 1rem;
+  height: 1rem;
+  background: theme('colors.blue.500');
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid #ffffff;
+  border: 2px solid theme('colors.white');
 }
 
 /* 滑块轨道样式 */
 .slider::-webkit-slider-track {
-  background: #4b5563;
-  height: 4px;
+  background: theme('colors.gray.600');
+  height: 0.25rem;
   border-radius: 0.5rem;
 }
 
