@@ -142,24 +142,28 @@ watch(zoomLevel, (newValue) => {
                 <div class="flex-1" />
 
                 <!-- 控制面板 -->
-                <div class="flex items-center gap-3 bg-black/80 backdrop-blur-sm rounded-lg px-4 py-3">
-                  <!-- 尺寸显示 -->
-                  <span class="text-white text-sm font-medium">
-                    {{ imageDimensions }}
-                  </span>
-
+                <div class="flex items-center gap-3 backdrop-blur-sm rounded-lg px-4 py-3">
                   <!-- 缩放滑块 -->
                   <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium min-w-[3rem]">
+                      {{ zoomLevel }}%
+                    </span>
                     <input
                       type="range"
                       min="100"
                       max="500"
                       :value="zoomLevel"
-                      class="w-24 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                      class="w-24 h-1 bg-gray-400 rounded-lg appearance-none cursor-pointer slider"
                       @input="handleZoomChange"
                     >
-                    <span class="text-white text-sm font-medium min-w-[3rem]">
-                      {{ zoomLevel }}%
+                  </div>
+
+                  <div class="flex items-center gap-2 text-xs">
+                    <i class="ki-filled ki-note" />
+
+                    <!-- 尺寸显示 -->
+                    <span class="text-sm font-medium">
+                      {{ imageDimensions }}
                     </span>
                   </div>
                 </div>
