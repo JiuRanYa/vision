@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { KTToast } from '@keenthemes/ktui/src'
 import { PhDownloadSimple, PhExport } from '@phosphor-icons/vue'
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -319,6 +320,14 @@ function handlePublished(item: any, tags: any[], inspirationData: any) {
 
   // 发布成功后刷新Inspiration列表
   loadInspirationImages()
+
+  // 显示成功Toast
+  KTToast.show({
+    message: 'Published to community successfully',
+    variant: 'success',
+    duration: 3000,
+    position: 'top-end',
+  })
 }
 
 // 处理取消发布
@@ -342,9 +351,25 @@ async function handleUnpublish(item: any) {
 
     // 刷新Inspiration列表
     loadInspirationImages()
+
+    // 显示成功Toast
+    KTToast.show({
+      message: 'Unpublished from community successfully',
+      variant: 'success',
+      duration: 3000,
+      position: 'top-end',
+    })
   }
   catch (error) {
     console.error('Failed to unpublish:', error)
+
+    // 显示错误Toast
+    KTToast.show({
+      message: 'Failed to unpublish from community',
+      variant: 'error',
+      duration: 3000,
+      position: 'top-end',
+    })
   }
 }
 

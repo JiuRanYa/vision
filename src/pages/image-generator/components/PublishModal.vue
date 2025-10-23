@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Tag } from '@/components/EditableTags.vue'
 import type { Creation } from '@/types/creation'
-import { KTModal } from '@keenthemes/ktui/src'
+import { KTModal, KTToast } from '@keenthemes/ktui/src'
 import { defineEmits, defineProps, ref } from 'vue'
 import EditableTags from '@/components/EditableTags.vue'
 import { ApiService } from '@/service/fetch'
@@ -60,6 +60,14 @@ async function handlePublish() {
   }
   catch (error) {
     console.error('Failed to publish:', error)
+
+    // 显示错误Toast
+    KTToast.show({
+      message: 'Failed to publish to community',
+      variant: 'error',
+      duration: 3000,
+      position: 'top-end',
+    })
   }
   finally {
     isPublishing.value = false
