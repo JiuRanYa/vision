@@ -65,7 +65,7 @@ const {
 } = useAsyncState(
   async () => {
     const { data } = await getHistoryImages(1, 5)
-    return (data.value.data || []) as Creation[]
+    return data.value.data as Creation[]
   },
   [], // 初始值为空数组
   {
@@ -256,7 +256,7 @@ function formatTimeAgo(dateString: string): string {
           >
             <div class="aspect-[3/4] overflow-hidden">
               <img
-                :src="`/api/s3/proxy?key=${creation.response.file_key}`"
+                :src="`/api/s3/proxy?key=${creation.response.compressed.large.file_key}`"
                 :alt="creation.prompt"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               >

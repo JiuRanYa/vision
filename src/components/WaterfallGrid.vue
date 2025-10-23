@@ -30,7 +30,7 @@ function handleRecreate(item: Inspiration) {
         :data-kt-modal-toggle="`#community-modal-${item.id}`"
       >
         <img
-          :src="`/api/s3/proxy?key=${item.creation.response.file_key}`"
+          :src="`/api/s3/proxy?key=${item.creation.response.compressed.large.file_key}`"
           :alt="item.creation.prompt"
           class="w-full h-auto object-cover"
           loading="lazy"

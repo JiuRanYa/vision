@@ -24,6 +24,34 @@ interface Attachment {
 }
 interface S3File {
   text: string
+  original: FileInfo
+  compressed: {
+    large: FileInfo
+    small: FileInfo
+    medium: FileInfo
+  }
+  original_metadata: {
+    size: number
+    depth: string
+    space: string
+    width: number
+    format: string
+    height: number
+    density: number
+    channels: number
+    hasAlpha: boolean
+    isPalette: boolean
+    autoOrient: {
+      width: number
+      height: number
+    }
+    hasProfile: boolean
+    bitsPerSample: number
+    isProgressive: boolean
+  }
+}
+
+interface FileInfo {
   file_key: string
   mimeType: string
   file_name: string

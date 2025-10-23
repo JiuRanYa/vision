@@ -353,12 +353,12 @@ function handleDownloadImage(item: any) {
 
   try {
     // 创建图片URL
-    const imageUrl = `/api/s3/proxy?key=${item.response.file_key}`
+    const imageUrl = `/api/s3/proxy?key=${item.response.compressed.large.file_key}`
 
     // 创建一个临时的a标签来触发下载
     const link = document.createElement('a')
     link.href = imageUrl
-    link.download = `${item.prompt.substring(0, 50)}_${item.id}.${item.response.file_extension || 'png'}`
+    link.download = `${item.prompt.substring(0, 50)}_${item.id}.${item.response.compressed.large.file_extension || 'png'}`
     link.target = '_blank'
 
     // 添加到DOM并触发点击
@@ -444,7 +444,7 @@ function handleDownloadImage(item: any) {
                   class="relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800"
                 >
                   <img
-                    :src="`/api/s3/proxy?key=${currentGeneratedImage.response.file_key}`"
+                    :src="`/api/s3/proxy?key=${currentGeneratedImage.response.compressed.large.file_key}`"
                     alt="Generated image"
                     class="w-full h-full object-fit"
                   >
@@ -546,7 +546,7 @@ function handleDownloadImage(item: any) {
                     class="cursor-pointer relative group rounded-lg overflow-hidden shadow-sm dark:shadow-gray-800 hover:shadow-md dark:hover:shadow-gray-700 transition-shadow flex items-center justify-center bg-gray-50 dark:bg-gray-800"
                   >
                     <img
-                      :src="`/api/s3/proxy?key=${image.response.file_key}`"
+                      :src="`/api/s3/proxy?key=${image.response.compressed.small.file_key}`"
                       alt="Generated image"
                       class="w-full h-full object-fit"
                     >

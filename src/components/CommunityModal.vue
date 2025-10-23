@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 // 计算属性：获取图片URL
 const imageUrl = computed(() => {
-  return `/api/s3/proxy?key=${props.item.creation.response.file_key}`
+  return `/api/s3/proxy?key=${props.item.creation.response.compressed.large.file_key}`
 })
 
 // 计算属性：获取prompt

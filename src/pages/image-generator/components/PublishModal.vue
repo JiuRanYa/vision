@@ -93,7 +93,7 @@ async function handlePublish() {
         <!-- 图片预览 -->
         <div class="mb-6 flex justify-center">
           <img
-            :src="`/api/s3/proxy?key=${item.response.file_key}`"
+            :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
             :alt="item.prompt"
             class="max-w-full max-h-96 object-contain rounded-lg"
           >

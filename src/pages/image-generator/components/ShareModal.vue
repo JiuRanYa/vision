@@ -78,7 +78,7 @@ function handleLike() {
           <div class="w-2/3 p-6">
             <div class="relative w-full h-full max-h-[80vh] overflow-hidden rounded-lg">
               <img
-                :src="`/api/s3/proxy?key=${item.response.file_key}`"
+                :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
                 :alt="item.prompt"
                 class="w-full h-full object-contain"
               >

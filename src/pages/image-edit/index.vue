@@ -85,8 +85,8 @@ onUnmounted(() => {
     <div class="relative flex-1 flex items-center justify-center p-8 z-[120]">
       <div class="max-w-full max-h-full">
         <img
-          v-if="imageData?.response?.file_key"
-          :src="`/api/s3/proxy?key=${imageData.response.file_key}`"
+          v-if="imageData?.response?.compressed?.large?.file_key"
+          :src="`/api/s3/proxy?key=${imageData.response.compressed.large.file_key}`"
           :alt="imageData.prompt"
           class="max-h-[80vh] object-contain rounded-lg shadow-lg"
         >
@@ -103,7 +103,7 @@ onUnmounted(() => {
             <div v-for="(item, index) in editHistoryImages" :key="index">
               <div class="size-10 relative">
                 <img
-                  :src="`/api/s3/proxy?key=${item.response.file_key}`"
+                  :src="`/api/s3/proxy?key=${item.response.original.file_key}`"
                   :alt="item.prompt"
                   class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
                   @click="selectEditImage(item)"
@@ -235,7 +235,7 @@ onUnmounted(() => {
         <div v-for="(item, index) in editHistoryImages" :key="index">
           <div class="size-10 relative">
             <img
-              :src="`/api/s3/proxy?key=${item.response.file_key}`"
+              :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
               :alt="item.prompt"
               class="rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700"
               @click="imageData = item"
@@ -262,7 +262,7 @@ onUnmounted(() => {
         >
           <div class="aspect-square size-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
             <img
-              :src="`/api/s3/proxy?key=${item.response.file_key}`"
+              :src="`/api/s3/proxy?key=${item.response.compressed.large.file_key}`"
               :alt="item.prompt"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             >

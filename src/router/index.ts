@@ -77,6 +77,7 @@ router.beforeEach(async (to, _from, next) => {
 
   const authStore = useAuthStore()
   await authStore.verifyAuth()
+
   if (!authStore.isAuthenticated) {
     localStorage.setItem(REDIRECT_PATH, to.fullPath)
     return next({ name: 'sso' })
