@@ -25,7 +25,6 @@ const emit = defineEmits<{
 
 // 缩放相关状态
 const zoomLevel = ref(100)
-const isFitToScreen = ref(true)
 
 // 计算属性：获取用户信息（从creator映射）
 const userInfo = computed(() => {
@@ -47,12 +46,6 @@ const imageDimensions = computed(() => {
 
 // 计算属性：获取图片样式
 const imageStyle = computed(() => {
-  if (isFitToScreen.value) {
-    return {
-      transform: 'scale(1)',
-      transformOrigin: 'center',
-    }
-  }
   return {
     transform: `scale(${zoomLevel.value / 100})`,
     transformOrigin: 'center',
@@ -100,23 +93,7 @@ function handleCopyLink() {
 function handleZoomChange(event: Event) {
   const target = event.target as HTMLInputElement
   zoomLevel.value = Number.parseInt(target.value)
-  isFitToScreen.value = false
 }
-
-function handleFitToScreen() {
-  isFitToScreen.value = true
-  zoomLevel.value = 100
-}
-
-// 监听缩放变化
-watch(zoomLevel, (newValue) => {
-  if (newValue === 100) {
-    isFitToScreen.value = true
-  }
-  else {
-    isFitToScreen.value = false
-  }
-})
 </script>
 
 <template>
