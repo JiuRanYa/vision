@@ -2,14 +2,12 @@
 import type { Model } from '@/config/models'
 import { defineEmits, defineProps } from 'vue'
 
-// 定义props
 const _props = defineProps<{
   models: Model[]
   selectedModelId: number | null
   modalId?: string
 }>()
 
-// 定义emits
 const emit = defineEmits<{
   selectModel: [model: Model]
 }>()

@@ -3,12 +3,10 @@ import type { Inspiration } from '@/types/creation'
 import { defineEmits, defineProps } from 'vue'
 import WaterfallGrid from './WaterfallGrid.vue'
 
-// 定义props
 const _props = defineProps<{
   items: Inspiration[]
 }>()
 
-// 定义emits
 const emit = defineEmits<{
   recreate: [item: Inspiration]
 }>()

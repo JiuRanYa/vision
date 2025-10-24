@@ -11,19 +11,16 @@ export interface Tag {
   background: string
 }
 
-// Props定义
 interface EditableTagsProps {
   modelValue: Tag[]
 }
 
 const props = defineProps<EditableTagsProps>()
 
-// Emits定义
 const emit = defineEmits<{
   'update:modelValue': [tags: Tag[]]
 }>()
 
-// 使用tags store
 const tagsStore = useTagsStore()
 
 // 编辑模式（默认为非编辑状态）
