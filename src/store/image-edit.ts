@@ -30,7 +30,6 @@ export const useImageEditStore = defineStore('image-edit', () => {
   // 确认保存状态
   const confirmSaving = ref(false)
 
-  // 使用getter函数让useFetch自动跟踪imageData的变化
   const {
     data: editHistoryData,
     isFetching: isLoadingEditHistory,

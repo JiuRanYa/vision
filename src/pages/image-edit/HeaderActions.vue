@@ -45,7 +45,6 @@ async function handleUnpublish() {
   try {
     await imageEditStore.unpublishFromCommunity()
 
-    // 显示成功Toast
     KTToast.show({
       message: 'Unpublished from community successfully',
       variant: 'success',
@@ -56,7 +55,6 @@ async function handleUnpublish() {
   catch (error) {
     console.error('Failed to unpublish:', error)
 
-    // 显示错误Toast
     KTToast.show({
       message: 'Failed to unpublish from community',
       variant: 'error',
@@ -76,17 +74,14 @@ function handleDownloadImage() {
     // 创建图片URL
     const imageUrl = `/api/s3/proxy?key=${imageData.value.response.compressed.large.file_key}`
 
-    // 创建一个临时的a标签来触发下载
     const link = document.createElement('a')
     link.href = imageUrl
     link.download = `${imageData.value.prompt.substring(0, 50)}_${imageData.value.id}.${imageData.value.response.compressed.large.file_extension || 'png'}`
     link.target = '_blank'
 
-    // 添加到DOM并触发点击
     document.body.appendChild(link)
     link.click()
 
-    // 清理
     document.body.removeChild(link)
   }
   catch (error) {
