@@ -89,7 +89,6 @@ function handleDownloadImage() {
   }
 }
 
-// 初始化Modal
 onMounted(() => {
   nextTick(() => {
     KTModal.init()

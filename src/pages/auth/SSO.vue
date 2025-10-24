@@ -13,13 +13,6 @@ function SSO_Redirect() {
 }
 
 const authTokenInQuery = useRouteQuery<string>('token')
-onMounted(async () => {
-  if (authTokenInQuery.value) {
-    setAuthToken(authTokenInQuery.value)
-    await useAuthStore().verifyAuth()
-    router.replace(localStorage.getItem(REDIRECT_PATH) || '/')
-  }
-})
 
 // 展示的AI生成作品示例
 const showcaseImages = ref([
@@ -45,13 +38,6 @@ const showcaseImages = ref([
 
 const currentImageIndex = ref(0)
 
-// 自动轮播
-onMounted(() => {
-  setInterval(() => {
-    currentImageIndex.value = (currentImageIndex.value + 1) % showcaseImages.value.length
-  }, 5000)
-})
-
 // 平台特性数据
 const features = [
   {
@@ -70,6 +56,18 @@ const features = [
     color: 'text-pink-500',
   },
 ]
+
+onMounted(async () => {
+  setInterval(() => {
+    currentImageIndex.value = (currentImageIndex.value + 1) % showcaseImages.value.length
+  }, 5000)
+
+  if (authTokenInQuery.value) {
+    setAuthToken(authTokenInQuery.value)
+    await useAuthStore().verifyAuth()
+    router.replace(localStorage.getItem(REDIRECT_PATH) || '/')
+  }
+})
 </script>
 
 <template>

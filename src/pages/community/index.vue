@@ -67,15 +67,12 @@ const filteredContent = computed(() => {
   }
 })
 
-// 切换标签
 function switchTab(tabId: string) {
   activeTab.value = tabId
 }
 
-// 处理重新创建
 function handleRecreate(item: typeof communityImages[0]) {
   console.warn('Recreating from community item:', item)
-  // 这里可以添加跳转到生成页面的逻辑
 }
 </script>
 

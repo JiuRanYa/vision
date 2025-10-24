@@ -148,8 +148,6 @@ function formatTimeAgo(dateString: string): string {
     return `${Math.floor(diffInDays / 7)} weeks ago`
   return 'last month'
 }
-
-// 不需要 onMounted，因为 useAsyncState 设置了 immediate: true
 </script>
 
 <template>

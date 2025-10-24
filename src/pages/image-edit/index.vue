@@ -8,7 +8,6 @@ import { useImageEditStore } from '@/store/image-edit'
 const route = useRoute()
 const imageEditStore = useImageEditStore()
 
-// 从store获取状态
 const {
   imageData,
   historyImages,
@@ -34,7 +33,6 @@ function selectTool(toolId: string) {
   activeTool.value = toolId
 }
 
-// 使用store的方法
 const selectHistoryImage = imageEditStore.selectHistoryImage
 const selectEditImage = imageEditStore.selectEditImage
 const handleSendPrompt = imageEditStore.handleSendPrompt
